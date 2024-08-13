@@ -12,8 +12,6 @@ import main_01
 import itertools
 
 
-
-
 class ParameterApp(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -46,7 +44,6 @@ class ParameterApp(tk.Tk):
         TH800_S10_frame = ttk.LabelFrame(self, text="先選擇插孔 TH800 S10")
         TH800_S10_frame.grid(column=3, row=7, padx=10, pady=10, sticky=tk.EW, rowspan=2)
         
-
 
         SCh_radio = {
             "LP220_S1Ch1": ["Current_source", "Voltage_source"],
@@ -86,6 +83,7 @@ class ParameterApp(tk.Tk):
             "TH800_S10Ch7": ["Thermometer"],
             "TH800_S10Ch8": ["Thermometer"]      
         }
+
 
         # 創建 Checkbutton 和 RadioButton 的框架
         self.check_sensor = {}   # 儲存 Checkbutton 的變量對象(BooleanVar)

@@ -282,7 +282,7 @@ class ParameterApp(tk.Tk):
         """處理提交的參數並保存"""
         self.saved_parameters[(option)] = params  # 保存參數
         print(f"提交的參數 ({option}): {params}")
-        window.destroy()  # 關閉窗口
+        window.destroy()  # 關閉窗口  
 
     
 

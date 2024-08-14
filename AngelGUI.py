@@ -87,8 +87,10 @@ class ParameterApp(tk.Tk):
 
         # 創建 Checkbutton 和 RadioButton 的框架
         self.check_sensor = {}   # 儲存 Checkbutton 的變量對象(BooleanVar)
-        self.check_radio = {}   #儲存 RadioButton 中當前選中的選項
-        self.radio_buttons_list = {}   #儲存 Checkbutton 對應的 RadioButton 列表
+        self.check_radio = {}   # 儲存 RadioButton 中當前選中的選項
+        self.radio_buttons_list = {}   # 儲存 Checkbutton 對應的 RadioButton 列表
+        self.saved_parameters = {}  # 儲存每個 RadioButton 的參數
+
 
         # 排版 Sensor
         for i, (text, radio_options) in enumerate(itertools.islice(SCh_radio.items(), 2)):
@@ -105,7 +107,7 @@ class ParameterApp(tk.Tk):
             self.radio_buttons_list[text] = []
 
             for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled")
+                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
                 radio_buttons_list.pack(side=tk.LEFT, padx=2)
                 self.radio_buttons_list[text].append(radio_buttons_list)
 
@@ -124,7 +126,7 @@ class ParameterApp(tk.Tk):
             self.radio_buttons_list[text] = []
 
             for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled")
+                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
                 radio_buttons_list.pack(side=tk.LEFT, padx=2)
                 self.radio_buttons_list[text].append(radio_buttons_list)
 
@@ -145,7 +147,7 @@ class ParameterApp(tk.Tk):
             self.radio_buttons_list[text] = []
 
             for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled")
+                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
                 radio_buttons_list.pack(side=tk.LEFT, padx=2)
                 self.radio_buttons_list[text].append(radio_buttons_list)
 
@@ -164,7 +166,7 @@ class ParameterApp(tk.Tk):
             self.radio_buttons_list[text] = []
 
             for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled")
+                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
                 radio_buttons_list.pack(side=tk.LEFT, padx=2)
                 self.radio_buttons_list[text].append(radio_buttons_list)
 
@@ -183,7 +185,7 @@ class ParameterApp(tk.Tk):
             self.radio_buttons_list[text] = []
 
             for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled")
+                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
                 radio_buttons_list.pack(side=tk.LEFT, padx=2)
                 self.radio_buttons_list[text].append(radio_buttons_list)
 
@@ -202,7 +204,7 @@ class ParameterApp(tk.Tk):
             self.radio_buttons_list[text] = []
 
             for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled")
+                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
                 radio_buttons_list.pack(side=tk.LEFT, padx=2)
                 self.radio_buttons_list[text].append(radio_buttons_list)
 
@@ -221,7 +223,7 @@ class ParameterApp(tk.Tk):
             self.radio_buttons_list[text] = []
 
             for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled")
+                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
                 radio_buttons_list.pack(side=tk.LEFT, padx=2)
                 self.radio_buttons_list[text].append(radio_buttons_list)
 
@@ -240,10 +242,10 @@ class ParameterApp(tk.Tk):
             self.radio_buttons_list[text] = []
 
             for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled")
+                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
                 radio_buttons_list.pack(side=tk.LEFT, padx=2)
-                self.radio_buttons_list[text].append(radio_buttons_list)
-
+                self.radio_buttons_list[text].append(radio_buttons_list)    
+            
 
     def toggle_radiobuttons(self, text):
         """切換 RadioButton 的狀態"""
@@ -254,7 +256,33 @@ class ParameterApp(tk.Tk):
             for radio_buttons in self.radio_buttons_list[text]:
                 radio_buttons.configure(state="disabled")
 
-    
+    def open_parameter_window(self, option):
+        """彈出一個填寫參數的表單視窗"""
+        param_window = tk.Toplevel(self)
+        param_window.title(f"填寫參數 - {option}")
+        param_window.geometry("300x200")
+
+        ttk.Label(param_window, text="請輸入參數:").pack(padx=10, pady=10)
+
+        # 創建參數輸入框
+        param_entry = ttk.Entry(param_window)
+        param_entry.pack(padx=10, pady=10)
+
+        # 如果之前有保存過該 RadioButton 的參數，則填入到輸入框中
+        if (option) in self.saved_parameters:
+            param_entry.insert(0, self.saved_parameters[(option)])
+
+        button_frame = ttk.Frame(param_window)
+        button_frame.pack(pady=10)
+
+        ttk.Button(button_frame, text="提交", command=lambda: self.submit_parameters(param_entry.get(),option, param_window)).pack(side=tk.LEFT, padx=5)
+        ttk.Button(button_frame, text="取消", command=param_window.destroy).pack(side=tk.LEFT, padx=5)
+
+    def submit_parameters(self, params, option, window):
+        """處理提交的參數並保存"""
+        self.saved_parameters[(option)] = params  # 保存參數
+        print(f"提交的參數 ({option}): {params}")
+        window.destroy()  # 關閉窗口
 
     
 

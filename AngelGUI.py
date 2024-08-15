@@ -16,72 +16,72 @@ class ParameterApp(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.title("Parameter Configuration")
+        self.title("T3STER SI")
         self.geometry("")
         
         # 先選擇插孔
-        LP220_S1_frame = ttk.LabelFrame(self, text="先選擇插孔 LP220 S1")
-        LP220_S1_frame.grid(column=1, row=1, padx=10, pady=10, sticky=tk.EW, rowspan=2)
+        LP220_S1_frame = ttk.LabelFrame(self, text="LP220")
+        LP220_S1_frame.grid(column=0, row=0, padx=10, pady=10, sticky=tk.NSEW) 
+        
+        LP220_S3_frame = ttk.LabelFrame(self, text="LP220")
+        LP220_S3_frame.grid(column=1, row=0, padx=10, pady=10, sticky=tk.NSEW)
 
-        LP220_S3_frame = ttk.LabelFrame(self, text="先選擇插孔 LP220 S3")
-        LP220_S3_frame.grid(column=3, row=1, padx=10, pady=10, sticky=tk.EW, rowspan=2)
+        MS401_S5_frame = ttk.LabelFrame(self, text="MS401")
+        MS401_S5_frame.grid(column=2, row=0, padx=10, pady=10, sticky=tk.NSEW)
 
-        MS401_S5_frame = ttk.LabelFrame(self, text="先選擇插孔 MS401 S5")
-        MS401_S5_frame.grid(column=1, row=3, padx=10, pady=10, sticky=tk.EW, rowspan=2)
+        MS401_S6_frame = ttk.LabelFrame(self, text="MS401")
+        MS401_S6_frame.grid(column=3, row=0, padx=10, pady=10, sticky=tk.NSEW)
 
-        MS401_S6_frame = ttk.LabelFrame(self, text="先選擇插孔 MS401 S6")
-        MS401_S6_frame.grid(column=3, row=3, padx=10, pady=10, sticky=tk.EW, rowspan=2)
+        MS401_S7_frame = ttk.LabelFrame(self, text="MS401")
+        MS401_S7_frame.grid(column=4, row=0, padx=10, pady=10, sticky=tk.NSEW)
 
-        MS401_S7_frame = ttk.LabelFrame(self, text="先選擇插孔 MS401 S7")
-        MS401_S7_frame.grid(column=1, row=5, padx=10, pady=10, sticky=tk.EW, rowspan=2)
+        MS401_S8_frame = ttk.LabelFrame(self, text="MS401")
+        MS401_S8_frame.grid(column=5, row=0, padx=10, pady=10, sticky=tk.NSEW)
 
-        MS401_S8_frame = ttk.LabelFrame(self, text="先選擇插孔 MS401 S8")
-        MS401_S8_frame.grid(column=3, row=5, padx=10, pady=10, sticky=tk.EW, rowspan=2)
+        TH800_S9_frame = ttk.LabelFrame(self, text="TH800")
+        TH800_S9_frame.grid(column=6, row=0, padx=10, pady=10, sticky=tk.NSEW)
 
-        TH800_S9_frame = ttk.LabelFrame(self, text="先選擇插孔 TH800 S9")
-        TH800_S9_frame.grid(column=1, row=7, padx=10, pady=10, sticky=tk.EW, rowspan=2)
-
-        TH800_S10_frame = ttk.LabelFrame(self, text="先選擇插孔 TH800 S10")
-        TH800_S10_frame.grid(column=3, row=7, padx=10, pady=10, sticky=tk.EW, rowspan=2)
+        TH800_S10_frame = ttk.LabelFrame(self, text="TH800")
+        TH800_S10_frame.grid(column=7, row=0, padx=10, pady=10, sticky=tk.NSEW)
         
 
-        SCh_radio = {
-            "LP220_S1Ch1": ["Current_source", "Voltage_source"],
-            "LP220_S1Ch2": ["Current_source", "Voltage_source"],
-            "LP220_S3Ch1": ["Current_source", "Voltage_source"],
-            "LP220_S3Ch2": ["Current_source", "Voltage_source"],
-            "MS401_S5Ch1": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S5Ch2": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S5Ch3": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S5Ch4": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S6Ch1": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S6Ch2": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S6Ch3": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S6Ch4": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S7Ch1": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S7Ch2": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S7Ch3": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S7Ch4": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S8Ch1": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S8Ch2": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S8Ch3": ["Current_source", "Measurement_channel", "Both"],
-            "MS401_S8Ch4": ["Current_source", "Measurement_channel", "Both"],
-            "TH800_S9Ch1": ["Thermometer"],
-            "TH800_S9Ch2": ["Thermometer"],
-            "TH800_S9Ch3": ["Thermometer"],
-            "TH800_S9Ch4": ["Thermometer"],
-            "TH800_S9Ch5": ["Thermometer"],
-            "TH800_S9Ch6": ["Thermometer"],
-            "TH800_S9Ch7": ["Thermometer"],
-            "TH800_S9Ch8": ["Thermometer"],
-            "TH800_S10Ch1": ["Thermometer"],
-            "TH800_S10Ch2": ["Thermometer"],
-            "TH800_S10Ch3": ["Thermometer"],
-            "TH800_S10Ch4": ["Thermometer"],
-            "TH800_S10Ch5": ["Thermometer"],
-            "TH800_S10Ch6": ["Thermometer"],
-            "TH800_S10Ch7": ["Thermometer"],
-            "TH800_S10Ch8": ["Thermometer"]      
+        self.SCh_radio = {
+            "S1Ch1": ["Current_source", "Voltage_source"],
+            "S1Ch2": ["Current_source", "Voltage_source"],
+            "S3Ch1": ["Current_source", "Voltage_source"],
+            "S3Ch2": ["Current_source", "Voltage_source"],
+            "S5Ch1": ["Current_source", "Measurement_channel", "Both"],
+            "S5Ch2": ["Current_source", "Measurement_channel", "Both"],
+            "S5Ch3": ["Current_source", "Measurement_channel", "Both"],
+            "S5Ch4": ["Current_source", "Measurement_channel", "Both"],
+            "S6Ch1": ["Current_source", "Measurement_channel", "Both"],
+            "S6Ch2": ["Current_source", "Measurement_channel", "Both"],
+            "S6Ch3": ["Current_source", "Measurement_channel", "Both"],
+            "S6Ch4": ["Current_source", "Measurement_channel", "Both"],
+            "S7Ch1": ["Current_source", "Measurement_channel", "Both"],
+            "S7Ch2": ["Current_source", "Measurement_channel", "Both"],
+            "S7Ch3": ["Current_source", "Measurement_channel", "Both"],
+            "S7Ch4": ["Current_source", "Measurement_channel", "Both"],
+            "S8Ch1": ["Current_source", "Measurement_channel", "Both"],
+            "S8Ch2": ["Current_source", "Measurement_channel", "Both"],
+            "S8Ch3": ["Current_source", "Measurement_channel", "Both"],
+            "S8Ch4": ["Current_source", "Measurement_channel", "Both"],
+            "S9Ch1": ["Thermometer"],
+            "S9Ch2": ["Thermometer"],
+            "S9Ch3": ["Thermometer"],
+            "S9Ch4": ["Thermometer"],
+            "S9Ch5": ["Thermometer"],
+            "S9Ch6": ["Thermometer"],
+            "S9Ch7": ["Thermometer"],
+            "S9Ch8": ["Thermometer"],
+            "S10Ch1": ["Thermometer"],
+            "S10Ch2": ["Thermometer"],
+            "S10Ch3": ["Thermometer"],
+            "S10Ch4": ["Thermometer"],
+            "S10Ch5": ["Thermometer"],
+            "S10Ch6": ["Thermometer"],
+            "S10Ch7": ["Thermometer"],
+            "S10Ch8": ["Thermometer"]      
         }
 
 
@@ -93,173 +93,164 @@ class ParameterApp(tk.Tk):
 
 
         # 排版 Sensor
-        for i, (text, radio_options) in enumerate(itertools.islice(SCh_radio.items(), 2)):
+        for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 2)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(LP220_S1_frame, text=text, variable=check_sensor, command=lambda t=text: self.toggle_radiobuttons(t))
+            checkbutton = ttk.Checkbutton(LP220_S1_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
-            # 創建 RadioButton 框架
-            check_radio = tk.StringVar(value=radio_options[0])
-            self.check_radio[text] = check_radio
-            radio_button_frame = ttk.Frame(LP220_S1_frame)
-            radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            self.radio_buttons_list[text] = []
+            # # 創建 RadioButton 框架
+            # check_radio = tk.StringVar(value=radio_options[0])
+            # self.check_radio[text] = check_radio
+            # radio_button_frame = ttk.Frame(LP220_S1_frame)
+            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
+            # self.radio_buttons_list[text] = []
 
-            for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-                radio_buttons_list.pack(side=tk.LEFT, padx=2)
-                self.radio_buttons_list[text].append(radio_buttons_list)
+            # for j, option in enumerate(radio_options):
+            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
+            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
+            #     self.radio_buttons_list[text].append(radio_buttons_list)
 
         # 排版 Sensor
-        for i, (text, radio_options) in enumerate(itertools.islice(SCh_radio.items(), 2, 4)):
+        for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 2, 4)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(LP220_S3_frame, text=text, variable=check_sensor, command=lambda t=text: self.toggle_radiobuttons(t))
+            checkbutton = ttk.Checkbutton(LP220_S3_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
-            # 創建 RadioButton 框架
-            check_radio = tk.StringVar(value=radio_options[0])
-            self.check_radio[text] = check_radio
-            radio_button_frame = ttk.Frame(LP220_S3_frame)
-            radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            self.radio_buttons_list[text] = []
+            # # 創建 RadioButton 框架
+            # check_radio = tk.StringVar(value=radio_options[0])
+            # self.check_radio[text] = check_radio
+            # radio_button_frame = ttk.Frame(LP220_S3_frame)
+            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
+            # self.radio_buttons_list[text] = []
 
-            for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-                radio_buttons_list.pack(side=tk.LEFT, padx=2)
-                self.radio_buttons_list[text].append(radio_buttons_list)
+            # for j, option in enumerate(radio_options):
+            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
+            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
+            #     self.radio_buttons_list[text].append(radio_buttons_list)
 
 
 
         # 排版 Sensor
-        for i, (text, radio_options) in enumerate(itertools.islice(SCh_radio.items(), 4, 8)):
+        for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 4, 8)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(MS401_S5_frame, text=text, variable=check_sensor, command=lambda t=text: self.toggle_radiobuttons(t))
+            checkbutton = ttk.Checkbutton(MS401_S5_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
-            # 創建 RadioButton 框架
-            check_radio = tk.StringVar(value=radio_options[0])
-            self.check_radio[text] = check_radio
-            radio_button_frame = ttk.Frame(MS401_S5_frame)
-            radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            self.radio_buttons_list[text] = []
+            # # 創建 RadioButton 框架
+            # check_radio = tk.StringVar(value=radio_options[0])
+            # self.check_radio[text] = check_radio
+            # radio_button_frame = ttk.Frame(MS401_S5_frame)
+            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
+            # self.radio_buttons_list[text] = []
 
-            for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-                radio_buttons_list.pack(side=tk.LEFT, padx=2)
-                self.radio_buttons_list[text].append(radio_buttons_list)
+            # for j, option in enumerate(radio_options):
+            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
+            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
+            #     self.radio_buttons_list[text].append(radio_buttons_list)
 
         # 排版 Sensor
-        for i, (text, radio_options) in enumerate(itertools.islice(SCh_radio.items(), 8, 12)):
+        for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 8, 12)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(MS401_S6_frame, text=text, variable=check_sensor, command=lambda t=text: self.toggle_radiobuttons(t))
+            checkbutton = ttk.Checkbutton(MS401_S6_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
-            # 創建 RadioButton 框架
-            check_radio = tk.StringVar(value=radio_options[0])
-            self.check_radio[text] = check_radio
-            radio_button_frame = ttk.Frame(MS401_S6_frame)
-            radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            self.radio_buttons_list[text] = []
+            # # 創建 RadioButton 框架
+            # check_radio = tk.StringVar(value=radio_options[0])
+            # self.check_radio[text] = check_radio
+            # radio_button_frame = ttk.Frame(MS401_S6_frame)
+            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
+            # self.radio_buttons_list[text] = []
 
-            for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-                radio_buttons_list.pack(side=tk.LEFT, padx=2)
-                self.radio_buttons_list[text].append(radio_buttons_list)
+            # for j, option in enumerate(radio_options):
+            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
+            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
+            #     self.radio_buttons_list[text].append(radio_buttons_list)
 
         # 排版 Sensor
-        for i, (text, radio_options) in enumerate(itertools.islice(SCh_radio.items(), 12, 16)):
+        for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 12, 16)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(MS401_S7_frame, text=text, variable=check_sensor, command=lambda t=text: self.toggle_radiobuttons(t))
+            checkbutton = ttk.Checkbutton(MS401_S7_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
-            # 創建 RadioButton 框架
-            check_radio = tk.StringVar(value=radio_options[0])
-            self.check_radio[text] = check_radio
-            radio_button_frame = ttk.Frame(MS401_S7_frame)
-            radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            self.radio_buttons_list[text] = []
+            # # 創建 RadioButton 框架
+            # check_radio = tk.StringVar(value=radio_options[0])
+            # self.check_radio[text] = check_radio
+            # radio_button_frame = ttk.Frame(MS401_S7_frame)
+            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
+            # self.radio_buttons_list[text] = []
 
-            for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-                radio_buttons_list.pack(side=tk.LEFT, padx=2)
-                self.radio_buttons_list[text].append(radio_buttons_list)
+            # for j, option in enumerate(radio_options):
+            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
+            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
+            #     self.radio_buttons_list[text].append(radio_buttons_list)
 
         # 排版 Sensor
-        for i, (text, radio_options) in enumerate(itertools.islice(SCh_radio.items(), 16, 20)):
+        for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 16, 20)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(MS401_S8_frame, text=text, variable=check_sensor, command=lambda t=text: self.toggle_radiobuttons(t))
+            checkbutton = ttk.Checkbutton(MS401_S8_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
-            # 創建 RadioButton 框架
-            check_radio = tk.StringVar(value=radio_options[0])
-            self.check_radio[text] = check_radio
-            radio_button_frame = ttk.Frame(MS401_S8_frame)
-            radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            self.radio_buttons_list[text] = []
+            # # 創建 RadioButton 框架
+            # check_radio = tk.StringVar(value=radio_options[0])
+            # self.check_radio[text] = check_radio
+            # radio_button_frame = ttk.Frame(MS401_S8_frame)
+            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
+            # self.radio_buttons_list[text] = []
 
-            for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-                radio_buttons_list.pack(side=tk.LEFT, padx=2)
-                self.radio_buttons_list[text].append(radio_buttons_list)
+            # for j, option in enumerate(radio_options):
+            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
+            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
+            #     self.radio_buttons_list[text].append(radio_buttons_list)
 
         # 排版 Sensor
-        for i, (text, radio_options) in enumerate(itertools.islice(SCh_radio.items(), 20, 28)):
+        for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 20, 28)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(TH800_S9_frame, text=text, variable=check_sensor, command=lambda t=text: self.toggle_radiobuttons(t))
+            checkbutton = ttk.Checkbutton(TH800_S9_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
-            # 創建 RadioButton 框架
-            check_radio = tk.StringVar(value=radio_options[0])
-            self.check_radio[text] = check_radio
-            radio_button_frame = ttk.Frame(TH800_S9_frame)
-            radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            self.radio_buttons_list[text] = []
+            # # 創建 RadioButton 框架
+            # check_radio = tk.StringVar(value=radio_options[0])
+            # self.check_radio[text] = check_radio
+            # radio_button_frame = ttk.Frame(TH800_S9_frame)
+            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
+            # self.radio_buttons_list[text] = []
 
-            for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-                radio_buttons_list.pack(side=tk.LEFT, padx=2)
-                self.radio_buttons_list[text].append(radio_buttons_list)
+            # for j, option in enumerate(radio_options):
+            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
+            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
+            #     self.radio_buttons_list[text].append(radio_buttons_list)
 
         # 排版 Sensor
-        for i, (text, radio_options) in enumerate(itertools.islice(SCh_radio.items(), 28, 36)):
+        for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 28, 36)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(TH800_S10_frame, text=text, variable=check_sensor, command=lambda t=text: self.toggle_radiobuttons(t))
+            checkbutton = ttk.Checkbutton(TH800_S10_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
-            # 創建 RadioButton 框架
-            check_radio = tk.StringVar(value=radio_options[0])
-            self.check_radio[text] = check_radio
-            radio_button_frame = ttk.Frame(TH800_S10_frame)
-            radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            self.radio_buttons_list[text] = []
+            # # 創建 RadioButton 框架
+            # check_radio = tk.StringVar(value=radio_options[0])
+            # self.check_radio[text] = check_radio
+            # radio_button_frame = ttk.Frame(TH800_S10_frame)
+            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
+            # self.radio_buttons_list[text] = []
 
-            for j, option in enumerate(radio_options):
-                radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-                radio_buttons_list.pack(side=tk.LEFT, padx=2)
-                self.radio_buttons_list[text].append(radio_buttons_list)    
-            
+            # for j, option in enumerate(radio_options):
+            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
+            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
+            #     self.radio_buttons_list[text].append(radio_buttons_list)              
+     
 
-    def toggle_radiobuttons(self, text):
-        """切換 RadioButton 的狀態"""
-        if self.check_sensor[text].get():
-            for radio_buttons in self.radio_buttons_list[text]:
-                radio_buttons.configure(state="normal")
-        else:
-            for radio_buttons in self.radio_buttons_list[text]:
-                radio_buttons.configure(state="disabled")
-
-    def open_parameter_window(self, option):
+    def open_parameter_window(self, text):        
         """彈出一個填寫參數的表單視窗"""
         param_window = tk.Toplevel(self)
-        param_window.title(f"填寫參數 - {option}")
+        param_window.title(f"{text}")
         param_window.geometry("300x200")
 
         ttk.Label(param_window, text="請輸入參數:").pack(padx=10, pady=10)
@@ -269,13 +260,13 @@ class ParameterApp(tk.Tk):
         param_entry.pack(padx=10, pady=10)
 
         # 如果之前有保存過該 RadioButton 的參數，則填入到輸入框中
-        if (option) in self.saved_parameters:
-            param_entry.insert(0, self.saved_parameters[(option)])
+        if (text) in self.saved_parameters:
+            param_entry.insert(0, self.saved_parameters[(text)])
 
         button_frame = ttk.Frame(param_window)
         button_frame.pack(pady=10)
 
-        ttk.Button(button_frame, text="提交", command=lambda: self.submit_parameters(param_entry.get(),option, param_window)).pack(side=tk.LEFT, padx=5)
+        ttk.Button(button_frame, text="提交", command=lambda: self.submit_parameters(param_entry.get(),text, param_window)).pack(side=tk.LEFT, padx=5)
         ttk.Button(button_frame, text="取消", command=param_window.destroy).pack(side=tk.LEFT, padx=5)
 
     def submit_parameters(self, params, option, window):
@@ -284,6 +275,9 @@ class ParameterApp(tk.Tk):
         print(f"提交的參數 ({option}): {params}")
         window.destroy()  # 關閉窗口  
 
+    
+    
+    
     
 
 

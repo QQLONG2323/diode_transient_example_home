@@ -85,173 +85,102 @@ class ParameterApp(tk.Tk):
         }
 
 
+        self.SCh_radio_parameters = {
+            "S1_S3_Current_source": ["Output mode", "Current [A]", "Voltage limit [V]"],
+            "S1_S3_Voltage_source": ["Output mode", "On-state voltage [V]", "Current limit [A]"],
+            "S5_S8_Current_source": ["Output mode", "Range", "Current [A]"],
+            "S5_S8_Measurement_channel": ["Sensitivity [mV/K]", "Auto range", "Range"],
+            "S5_S8_Both": ["S5_S8_Current_source", "S5_S8_Measurement_channel"],
+            "S9_S10_Thermometer": ["Type", "Sensitivity", "Sample per sec"]
+        }
+
+
         # 創建 Checkbutton 和 RadioButton 的框架
         self.check_sensor = {}   # 儲存 Checkbutton 的變量對象(BooleanVar)
         self.check_radio = {}   # 儲存 RadioButton 中當前選中的選項
-        self.radio_buttons_list = {}   # 儲存 Checkbutton 對應的 RadioButton 列表
         self.saved_parameters = {}  # 儲存每個 RadioButton 的參數
+        self.radio_vars = {}  # 儲存每個 Checkbutton 對應的 StringVar
 
 
         # 排版 Sensor
         for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 2)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(LP220_S1_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
+            checkbutton = ttk.Checkbutton(LP220_S1_frame, text=text, variable=check_sensor, command=lambda t=text: self.handle_checkbutton(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-            # # 創建 RadioButton 框架
-            # check_radio = tk.StringVar(value=radio_options[0])
-            # self.check_radio[text] = check_radio
-            # radio_button_frame = ttk.Frame(LP220_S1_frame)
-            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            # self.radio_buttons_list[text] = []
-
-            # for j, option in enumerate(radio_options):
-            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
-            #     self.radio_buttons_list[text].append(radio_buttons_list)
-
+            
         # 排版 Sensor
         for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 2, 4)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(LP220_S3_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
+            checkbutton = ttk.Checkbutton(LP220_S3_frame, text=text, variable=check_sensor, command=lambda t=text: self.handle_checkbutton(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-            # # 創建 RadioButton 框架
-            # check_radio = tk.StringVar(value=radio_options[0])
-            # self.check_radio[text] = check_radio
-            # radio_button_frame = ttk.Frame(LP220_S3_frame)
-            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            # self.radio_buttons_list[text] = []
-
-            # for j, option in enumerate(radio_options):
-            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
-            #     self.radio_buttons_list[text].append(radio_buttons_list)
-
-
 
         # 排版 Sensor
         for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 4, 8)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(MS401_S5_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
+            checkbutton = ttk.Checkbutton(MS401_S5_frame, text=text, variable=check_sensor, command=lambda t=text: self.handle_checkbutton(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-            # # 創建 RadioButton 框架
-            # check_radio = tk.StringVar(value=radio_options[0])
-            # self.check_radio[text] = check_radio
-            # radio_button_frame = ttk.Frame(MS401_S5_frame)
-            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            # self.radio_buttons_list[text] = []
-
-            # for j, option in enumerate(radio_options):
-            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
-            #     self.radio_buttons_list[text].append(radio_buttons_list)
 
         # 排版 Sensor
         for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 8, 12)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(MS401_S6_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
+            checkbutton = ttk.Checkbutton(MS401_S6_frame, text=text, variable=check_sensor, command=lambda t=text: self.handle_checkbutton(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-            # # 創建 RadioButton 框架
-            # check_radio = tk.StringVar(value=radio_options[0])
-            # self.check_radio[text] = check_radio
-            # radio_button_frame = ttk.Frame(MS401_S6_frame)
-            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            # self.radio_buttons_list[text] = []
-
-            # for j, option in enumerate(radio_options):
-            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
-            #     self.radio_buttons_list[text].append(radio_buttons_list)
 
         # 排版 Sensor
         for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 12, 16)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(MS401_S7_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
+            checkbutton = ttk.Checkbutton(MS401_S7_frame, text=text, variable=check_sensor, command=lambda t=text: self.handle_checkbutton(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-            # # 創建 RadioButton 框架
-            # check_radio = tk.StringVar(value=radio_options[0])
-            # self.check_radio[text] = check_radio
-            # radio_button_frame = ttk.Frame(MS401_S7_frame)
-            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            # self.radio_buttons_list[text] = []
-
-            # for j, option in enumerate(radio_options):
-            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
-            #     self.radio_buttons_list[text].append(radio_buttons_list)
 
         # 排版 Sensor
         for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 16, 20)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(MS401_S8_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
+            checkbutton = ttk.Checkbutton(MS401_S8_frame, text=text, variable=check_sensor, command=lambda t=text: self.handle_checkbutton(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-            # # 創建 RadioButton 框架
-            # check_radio = tk.StringVar(value=radio_options[0])
-            # self.check_radio[text] = check_radio
-            # radio_button_frame = ttk.Frame(MS401_S8_frame)
-            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            # self.radio_buttons_list[text] = []
-
-            # for j, option in enumerate(radio_options):
-            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
-            #     self.radio_buttons_list[text].append(radio_buttons_list)
 
         # 排版 Sensor
         for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 20, 28)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(TH800_S9_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
+            checkbutton = ttk.Checkbutton(TH800_S9_frame, text=text, variable=check_sensor, command=lambda t=text: self.handle_checkbutton(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-            # # 創建 RadioButton 框架
-            # check_radio = tk.StringVar(value=radio_options[0])
-            # self.check_radio[text] = check_radio
-            # radio_button_frame = ttk.Frame(TH800_S9_frame)
-            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            # self.radio_buttons_list[text] = []
-
-            # for j, option in enumerate(radio_options):
-            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
-            #     self.radio_buttons_list[text].append(radio_buttons_list)
 
         # 排版 Sensor
         for i, (text, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 28, 36)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[text] = check_sensor
-            checkbutton = ttk.Checkbutton(TH800_S10_frame, text=text, variable=check_sensor, command=lambda t=text: self.open_parameter_window(t))
+            checkbutton = ttk.Checkbutton(TH800_S10_frame, text=text, variable=check_sensor, command=lambda t=text: self.handle_checkbutton(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-            # # 創建 RadioButton 框架
-            # check_radio = tk.StringVar(value=radio_options[0])
-            # self.check_radio[text] = check_radio
-            # radio_button_frame = ttk.Frame(TH800_S10_frame)
-            # radio_button_frame.grid(column=1, row=i, sticky=tk.W, padx=10, pady=5)
-            # self.radio_buttons_list[text] = []
-
-            # for j, option in enumerate(radio_options):
-            #     radio_buttons_list = tk.Radiobutton(radio_button_frame, text=option, variable=check_radio, value=option, state="disabled", command=lambda opt=option: self.open_parameter_window(opt))
-            #     radio_buttons_list.pack(side=tk.LEFT, padx=2)
-            #     self.radio_buttons_list[text].append(radio_buttons_list)              
+                   
+        
+    # 只有在 Checkbutton 被勾選時才彈出視窗
+    def handle_checkbutton(self, text):    
+        if self.check_sensor[text].get():
+            self.open_parameter_window(text)      
      
-
-    def open_parameter_window(self, text):        
-        """彈出一個填寫參數的表單視窗"""
+    # 彈出一個填寫參數的表單視窗
+    def open_parameter_window(self, text):   
         param_window = tk.Toplevel(self)
         param_window.title(f"{text}")
-        param_window.geometry("300x200")
+        param_window.geometry("")
+
+
+
+
+
+        # 取得對應的 RadioButton 選項
+        radio_options = self.SCh_radio[text]
+
+        # 創建 RadioButton 並顯示
+        check_radio = tk.StringVar(value=radio_options[0])  # 預設選項
+        for option in radio_options:
+            tk.Radiobutton(param_window, text=option, variable=check_radio, value=option).pack(anchor=tk.W, padx=20, pady=5)
 
         ttk.Label(param_window, text="請輸入參數:").pack(padx=10, pady=10)
 
@@ -260,24 +189,21 @@ class ParameterApp(tk.Tk):
         param_entry.pack(padx=10, pady=10)
 
         # 如果之前有保存過該 RadioButton 的參數，則填入到輸入框中
-        if (text) in self.saved_parameters:
-            param_entry.insert(0, self.saved_parameters[(text)])
+        if (text, check_radio.get()) in self.saved_parameters:
+            param_entry.insert(0, self.saved_parameters[(text, check_radio.get())])
 
         button_frame = ttk.Frame(param_window)
         button_frame.pack(pady=10)
 
-        ttk.Button(button_frame, text="提交", command=lambda: self.submit_parameters(param_entry.get(),text, param_window)).pack(side=tk.LEFT, padx=5)
+        ttk.Button(button_frame, text="提交", command=lambda: self.submit_parameters(param_entry.get(), text, check_radio.get(), param_window)).pack(side=tk.LEFT, padx=5)
         ttk.Button(button_frame, text="取消", command=param_window.destroy).pack(side=tk.LEFT, padx=5)
 
-    def submit_parameters(self, params, option, window):
-        """處理提交的參數並保存"""
-        self.saved_parameters[(option)] = params  # 保存參數
-        print(f"提交的參數 ({option}): {params}")
-        window.destroy()  # 關閉窗口  
 
-    
-    
-    
+    def submit_parameters(self, params, sensor, option, window):
+        """處理提交的參數並保存"""
+        self.saved_parameters[(sensor, option)] = params  # 保存參數
+        print(f"提交的參數 ({sensor} - {option}): {params}")
+        window.destroy()  # 關閉窗口
     
 
 

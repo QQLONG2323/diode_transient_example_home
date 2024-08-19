@@ -45,6 +45,7 @@ class ParameterApp(tk.Tk):
         TH800_S10_frame.grid(column=7, row=0, padx=10, pady=10, sticky=tk.NSEW)
         
 
+        # 定義每個感測器的選項
         self.SCh_radio = {
             "S1Ch1": ["Current_source", "Voltage_source"],
             "S1Ch2": ["Current_source", "Voltage_source"],
@@ -86,18 +87,79 @@ class ParameterApp(tk.Tk):
 
 
         self.SCh_radio_parameters = {
-            "S1_S3_Current_source": ["Output mode", "Current [A]", "Voltage limit [V]"],
-            "S1_S3_Voltage_source": ["Output mode", "On-state voltage [V]", "Current limit [A]"],
-            "S5_S8_Current_source": ["Output mode", "Range", "Current [A]"],
-            "S5_S8_Measurement_channel": ["Sensitivity [mV/K]", "Auto range", "Range"],
-            "S5_S8_Both": ["S5_S8_Current_source", "S5_S8_Measurement_channel"],
+            "S1_S3_Current_source": [
+                ("Output mode", ["Off", "Switching", "On"]), 
+                ("Current [A]", "entry"), 
+                ("Voltage limit [V]", "entry")
+            ],
+            "S1_S3_Voltage_source": [
+                ("Output mode", ["Off", "On", "Switching"]), 
+                ("On-state voltage [V]", "entry"), 
+                ("Current limit [A]", "entry")
+            ],
+            "S5_S8_Current_source": [
+                ("Output mode", ["Off", "On"]), 
+                ("Range", ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"]), 
+                ("Current [A]", "entry")
+            ],
+            "S5_S8_Measurement_channel": [
+                ("Sensitivity [mV/K]", "entry"), 
+                ("Auto range", ["On", "Off"]), 
+                ("Range", ["Fall scale: 20 V, V(in): -10 V ~ 10 V", 
+                           "Fall scale: 10 V, V(in): -10 V ~ 10 V", 
+                           "Fall scale: 4 V, V(in): -10 V ~ 10 V", 
+                           "Fall scale: 2 V, V(in): -10 V ~ 10 V", 
+                           "Fall scale: 1 V, V(in): -10 V ~ 10 V", 
+                           "Fall scale: 20 V, V(in): -20 V ~ 20 V", 
+                           "Fall scale: 8 V, V(in): -20 V ~ 20 V", 
+                           "Fall scale: 4 V, V(in): -20 V ~ 20 V", 
+                           "Fall scale: 40 V, V(in): -40 V ~ 40 V", 
+                           "Fall scale: 16 V, V(in): -40 V ~ 40 V", 
+                           "Fall scale: 8 V, V(in): -40 V ~ 40 V", 
+                           "Fall scale: 32 V, V(in): -80 V ~ 80 V", 
+                           "Fall scale: 16 V, V(in): -80 V ~ 80 V", 
+                           "Fall scale: 8 V, V(in): -80 V ~ 80 V", 
+                           ]
+                ),
+                ("Vref [V]", "entry"),
+                ("Separate Vref for heating", ["On", "Off"])
+            ],
+            "S5_S8_Both": [
+                # Combine both lists here
+                *[
+                    ("Output mode", ["Off", "On"]), 
+                    ("Range", ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"]), 
+                    ("Current [A]", "entry")
+                ],
+                *[
+                    ("Sensitivity [mV/K]", "entry"), 
+                    ("Auto range", ["On", "Off"]), 
+                    ("Range", ["Fall scale: 20 V, V(in): -10 V ~ 10 V", 
+                            "Fall scale: 10 V, V(in): -10 V ~ 10 V", 
+                            "Fall scale: 4 V, V(in): -10 V ~ 10 V", 
+                            "Fall scale: 2 V, V(in): -10 V ~ 10 V", 
+                            "Fall scale: 1 V, V(in): -10 V ~ 10 V", 
+                            "Fall scale: 20 V, V(in): -20 V ~ 20 V", 
+                            "Fall scale: 8 V, V(in): -20 V ~ 20 V", 
+                            "Fall scale: 4 V, V(in): -20 V ~ 20 V", 
+                            "Fall scale: 40 V, V(in): -40 V ~ 40 V", 
+                            "Fall scale: 16 V, V(in): -40 V ~ 40 V", 
+                            "Fall scale: 8 V, V(in): -40 V ~ 40 V", 
+                            "Fall scale: 32 V, V(in): -80 V ~ 80 V", 
+                            "Fall scale: 16 V, V(in): -80 V ~ 80 V", 
+                            "Fall scale: 8 V, V(in): -80 V ~ 80 V", 
+                            ]
+                    ),
+                    ("Vref [V]", "entry"),
+                    ("Separate Vref for heating", ["On", "Off"])
+                ]
+            ],
             "S9_S10_Thermometer": ["Type", "Sensitivity", "Sample per sec"]
         }
 
 
         # 創建 Checkbutton 和 RadioButton 的框架
         self.check_sensor = {}   # 儲存 Checkbutton 的變量對象(BooleanVar)
-        self.check_radio = {}   # 儲存 RadioButton 中當前選中的選項
         self.saved_parameters = {}  # 儲存每個 RadioButton 的參數
         self.radio_vars = {}  # 儲存每個 Checkbutton 對應的 StringVar
 
@@ -170,21 +232,25 @@ class ParameterApp(tk.Tk):
         param_window.title(f"{text}")
         param_window.geometry("")
 
-
-
-
-
         # 取得對應的 RadioButton 選項
         radio_options = self.SCh_radio[text]
 
-        # 創建 RadioButton 並顯示
-        check_radio = tk.StringVar(value=radio_options[0])  # 預設選項
+        # 檢查是否有保存的 RadioButton 選項
+        default_radio_option = None
+        for option in radio_options:
+            if (text, option) in self.saved_parameters:
+                default_radio_option = option
+                break
+
+        # 如果已經有保存的選項，將其作為預設選項，否則使用第一個選項
+        check_radio = tk.StringVar(value=default_radio_option or radio_options[0])
+        self.radio_vars[text] = check_radio  # 保存這個 sensor 的選擇變量
+
         for option in radio_options:
             tk.Radiobutton(param_window, text=option, variable=check_radio, value=option).pack(anchor=tk.W, padx=20, pady=5)
-
-        ttk.Label(param_window, text="請輸入參數:").pack(padx=10, pady=10)
-
+       
         # 創建參數輸入框
+        ttk.Label(param_window, text="請輸入參數:").pack(padx=10, pady=10)
         param_entry = ttk.Entry(param_window)
         param_entry.pack(padx=10, pady=10)
 
@@ -201,10 +267,16 @@ class ParameterApp(tk.Tk):
 
     def submit_parameters(self, params, sensor, option, window):
         """處理提交的參數並保存"""
-        self.saved_parameters[(sensor, option)] = params  # 保存參數
+
+        # 刪除該感測器的所有已保存參數
+        for key in list(self.saved_parameters):
+            if key[0] == sensor:
+                del self.saved_parameters[key]
+
+        # 保存當前選中的選項和參數
+        self.saved_parameters[(sensor, option)] = params
         print(f"提交的參數 ({sensor} - {option}): {params}")
         window.destroy()  # 關閉窗口
-    
 
 
 

@@ -251,8 +251,14 @@ class ParameterApp(tk.Tk):
         radio_frame = ttk.Frame(param_window)
         radio_frame.pack(padx=5, pady=5, anchor=tk.NW)
 
-        form_frame = ttk.Frame(param_window)
-        form_frame.pack(padx=5, pady=5, anchor=tk.NW)
+        form_frame_1 = ttk.Frame(param_window)
+        form_frame_1.pack(padx=5, pady=5, anchor=tk.NW)
+
+        form_frame_2 = ttk.Frame(param_window)
+        form_frame_2.pack(padx=5, pady=5, anchor=tk.NW)
+
+        form_frame_3 = ttk.Frame(param_window)
+        form_frame_3.pack(padx=5, pady=5, anchor=tk.NW)
 
         button_frame = ttk.Frame(param_window)
         button_frame.pack(padx=5, pady=5, fill=tk.BOTH, anchor=tk.S, expand=True)
@@ -278,19 +284,18 @@ class ParameterApp(tk.Tk):
        
         # 根據選中的選項動態生成表單
         self.form_widgets[sensor] = {}
-        for key in self.SCh_radio:
-            if key == :
-                form_widgets_for_option = []
-                for label_text, field_type in self.SCh_radio_parameters[option]:
-                    ttk.Label(form_frame, text=label_text).pack(anchor=tk.W)
-                    if isinstance(field_type, list):
-                        combobox = ttk.Combobox(form_frame, values=field_type, state="disabled")
-                        combobox.pack(anchor=tk.W, pady=5)
-                        form_widgets_for_option.append(combobox)
-                    else:
-                        entry = ttk.Entry(form_frame, state="disabled")
-                        entry.pack(anchor=tk.W, pady=5)
-                        form_widgets_for_option.append(entry)
+        if self.SCh_radio == "S1Ch1" or "S1Ch2" or "S3Ch1" or "S3Ch2":
+            form_widgets_for_option = []
+            for label_text, field_type in self.SCh_radio_parameters["S1_S3_Current_source"]:
+                ttk.Label(form_frame_1, text=label_text).pack(anchor=tk.W)
+                if isinstance(field_type, list):
+                    combobox = ttk.Combobox(form_frame_1, values=field_type, state="disabled")
+                    combobox.pack(anchor=tk.W, pady=5)
+                    form_widgets_for_option.append(combobox)
+                else:
+                    entry = ttk.Entry(form_frame_1, state="disabled")
+                    entry.pack(anchor=tk.W, pady=5)
+                    form_widgets_for_option.append(entry)
 
                 self.form_widgets[sensor][option] = form_widgets_for_option
 

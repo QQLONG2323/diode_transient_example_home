@@ -18,6 +18,8 @@ class ParameterApp(tk.Tk):
 
         self.title("T3STER SI")
         self.geometry("")
+
+        
         
 
         # 先選擇插孔
@@ -244,24 +246,43 @@ class ParameterApp(tk.Tk):
      
     # 彈出一個填寫參數的表單視窗
     def open_parameter_window(self, sensor):   
+        # 建立彈出視窗
         param_window = tk.Toplevel(self)
         param_window.title(f"{sensor}")
         param_window.geometry("")
 
+        # 設定 LabelFrame 字體大小與粗體
+        style = ttk.Style()
+        style.configure("Large_Bold.TLabelframe.Label", font=("System", 16, "bold"))
+
+        
+
+        # 建立頂端按鈕
         radio_frame = ttk.Frame(param_window)
-        radio_frame.pack(padx=5, pady=5, anchor=tk.NW)
+        radio_frame.grid(row=0, column=0, padx=20, pady=10, sticky="ew")
 
-        form_frame_1 = ttk.Frame(param_window)
-        form_frame_1.pack(padx=5, pady=5, anchor=tk.NW)
+        # 建立 LP220 所有的參數 table
+        S1_S3_Current_source_frame = ttk.LabelFrame(param_window, text="Current source", style="Large_Bold.TLabelframe")
+        S1_S3_Current_source_frame.grid(row=1, column=0, padx=20, pady=20, sticky="ew")
 
-        form_frame_2 = ttk.Frame(param_window)
-        form_frame_2.pack(padx=5, pady=5, anchor=tk.NW)
+        S1_S3_Voltage_source_frame = ttk.LabelFrame(param_window, text="Voltage source", style="Large_Bold.TLabelframe")
+        S1_S3_Voltage_source_frame.grid(row=2, column=0, padx=20, pady=20, sticky="ew")
 
-        form_frame_3 = ttk.Frame(param_window)
-        form_frame_3.pack(padx=5, pady=5, anchor=tk.NW)
+        # 建立 MS401 所有的參數 table
+        S5_S8_Current_source_frame = ttk.LabelFrame(param_window, text="Current source", style="Large_Bold.TLabelframe")
+        S5_S8_Current_source_frame.grid(row=1, column=0, padx=20, pady=20, sticky="ew")
 
+        S5_S8_Measurement_channel_frame = ttk.LabelFrame(param_window, text="Measurement channel", style="Large_Bold.TLabelframe")
+        S5_S8_Measurement_channel_frame.grid(row=2, column=0, padx=20, pady=20, sticky="ew")
+
+        # 建立 TH800 所有的參數 table
+        S9_S10_Thermometer_frame = ttk.LabelFrame(param_window, text="Thermometer", style="Large_Bold.TLabelframe")
+        S9_S10_Thermometer_frame.grid(row=1, column=0, padx=20, pady=20, sticky="ew")
+
+
+        # 建立提交、取消按鈕
         button_frame = ttk.Frame(param_window)
-        button_frame.pack(padx=5, pady=5, fill=tk.BOTH, anchor=tk.S, expand=True)
+        button_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
       
 
         # 取得對應的 RadioButton 選項
@@ -279,27 +300,118 @@ class ParameterApp(tk.Tk):
         self.radio_vars[sensor] = check_radio  # 保存這個 sensor 的選擇變量
         
         # Radio 排版
-        for option in radio_options:
-            tk.Radiobutton(radio_frame, text=option, variable=check_radio, value=option, command=lambda: self.update_form(sensor)).pack(anchor=tk.W, padx=20, pady=5)
+        for i, option in enumerate(radio_options):
+            tk.Radiobutton(radio_frame, text=option, variable=check_radio, value=option, font=("System", 16, "bold"), command=lambda: self.update_form(sensor)).grid(row=0, column=i+1, padx=20, pady=5)
+            
+
+
        
+
+
+
         # 根據選中的選項動態生成表單
         self.form_widgets[sensor] = {}
-        if self.SCh_radio == "S1Ch1" or "S1Ch2" or "S3Ch1" or "S3Ch2":
+        
+        if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:            
             form_widgets_for_option = []
             for label_text, field_type in self.SCh_radio_parameters["S1_S3_Current_source"]:
-                ttk.Label(form_frame_1, text=label_text).pack(anchor=tk.W)
+                ttk.Label(S1_S3_Current_source_frame, text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
-                    combobox = ttk.Combobox(form_frame_1, values=field_type, state="disabled")
+                    combobox = ttk.Combobox(S1_S3_Current_source_frame, values=field_type, state="disabled")
                     combobox.pack(anchor=tk.W, pady=5)
                     form_widgets_for_option.append(combobox)
                 else:
-                    entry = ttk.Entry(form_frame_1, state="disabled")
+                    entry = ttk.Entry(S1_S3_Current_source_frame, state="disabled")
                     entry.pack(anchor=tk.W, pady=5)
                     form_widgets_for_option.append(entry)
 
-                self.form_widgets[sensor][option] = form_widgets_for_option
+            for label_text, field_type in self.SCh_radio_parameters["S1_S3_Voltage_source"]:
+                ttk.Label(S1_S3_Voltage_source_frame, text=label_text).pack(anchor=tk.W)
+                if isinstance(field_type, list):
+                    combobox = ttk.Combobox(S1_S3_Voltage_source_frame, values=field_type, state="disabled")
+                    combobox.pack(anchor=tk.W, pady=5)
+                    form_widgets_for_option.append(combobox)
+                else:
+                    entry = ttk.Entry(S1_S3_Voltage_source_frame, state="disabled")
+                    entry.pack(anchor=tk.W, pady=5)
+                    form_widgets_for_option.append(entry)
+
+            self.form_widgets[sensor][option] = form_widgets_for_option
+
+        elif sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:            
+            form_widgets_for_option = []
+            for label_text, field_type in self.SCh_radio_parameters["S5_S8_Current_source"]:
+                ttk.Label(S5_S8_Current_source_frame, text=label_text).pack(anchor=tk.W)
+                if isinstance(field_type, list):
+                    combobox = ttk.Combobox(S5_S8_Current_source_frame, values=field_type, state="disabled")
+                    combobox.pack(anchor=tk.W, pady=5)
+                    form_widgets_for_option.append(combobox)
+                else:
+                    entry = ttk.Entry(S5_S8_Current_source_frame, state="disabled")
+                    entry.pack(anchor=tk.W, pady=5)
+                    form_widgets_for_option.append(entry)
+
+            for label_text, field_type in self.SCh_radio_parameters["S5_S8_Measurement_channel"]:
+                ttk.Label(S5_S8_Measurement_channel_frame, text=label_text).pack(anchor=tk.W)
+                if isinstance(field_type, list):
+                    combobox = ttk.Combobox(S5_S8_Measurement_channel_frame, values=field_type, state="disabled")
+                    combobox.pack(anchor=tk.W, pady=5)
+                    form_widgets_for_option.append(combobox)
+                else:
+                    entry = ttk.Entry(S5_S8_Measurement_channel_frame, state="disabled")
+                    entry.pack(anchor=tk.W, pady=5)
+                    form_widgets_for_option.append(entry)
+
+            self.form_widgets[sensor][option] = form_widgets_for_option
+
+        else:           
+            form_widgets_for_option = []
+            for label_text, field_type in self.SCh_radio_parameters["S9_S10_Thermometer"]:
+                ttk.Label(S9_S10_Thermometer_frame, text=label_text).pack(anchor=tk.W)
+                if isinstance(field_type, list):
+                    combobox = ttk.Combobox(S9_S10_Thermometer_frame, values=field_type, state="disabled")
+                    combobox.pack(anchor=tk.W, pady=5)
+                    form_widgets_for_option.append(combobox)
+                else:
+                    entry = ttk.Entry(S9_S10_Thermometer_frame, state="disabled")
+                    entry.pack(anchor=tk.W, pady=5)
+                    form_widgets_for_option.append(entry)            
+
+            self.form_widgets[sensor][option] = form_widgets_for_option
+
+
 
         
+
+    
+
+
+
+
+    # 提交按鈕排版
+        ttk.Button(button_frame, text="提交", command=lambda: self.submit_parameters(param_entry.get(), sensor, check_radio.get(), param_window)).pack(side=tk.LEFT, padx=5)
+        ttk.Button(button_frame, text="取消", command=param_window.destroy).pack(side=tk.LEFT, padx=5)
+
+
+    def update_form(self, sensor):
+        # 根據選中的 RadioButton 選項更新表單的狀態
+        selected_radio = self.radio_vars[sensor].get()
+    
+        for option, widgets in self.form_widgets[sensor].items():
+            state = "normal" if option == selected_radio else "disabled"
+            for widget in widgets:
+                widget.configure(state=state)
+
+        # 如果選中 "Current_source"，則啟用 S1_S3_Current_source_frame 內的參數
+        if selected_radio == "Current_source":
+            for widget in self.form_widgets[sensor]["S1_S3_Current_source"]:
+                widget.configure(state="normal")
+        else:
+            for widget in self.form_widgets[sensor]["S1_S3_Current_source"]:
+                widget.configure(state="disabled")
+
+
+
 
         # 創建參數輸入框
         
@@ -324,9 +436,7 @@ class ParameterApp(tk.Tk):
 
 
 
-        # # 提交按鈕排版
-        # ttk.Button(button_frame, text="提交", command=lambda: self.submit_parameters(param_entry.get(), sensor, check_radio.get(), param_window)).pack(side=tk.LEFT, padx=5)
-        # ttk.Button(button_frame, text="取消", command=param_window.destroy).pack(side=tk.LEFT, padx=5)
+        
 
 
     def submit_parameters(self, params, sensor, option, window):
@@ -344,6 +454,9 @@ class ParameterApp(tk.Tk):
 
 
 
+
+
+        
 
 
 

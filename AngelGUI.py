@@ -315,7 +315,7 @@ class ParameterApp(tk.Tk):
             for label_text, field_type in self.SCh_radio_parameters["S1_S3_Current_source"]:
                 ttk.Label(S1_S3_Current_source_frame, text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
-                    combobox = ttk.Combobox(S1_S3_Current_source_frame, values=field_type, state="readonly")
+                    combobox = ttk.Combobox(S1_S3_Current_source_frame, values=field_type)
                     combobox.pack(anchor=tk.W, pady=5)
                     form_widgets_for_option.append(combobox)
                 else:

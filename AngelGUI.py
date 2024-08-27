@@ -462,18 +462,6 @@ class ParameterApp(tk.Tk):
 
 
 
-    # def submit_parameters(self, params, sensor, option, window):
-    #     """處理提交的參數並保存"""
-
-    #     # 刪除該感測器的所有已保存參數
-    #     for key in list(self.saved_parameters):
-    #         if key[0] == sensor:
-    #             del self.saved_parameters[key]
-
-    #     # 保存當前選中的選項和參數
-    #     self.saved_parameters[(sensor, option)] = params
-    #     print(f"提交的參數 ({sensor} - {option}): {params}")
-    #     window.destroy()  # 關閉窗口
 
     
 

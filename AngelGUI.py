@@ -167,7 +167,7 @@ class ParameterApp(tk.Tk):
         
         #創建 Checkbutton 和 RadioButton 的框架
         self.check_sensor = {}   # 儲存 Checkbutton 的變量對象(BooleanVar)
-        self.radio_vars = {}  # 儲存每個 Checkbutton 對應的 StringVar
+        self.check_option = {}  # 儲存每個 Checkbutton 對應的 StringVar
         self.saved_parameters = {}  # 儲存每個 RadioButton 的參數        
         self.form_widgets = {}   # 保存所有動態生成的表單控件
         
@@ -228,7 +228,9 @@ class ParameterApp(tk.Tk):
             self.check_sensor[sensor] = check_sensor
             checkbutton = ttk.Checkbutton(TH800_S10_frame, text=sensor, variable=check_sensor, command=lambda t=sensor: self.handle_checkbutton(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-      
+
+        # print_button = ttk.Button(self, text="Print Values", command=self.print_all_data)
+        # print_button.grid(pady=10)
 
                         
     # 只有在 Checkbutton 被勾選時才彈出視窗
@@ -236,7 +238,7 @@ class ParameterApp(tk.Tk):
         if self.check_sensor[sensor].get():
             self.open_parameter_window(sensor)
         else:
-            self.radio_vars[sensor].set("")
+            self.check_option[sensor].set("")
             self.update_form(sensor, disable=True)
     
      
@@ -292,21 +294,21 @@ class ParameterApp(tk.Tk):
                 break
 
         # 如果已經有保存的選項，將其作為預設選項，否則使用第一個選項
-        check_radio = tk.StringVar(value=default_radio_option or radio_options[0])
-        self.radio_vars[sensor] = check_radio  # 保存這個 sensor 的選擇變量
+        check_option = tk.StringVar(value=default_radio_option or radio_options[0])
+        self.check_option[sensor] = check_option  # 保存這個 sensor 的選擇變量
         
         # Radio 排版
         for i, option in enumerate(radio_options):
-            tk.Radiobutton(radio_frame, text=option, variable=check_radio, value=option, font=("System", 16, "bold"), command=lambda: self.update_form(sensor)).grid(row=0, column=i+1, padx=20, pady=5)
+            tk.Radiobutton(radio_frame, text=option, variable=check_option, value=option, font=("System", 16, "bold"), command=lambda: self.update_form(sensor)).grid(row=0, column=i+1, padx=20, pady=5)
 
 
  
 
 
         # Retrieve saved parameters and pre-fill the form
-        if (sensor, check_radio.get()) in self.saved_parameters:
-            saved_params = self.saved_parameters[(sensor, check_radio.get())]
-            for widget, value in zip(self.form_widgets[sensor][check_radio.get()], saved_params):
+        if (sensor, check_option.get()) in self.saved_parameters:
+            saved_params = self.saved_parameters[(sensor, check_option.get())]
+            for widget, value in zip(self.form_widgets[sensor][check_option.get()], saved_params):
                 if isinstance(widget, ttk.Combobox):
                     widget.set(value)
                 else:
@@ -410,7 +412,7 @@ class ParameterApp(tk.Tk):
         
 
         # 提交按鈕排版
-        ttk.Button(button_frame, text="儲存", command=lambda: self.save_parameters(sensor, check_radio.get(), param_window)).pack(side=tk.LEFT, padx=5)
+        ttk.Button(button_frame, text="儲存", command=lambda: self.save_parameters(sensor, check_option.get(), param_window)).pack(side=tk.LEFT, padx=5)
         ttk.Button(button_frame, text="取消", command=param_window.destroy).pack(side=tk.LEFT, padx=5)
 
 
@@ -427,7 +429,7 @@ class ParameterApp(tk.Tk):
 
     def update_form(self, sensor):
         # 根據選中的 RadioButton 選項更新表單的狀態
-        selected_radio = self.radio_vars[sensor].get()
+        selected_radio = self.check_option[sensor].get()
        
         if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:            
             for option, widgets in self.form_widgets[sensor].items():

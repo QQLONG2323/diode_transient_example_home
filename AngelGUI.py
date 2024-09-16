@@ -166,12 +166,14 @@ class ParameterApp(tk.Tk):
         
         
         #創建 Checkbutton 和 RadioButton 的框架
-        self.check_sensor = {}   # 儲存 Checkbutton 的變量對象(BooleanVar)
-        self.check_option = {}  # 儲存每個 Checkbutton 對應的 StringVar
-        self.saved_parameters = {}  # 儲存每個 RadioButton 的參數        
+        self.check_sensor = {}   # 儲存 Sensor
+        self.check_option = {}  # 儲存 Option
+        self.saved_parameters = {}  # 儲存 Option 的參數        
         self.form_widgets = {}   # 保存所有動態生成的表單控件
+        # self.input_data = {}
+        # self.widgets = {}
         
-
+        
 
         # 排版 Sensor
         for i, (sensor, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 2)):
@@ -305,21 +307,21 @@ class ParameterApp(tk.Tk):
  
 
 
-        # Retrieve saved parameters and pre-fill the form
-        if (sensor, check_option.get()) in self.saved_parameters:
-            saved_params = self.saved_parameters[(sensor, check_option.get())]
-            for widget, value in zip(self.form_widgets[sensor][check_option.get()], saved_params):
-                if isinstance(widget, ttk.Combobox):
-                    widget.set(value)
-                else:
-                    widget.insert(0, value)
+        # # Retrieve saved parameters and pre-fill the form
+        # if (sensor, check_option.get()) in self.saved_parameters:
+        #     saved_params = self.saved_parameters[(sensor, check_option.get())]
+        #     for widget, value in zip(self.form_widgets[sensor][check_option.get()], saved_params):
+        #         if isinstance(widget, ttk.Combobox):
+        #             widget.set(value)
+        #         else:
+        #             widget.insert(0, value)
     
 
 
 
 
 
-        # 根據選中的選項動態生成表單
+        # 建立每個 Sensor 中的參數表單
         self.form_widgets[sensor] = {}
         
         if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:            
@@ -399,53 +401,53 @@ class ParameterApp(tk.Tk):
                     entry.pack(anchor=tk.W, pady=5)
                     form_widgets_for_option_Thermometer.append(entry)            
 
-            self.form_widgets[sensor]["Thermometer"] = form_widgets_for_option_Thermometer
+            self.form_widgets[sensor]["Thermometer"] = form_widgets_for_option_Thermometer 
 
-
-
-    
-
-
-
-
-
-        
 
         # 提交按鈕排版
         ttk.Button(button_frame, text="儲存", command=lambda: self.save_parameters(sensor, check_option.get(), param_window)).pack(side=tk.LEFT, padx=5)
         ttk.Button(button_frame, text="取消", command=param_window.destroy).pack(side=tk.LEFT, padx=5)
 
 
-
-
-
-
-
-
-
-
-
-
-
     def update_form(self, sensor):
         # 根據選中的 RadioButton 選項更新表單的狀態
         selected_radio = self.check_option[sensor].get()
-       
+
+
+        # 檢查是否有保存的參數數據
+        saved_params = self.saved_parameters.get((sensor, selected_radio), None)
+
         if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:            
             for option, widgets in self.form_widgets[sensor].items():
                 if selected_radio == option:
-                    for widget in widgets:
+                    for index, widget in enumerate(widgets):
                         widget.configure(state="normal")
+                        # 回填保存的數據到小部件
+                        if saved_params and index < len(saved_params):
+                            if isinstance(widget, ttk.Combobox):
+                                widget.set(saved_params[index])
+                            elif isinstance(widget, ttk.Entry):
+                                widget.delete(0, tk.END)  # 清空文本框
+                                widget.insert(0, saved_params[index])  # 填回數據
                 else:
                     for widget in widgets:
                         widget.configure(state="disabled")
 
-        elif sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:            
+        elif sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2", "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:            
             # 當選擇 "Both" 時，先禁用所有小部件，再逐一啟用
             if selected_radio == "Both":
                 for widgets in self.form_widgets[sensor].values():
                     for widget in widgets:
                         widget.configure(state="normal")
+                # 回填保存的數據到小部件
+                if saved_params:
+                    for index, widget in enumerate(self.form_widgets[sensor]["Both"]):
+                        if index < len(saved_params):
+                            if isinstance(widget, ttk.Combobox):
+                                widget.set(saved_params[index])
+                            elif isinstance(widget, ttk.Entry):
+                                widget.delete(0, tk.END)  # 清空文本框
+                                widget.insert(0, saved_params[index])  # 填回數據
             else:
                 # 將所有小部件設置為禁用狀態
                 for widgets in self.form_widgets[sensor].values():
@@ -455,8 +457,42 @@ class ParameterApp(tk.Tk):
                 # 啟用選中的選項對應的小部件
                 for option, widgets in self.form_widgets[sensor].items():
                     if selected_radio == option:
-                        for widget in widgets:
+                        for index, widget in enumerate(widgets):
                             widget.configure(state="normal")
+                            # 回填保存的數據到小部件
+                            if saved_params and index < len(saved_params):
+                                if isinstance(widget, ttk.Combobox):
+                                    widget.set(saved_params[index])
+                                elif isinstance(widget, ttk.Entry):
+                                    widget.delete(0, tk.END)  # 清空文本框
+                                    widget.insert(0, saved_params[index])  # 填回數據
+       
+        # if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:            
+        #     for option, widgets in self.form_widgets[sensor].items():
+        #         if selected_radio == option:
+        #             for widget in widgets:
+        #                 widget.configure(state="normal")
+        #         else:
+        #             for widget in widgets:
+        #                 widget.configure(state="disabled")
+
+        # elif sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:            
+        #     # 當選擇 "Both" 時，先禁用所有小部件，再逐一啟用
+        #     if selected_radio == "Both":
+        #         for widgets in self.form_widgets[sensor].values():
+        #             for widget in widgets:
+        #                 widget.configure(state="normal")
+        #     else:
+        #         # 將所有小部件設置為禁用狀態
+        #         for widgets in self.form_widgets[sensor].values():
+        #             for widget in widgets:
+        #                 widget.configure(state="disabled")
+                
+        #         # 啟用選中的選項對應的小部件
+        #         for option, widgets in self.form_widgets[sensor].items():
+        #             if selected_radio == option:
+        #                 for widget in widgets:
+        #                     widget.configure(state="normal")
 
     
 
@@ -475,13 +511,13 @@ class ParameterApp(tk.Tk):
         params = []
         for widget in self.form_widgets[sensor][option]:
             if isinstance(widget, ttk.Combobox):
-                params.append(widget.get())
+                params.append(widget.get())   # Get the selected value in Combobox
             else:
-                params.append(widget.get())
+                params.append(widget.get())   # Get the value in Entry
         
-        # Delete previously saved parameters for this sensor
+        # Delete previously saved parameters for this sensor-option pair
         for key in list(self.saved_parameters):
-            if key[0] == sensor:
+            if key[0] == sensor and key[1] == option:
                 del self.saved_parameters[key]
 
         # Save current parameters

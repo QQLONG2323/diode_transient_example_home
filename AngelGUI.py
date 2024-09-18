@@ -321,7 +321,7 @@ class ParameterApp(tk.Tk):
         #             widget.insert(0, value)
 
         # 建立每個 Sensor 中的參數表單
-        self.form_widgets[sensor] = {}
+        self.form_widgets[sensor] = {}   
 
         form_widgets_for_option_S1_S3_current_source = []
         form_widgets_for_option_voltage_source = []
@@ -331,54 +331,84 @@ class ParameterApp(tk.Tk):
 
         form_widgets_for_option_Thermometer = []
 
-        # 檢查是否有已保存的參數
-        saved_parameters_for_sensor = self.saved_parameters.get(
-            (sensor, self.check_option[sensor].get()), [])
+        # # 檢查是否有已保存的參數       
+        # saved_parameters_for_sensor = self.saved_parameters.get((sensor, self.check_option[sensor].get()), [])
+
+        # 獲取保存的參數，分別針對 Current_source 和 Voltage_source
+        saved_parameters_for_current_source = self.saved_parameters.get((sensor, "Current_source"), [])
+        saved_parameters_for_voltage_source = self.saved_parameters.get((sensor, "Voltage_source"), [])
+
+        # 檢查如果有 Voltage_source 保存的參數，那麼禁用 Current_source，反之亦然
+        if saved_parameters_for_voltage_source:
+            current_source_state = "disabled"
+            voltage_source_state = "normal"
+        else:
+            current_source_state = "normal"
+            voltage_source_state = "disabled"
+        
+        
 
         if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
+            # 填充 Current_source 表單
             for i, (label_text, field_type) in enumerate(self.SCh_radio_parameters["S1_S3_Current_source"]):
                 ttk.Label(S1_S3_Current_source_frame,
                           text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
                     combobox = ttk.Combobox(
-                        S1_S3_Current_source_frame, values=field_type, state="readonly")
+                        S1_S3_Current_source_frame, values=field_type, state=current_source_state)  # 根據條件禁用或啟用
                     combobox.pack(anchor=tk.W, pady=5)
-                    # 回填 saved_parameters 中的值
-                    if i < len(saved_parameters_for_sensor):
-                        combobox.set(saved_parameters_for_sensor[i])
+                    # 回填 saved_parameters_for_current_source 中的值
+                    if i < len(saved_parameters_for_current_source):
+                        combobox.set(saved_parameters_for_current_source[i])
                     form_widgets_for_option_S1_S3_current_source.append(
                         combobox)
                 else:
-                    entry = ttk.Entry(S1_S3_Current_source_frame)
+                    entry = ttk.Entry(S1_S3_Current_source_frame, state=current_source_state)  # 根據條件禁用或啟用
                     entry.pack(anchor=tk.W, pady=5)
-                    # 回填 saved_parameters 中的值
-                    if i < len(saved_parameters_for_sensor):
-                        entry.insert(0, saved_parameters_for_sensor[i])
+                    # 回填 saved_parameters_for_current_source 中的值
+                    if i < len(saved_parameters_for_current_source):
+                        entry.insert(0, saved_parameters_for_current_source[i])
                     form_widgets_for_option_S1_S3_current_source.append(entry)
 
+            # 保存填充的 Current_source
             self.form_widgets[sensor]["Current_source"] = form_widgets_for_option_S1_S3_current_source
+            
+          
 
+           
+           
+            # 填充 Voltage_source 表單
             for i, (label_text, field_type) in enumerate(self.SCh_radio_parameters["S1_S3_Voltage_source"]):
                 ttk.Label(S1_S3_Voltage_source_frame,
-                          text=label_text).pack(anchor=tk.W)
+                        text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
                     combobox = ttk.Combobox(
-                        S1_S3_Voltage_source_frame, values=field_type, state="disabled")
+                        S1_S3_Voltage_source_frame, values=field_type, state=voltage_source_state)  # 根據條件禁用或啟用
                     combobox.pack(anchor=tk.W, pady=5)
-                    # 回填 saved_parameters 中的值
-                    if i < len(saved_parameters_for_sensor):
-                        combobox.set(saved_parameters_for_sensor[i])
+                    # 回填 saved_parameters_for_voltage_source 中的值
+                    if i < len(saved_parameters_for_voltage_source):
+                        print(f"回填 Voltage_source - Combobox: {saved_parameters_for_voltage_source[i]}")
+                        combobox.set(saved_parameters_for_voltage_source[i])
                     form_widgets_for_option_voltage_source.append(combobox)
                 else:
                     entry = ttk.Entry(
-                        S1_S3_Voltage_source_frame, state="disabled")
+                        S1_S3_Voltage_source_frame, state=voltage_source_state)  # 根據條件禁用或啟用
                     entry.pack(anchor=tk.W, pady=5)
-                    # 回填 saved_parameters 中的值
-                    if i < len(saved_parameters_for_sensor):
-                        entry.insert(0, saved_parameters_for_sensor[i])
+                    # 回填 saved_parameters_for_voltage_source 中的值
+                    if i < len(saved_parameters_for_voltage_source):
+                        print(f"回填 Voltage_source - Entry: {saved_parameters_for_voltage_source[i]}")
+                        entry.insert(0, saved_parameters_for_voltage_source[i])
                     form_widgets_for_option_voltage_source.append(entry)
 
+            # 保存填充的 Voltage_source
             self.form_widgets[sensor]["Voltage_source"] = form_widgets_for_option_voltage_source
+
+            
+
+            
+
+               
+
 
         elif sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:
             for i, (label_text, field_type) in enumerate(self.SCh_radio_parameters["S5_S8_Current_source"]):
@@ -506,15 +536,40 @@ class ParameterApp(tk.Tk):
 
         # Delete previously saved parameters for this sensor-option pair
         for key in list(self.saved_parameters):
-            if key[0] == sensor and key[1] == option:
+            # if key[0] == sensor and key[1] == option:
+            #     del self.saved_parameters[key]
+
+            if key == (sensor, option):  # 僅刪除與當前 sensor 和 option 配對的參數
                 del self.saved_parameters[key]
 
         # Save current parameters
         self.saved_parameters[(sensor, option)] = params
         print(f"提交的參數 ({sensor} - {option}): {params}")
 
-        print(enumerate(self.form_widgets[sensor]["Current_source"]),
-              enumerate(self.form_widgets[sensor]["Voltage_source"]))
+        # 清除另一個選項的內容
+        if option == "Current_source":
+            # 清除 Voltage_source 的內容
+            if (sensor, "Voltage_source") in self.saved_parameters:
+                del self.saved_parameters[(sensor, "Voltage_source")]
+                # 清空界面上的 Voltage_source 表單內容
+                for widget in self.form_widgets[sensor]["Voltage_source"]:
+                    if isinstance(widget, ttk.Combobox):
+                        widget.set('')  # 清空 combobox
+                    else:
+                        widget.delete(0, tk.END)  # 清空 entry
+        elif option == "Voltage_source":
+            # 清除 Current_source 的內容
+            if (sensor, "Current_source") in self.saved_parameters:
+                del self.saved_parameters[(sensor, "Current_source")]
+                # 清空界面上的 Current_source 表單內容
+                for widget in self.form_widgets[sensor]["Current_source"]:
+                    if isinstance(widget, ttk.Combobox):
+                        widget.set('')  # 清空 combobox
+                    else:
+                        widget.delete(0, tk.END)  # 清空 entry
+
+        
+        
 
         # Close the window
         window.destroy()

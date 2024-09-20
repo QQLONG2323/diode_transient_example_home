@@ -319,6 +319,9 @@ class ParameterApp(tk.Tk):
         elif saved_parameters_for_S5_S8_Both:
             S5_S8_current_source_state = "normal"
             Measurement_channel_state = "normal"
+            saved_parameters_for_S5_S8_current_source = saved_parameters_for_S5_S8_Both[:3]
+            saved_parameters_for_S5_S8_Measurement_channel = saved_parameters_for_S5_S8_Both[3:]
+
         else:
             S5_S8_current_source_state = "normal"
             Measurement_channel_state = "disabled"
@@ -389,8 +392,6 @@ class ParameterApp(tk.Tk):
                     # 回填 saved_parameters_for_S5_S8_current_source 中的值
                     if i < len(saved_parameters_for_S5_S8_current_source):
                         combobox.set(saved_parameters_for_S5_S8_current_source[i])
-                    elif i < len(saved_parameters_for_S5_S8_Both):
-                        combobox.set(saved_parameters_for_S5_S8_Both[i])
                     form_widgets_for_option_S5_S8_current_source.append(
                             combobox)
                     
@@ -400,8 +401,6 @@ class ParameterApp(tk.Tk):
                     # 回填 saved_parameters_for_S5_S8_current_source 中的值
                     if i < len(saved_parameters_for_S5_S8_current_source):
                         entry.insert(0, saved_parameters_for_S5_S8_current_source[i])
-                    elif i < len(saved_parameters_for_S5_S8_Both):
-                        entry.insert(0, saved_parameters_for_S5_S8_Both[i])
                     form_widgets_for_option_S5_S8_current_source.append(entry)
             # 保存填充的 Current_source
             self.form_widgets[sensor]["Current_source"] = form_widgets_for_option_S5_S8_current_source
@@ -417,8 +416,6 @@ class ParameterApp(tk.Tk):
                     # 回填 saved_parameters_for_S5_S8_Measurement_channel 中的值
                     if i < len(saved_parameters_for_S5_S8_Measurement_channel):
                         combobox.set(saved_parameters_for_S5_S8_Measurement_channel[i])
-                    elif i < len(saved_parameters_for_S5_S8_Both):
-                        combobox.set(saved_parameters_for_S5_S8_Both[i+3])
                     form_widgets_for_option_Measurement_channel.append(
                         combobox)
                 else:
@@ -428,8 +425,6 @@ class ParameterApp(tk.Tk):
                     # 回填 saved_parameters_for_S5_S8_Measurement_channel 中的值
                     if i < len(saved_parameters_for_S5_S8_Measurement_channel):
                         entry.insert(0, saved_parameters_for_S5_S8_Measurement_channel[i])
-                    elif i < len(saved_parameters_for_S5_S8_Both):
-                        entry.insert(0, saved_parameters_for_S5_S8_Both[i+3])
                     form_widgets_for_option_Measurement_channel.append(entry)
             # 保存填充的 Measurement_channel
             self.form_widgets[sensor]["Measurement_channel"] = form_widgets_for_option_Measurement_channel
@@ -546,6 +541,7 @@ class ParameterApp(tk.Tk):
         if option == "Current_source":
             # 清除 Measurement_channel 的內容
             if (sensor, "Measurement_channel") in self.saved_parameters:
+                print(sensor, option)
                 del self.saved_parameters[(sensor, "Measurement_channel")]
                 for widget in self.form_widgets[sensor]["Measurement_channel"]:
                     if isinstance(widget, ttk.Combobox):
@@ -556,6 +552,7 @@ class ParameterApp(tk.Tk):
         elif option == "Measurement_channel":
             # 清除 Current_source 的內容
             if (sensor, "Current_source") in self.saved_parameters:
+                print(sensor, option)
                 del self.saved_parameters[(sensor, "Current_source")]
                 for widget in self.form_widgets[sensor]["Current_source"]:
                     if isinstance(widget, ttk.Combobox):
@@ -563,23 +560,13 @@ class ParameterApp(tk.Tk):
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
 
+        elif option == "Both":
+            # 刪除 Current_source 和 Measurement_channel 的 key (不清空表單)
+            if (sensor, "Current_source") in self.saved_parameters:
+                del self.saved_parameters[(sensor, "Current_source")]
 
-        # elif option == "Both":
-        #     # 清除 Current_source 和 Measurement_channel 的內容，並啟用兩者
-        #     if (sensor, "Current_source") in self.saved_parameters:
-        #         del self.saved_parameters[(sensor, "Current_source")]
-        #         for widget in self.form_widgets[sensor]["Current_source"]:
-        #             if isinstance(widget, ttk.Combobox):
-        #                 widget.set('')  # 清空 combobox
-        #             else:
-        #                 widget.delete(0, tk.END)  # 清空 entry
-        #     if (sensor, "Measurement_channel") in self.saved_parameters:
-        #         del self.saved_parameters[(sensor, "Measurement_channel")]
-        #         for widget in self.form_widgets[sensor]["Measurement_channel"]:
-        #             if isinstance(widget, ttk.Combobox):
-        #                 widget.set('')  # 清空 combobox
-        #             else:
-        #                 widget.delete(0, tk.END)  # 清空 entry
+            if (sensor, "Measurement_channel") in self.saved_parameters:
+                del self.saved_parameters[(sensor, "Measurement_channel")]
         
         
 

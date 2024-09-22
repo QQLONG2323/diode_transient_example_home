@@ -575,6 +575,14 @@ class ParameterApp(tk.Tk):
                         widget.set('')  # 清空 combobox
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
+            if (sensor, "Both") in self.saved_parameters:
+                print(sensor, option)
+                del self.saved_parameters[(sensor, "Both")]
+                for widget in self.form_widgets[sensor]["Both"]:
+                    if isinstance(widget, ttk.Combobox):
+                        widget.set('')  # 清空 combobox
+                    else:
+                        widget.delete(0, tk.END)  # 清空 entry
 
         elif option == "Measurement_channel":
             # 清除 Current_source 的內容
@@ -582,6 +590,14 @@ class ParameterApp(tk.Tk):
                 print(sensor, option)
                 del self.saved_parameters[(sensor, "Current_source")]
                 for widget in self.form_widgets[sensor]["Current_source"]:
+                    if isinstance(widget, ttk.Combobox):
+                        widget.set('')  # 清空 combobox
+                    else:
+                        widget.delete(0, tk.END)  # 清空 entry
+            if (sensor, "Both") in self.saved_parameters:
+                print(sensor, option)
+                del self.saved_parameters[(sensor, "Both")]
+                for widget in self.form_widgets[sensor]["Both"]:
                     if isinstance(widget, ttk.Combobox):
                         widget.set('')  # 清空 combobox
                     else:
@@ -602,7 +618,7 @@ class ParameterApp(tk.Tk):
         self.text_box.config(state="normal")
         self.text_box.delete(1.0, tk.END)
         for key, value in self.saved_parameters.items():
-            param_str = f"{key}: {value}\n"
+            param_str = f"{key}: {value}\n\n"
             self.text_box.insert(tk.END, param_str)
         self.text_box.config(state="disabled")
 

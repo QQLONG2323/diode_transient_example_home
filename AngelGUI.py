@@ -19,41 +19,59 @@ class ParameterApp(tk.Tk):
         self.title("T3STER SI")
         self.geometry("")
 
-        # 先選擇插孔
+        # 用於儲存第一個頁面上的所有控件
+        self.page1_widgets = []
+
+        # Sensor 框架
         LP220_S1_frame = ttk.LabelFrame(self, text="LP220")
         LP220_S1_frame.grid(column=0, row=0, padx=10, pady=10, sticky=tk.NSEW)
+        self.page1_widgets.append(LP220_S1_frame)
 
         LP220_S3_frame = ttk.LabelFrame(self, text="LP220")
         LP220_S3_frame.grid(column=1, row=0, padx=10, pady=10, sticky=tk.NSEW)
+        self.page1_widgets.append(LP220_S3_frame)
 
         MS401_S5_frame = ttk.LabelFrame(self, text="MS401")
         MS401_S5_frame.grid(column=2, row=0, padx=10, pady=10, sticky=tk.NSEW)
+        self.page1_widgets.append(MS401_S5_frame)
 
         MS401_S6_frame = ttk.LabelFrame(self, text="MS401")
         MS401_S6_frame.grid(column=3, row=0, padx=10, pady=10, sticky=tk.NSEW)
+        self.page1_widgets.append(MS401_S6_frame)
 
         MS401_S7_frame = ttk.LabelFrame(self, text="MS401")
         MS401_S7_frame.grid(column=4, row=0, padx=10, pady=10, sticky=tk.NSEW)
+        self.page1_widgets.append(MS401_S7_frame)
 
         MS401_S8_frame = ttk.LabelFrame(self, text="MS401")
         MS401_S8_frame.grid(column=5, row=0, padx=10, pady=10, sticky=tk.NSEW)
+        self.page1_widgets.append(MS401_S8_frame)
 
         TH800_S9_frame = ttk.LabelFrame(self, text="TH800")
         TH800_S9_frame.grid(column=6, row=0, padx=10, pady=10, sticky=tk.NSEW)
+        self.page1_widgets.append(TH800_S9_frame)
 
         TH800_S10_frame = ttk.LabelFrame(self, text="TH800")
         TH800_S10_frame.grid(column=7, row=0, padx=10, pady=10, sticky=tk.NSEW)
+        self.page1_widgets.append(TH800_S10_frame)
 
+        # 顯示儲存所有參數的框框
         self.text_box = tk.Text(self, width=100, height=10, state="disabled")
         self.text_box.grid(column=0, row=1, columnspan=7,
                            rowspan=2, padx=10, pady=10)
+        self.page1_widgets.append(self.text_box)
 
+        # 顯示儲存參數按鈕
         parameters_button = ttk.Button(
             self, text="顯示儲存參數", command=self.show_parameters)
         parameters_button.grid(column=7, row=1, padx=10, pady=10, ipady=30)
+        self.page1_widgets.append(parameters_button)
 
-        next_button = ttk.Button(self, text="Next")
+        # Next 按鈕，按下後隱藏當前頁面並進入下一步的頁面
+        next_button = ttk.Button(
+            self, text="Next", command=self.go_to_next_page)
         next_button.grid(column=7, row=2, padx=10, pady=10)
+        self.page1_widgets.append(next_button)
 
         # 定義每個感測器的選項
         self.SCh_radio = {
@@ -621,6 +639,36 @@ class ParameterApp(tk.Tk):
             param_str = f"{key}: {value}\n\n"
             self.text_box.insert(tk.END, param_str)
         self.text_box.config(state="disabled")
+
+    def go_to_next_page(self):
+        """隱藏當前頁面，顯示下一頁面"""
+        # 隱藏第一頁面的所有控件
+        for widget in self.page1_widgets:
+            widget.grid_forget()
+
+        # 顯示第二頁面的控件
+        self.create_second_page()
+
+    def create_second_page(self):
+        """創建第二頁面"""
+
+        # 用於儲存第二個頁面上的所有控件
+        self.page2_widgets = []
+
+        # Config Name 輸入框和標籤
+        config_label = ttk.Label(self, text="請輸入 Config Name:")
+        config_label.grid(column=0, row=0, padx=10, pady=10)
+        self.page2_widgets.append(config_label)
+
+        self.config_entry = ttk.Entry(self)
+        self.config_entry.grid(column=1, row=0, padx=10, pady=10)
+        self.page2_widgets.append(self.config_entry)
+
+        # 提交按鈕
+        submit_button = ttk.Button(
+            self, text="提交")
+        submit_button.grid(column=1, row=1, padx=10, pady=10)
+        self.page2_widgets.append(submit_button)
 
 
 if __name__ == '__main__':

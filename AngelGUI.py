@@ -17,7 +17,7 @@ class ParameterApp(tk.Tk):
         super().__init__()
 
         self.title("T3STER SI")
-        self.geometry("")
+        self.geometry("1280x800")
 
         # 用於儲存第一個頁面上的所有控件
         self.page1_widgets = []
@@ -664,11 +664,68 @@ class ParameterApp(tk.Tk):
         self.config_entry.grid(column=1, row=0, padx=10, pady=10)
         self.page2_widgets.append(self.config_entry)
 
-        # 提交按鈕
-        submit_button = ttk.Button(
-            self, text="提交")
-        submit_button.grid(column=1, row=1, padx=10, pady=10)
-        self.page2_widgets.append(submit_button)
+        # 根據 saved_parameters 中的數據動態生成表格
+        measurement_channels = [sensor for sensor, options in self.saved_parameters if "Measurement_channel" in options or "Both" in options]
+        current_sources_s5_s8 = [sensor for sensor, options in self.saved_parameters if ("Current_source" in options and sensor.startswith(('S5', 'S6', 'S7', 'S8'))) or ("Both" in options and sensor.startswith(('S5', 'S6', 'S7', 'S8')))]
+        current_sources_s1_s3 = [sensor for sensor, options in self.saved_parameters if "Current_source" in options and sensor.startswith(('S1', 'S3'))]
+
+        # 顯示 "Calculation Method" 字
+        method_label = ttk.Label(self, text="Calculation Method")
+        method_label.grid(row=1, column=0, padx=10, pady=10)
+        self.page2_widgets.append(method_label)
+
+        # 顯示公式
+        formula_label = ttk.Label(self, text="Diode — Pstep = ||Vmeas,heat · (Idrive + Isense)| - |Vmeas,cool · Isense||")
+        formula_label.grid(row=1, column=1, columnspan=2, padx=10, pady=10)
+        self.page2_widgets.append(formula_label)
+        
+        row_index = 2  # 用來處理表格的起始行
+
+        for sensor in measurement_channels:
+            # 第一欄：顯示 "Diode" 的欄位
+            diode_label = ttk.Label(self, text="Diode")
+            diode_label.grid(row=row_index, column=0, padx=10, pady=10)  # Column 1 顯示 "Diode"
+            self.page2_widgets.append(diode_label)
+            
+            # 第二欄：顯示 Measurement_channel 的感測器
+            label = ttk.Label(self, text=sensor)
+            label.grid(row=row_index, column=1, padx=10, pady=10)
+            self.page2_widgets.append(label)
+
+            # 第三欄：顯示 S5 ~ S8 的 Current_source 選項
+            Isense_label = ttk.Label(self, text="Isense: ")
+            Isense_label.grid(row=row_index, column=2, padx=10, pady=10)
+            self.page2_widgets.append(Isense_label)
+
+            combo_s5_s8 = ttk.Combobox(self, values=current_sources_s5_s8)
+            combo_s5_s8.grid(row=row_index, column=3, padx=10, pady=10)
+            self.page2_widgets.append(combo_s5_s8)
+            
+            # 第四欄：顯示 S1 ~ S3 的 Current_source 選項
+            Idrive_label = ttk.Label(self, text="Idrive: ")
+            Idrive_label.grid(row=row_index, column=4, padx=10, pady=10)
+            self.page2_widgets.append(Idrive_label)
+
+            combo_s1_s3 = ttk.Combobox(self, values=current_sources_s1_s3)
+            combo_s1_s3.grid(row=row_index, column=5, padx=10, pady=10)
+            self.page2_widgets.append(combo_s1_s3)
+            
+            row_index += 1
+
+        self.update()  # 強制刷新頁面
+
+
+
+
+        
+
+
+
+        # # 提交按鈕
+        # submit_button = ttk.Button(
+        #     self, text="提交")
+        # submit_button.grid(column=1, row=1, padx=10, pady=10)
+        # self.page2_widgets.append(submit_button)
 
 
 if __name__ == '__main__':

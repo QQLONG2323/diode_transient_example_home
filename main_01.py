@@ -170,7 +170,7 @@ command_save_config = {
             "default": 1,
             "locked": False,
             "min": 1,
-            "max": 1
+            "max": 100
         }
     },
     "SourceTimingControl": {

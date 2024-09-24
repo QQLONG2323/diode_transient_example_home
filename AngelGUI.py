@@ -712,6 +712,66 @@ class ParameterApp(tk.Tk):
             
             row_index += 1
 
+        # 在表格的最後一行添加 "Measurement settings" 的 Label
+        measurement_settings_label = ttk.Label(self, text="Measurement settings")
+        measurement_settings_label.grid(row=row_index, column=0, columnspan=6, padx=10, pady=10)  # 使用 columnspan 覆蓋所有列
+        self.page2_widgets.append(measurement_settings_label)
+
+
+        # Heating time row
+        row_index += 1  # 更新行索引以便繼續添加 Heating, Cooling, Delay 設置
+        heating_label = ttk.Label(self, text="Heating time [s]")
+        heating_label.grid(row=row_index, column=0, padx=10, pady=10)
+        self.page2_widgets.append(heating_label)
+
+        setpoint_label = ttk.Label(self, text="Setpoint: ")
+        setpoint_label.grid(row=row_index, column=1, padx=10, pady=10)
+        self.page2_widgets.append(setpoint_label)
+
+        self.heating_entry = ttk.Entry(self)
+        self.heating_entry.grid(row=row_index, column=2, padx=10, pady=10)
+        self.page2_widgets.append(self.heating_entry)
+
+        heating_range_label = ttk.Label(self, text="範圍: 0 ~ 4000")
+        heating_range_label.grid(row=row_index, column=3, padx=10, pady=10)
+        self.page2_widgets.append(heating_range_label)
+
+        # Cooling time row
+        row_index += 1
+        cooling_label = ttk.Label(self, text="Cooling time [s]")
+        cooling_label.grid(row=row_index, column=0, padx=10, pady=10)
+        self.page2_widgets.append(cooling_label)
+
+        setpoint_label_cooling = ttk.Label(self, text="Setpoint: ")
+        setpoint_label_cooling.grid(row=row_index, column=1, padx=10, pady=10)
+        self.page2_widgets.append(setpoint_label_cooling)
+
+        self.cooling_entry = ttk.Entry(self)
+        self.cooling_entry.grid(row=row_index, column=2, padx=10, pady=10)
+        self.page2_widgets.append(self.cooling_entry)
+
+        cooling_range_label = ttk.Label(self, text="範圍: 0 ~ 4000")
+        cooling_range_label.grid(row=row_index, column=3, padx=10, pady=10)
+        self.page2_widgets.append(cooling_range_label)
+
+        # Delay time row
+        row_index += 1
+        delay_label = ttk.Label(self, text="Delay time [s]")
+        delay_label.grid(row=row_index, column=0, padx=10, pady=10)
+        self.page2_widgets.append(delay_label)
+
+        setpoint_label_delay = ttk.Label(self, text="Setpoint: ")
+        setpoint_label_delay.grid(row=row_index, column=1, padx=10, pady=10)
+        self.page2_widgets.append(setpoint_label_delay)
+
+        self.delay_entry = ttk.Entry(self)
+        self.delay_entry.grid(row=row_index, column=2, padx=10, pady=10)
+        self.page2_widgets.append(self.delay_entry)
+
+        delay_range_label = ttk.Label(self, text="範圍: 0 ~ 4000")
+        delay_range_label.grid(row=row_index, column=3, padx=10, pady=10)
+        self.page2_widgets.append(delay_range_label)
+
         self.update()  # 強制刷新頁面
 
 

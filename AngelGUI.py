@@ -17,7 +17,11 @@ class ParameterApp(tk.Tk):
         super().__init__()
 
         self.title("T3STER SI")
-        self.geometry("1280x800")
+        self.geometry("")
+
+        self.create_page1()
+
+    def create_page1(self):
 
         # 用於儲存第一個頁面上的所有控件
         self.page1_widgets = []
@@ -69,7 +73,7 @@ class ParameterApp(tk.Tk):
 
         # Next 按鈕，按下後隱藏當前頁面並進入下一步的頁面
         next_button = ttk.Button(
-            self, text="Next", command=self.go_to_next_page)
+            self, text="Next", command=self.go_to_page2)
         next_button.grid(column=7, row=2, padx=10, pady=10)
         self.page1_widgets.append(next_button)
 
@@ -116,7 +120,7 @@ class ParameterApp(tk.Tk):
         # 定義每個選項對應的表單結構
         self.SCh_radio_parameters = {
             "S1_S3_Current_source": [
-                ("Output mode", ["Off", "Switching", "On"]),
+                ("Output mode", ["Off", "On", "Switching"]),
                 ("Current [A]", "entry"),
                 ("Voltage limit [V]", "entry")
             ],
@@ -133,7 +137,7 @@ class ParameterApp(tk.Tk):
             ],
             "S5_S8_Measurement_channel": [
                 ("Sensitivity [mV/K]", "entry"),
-                ("Auto range", ["On", "Off"]),
+                ("Auto range", ["Off", "On"]),
                 ("Range", ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
                            "Fall scale: 10 V, V(in): -10 V ~ 10 V",
                            "Fall scale: 4 V, V(in): -10 V ~ 10 V",
@@ -151,7 +155,7 @@ class ParameterApp(tk.Tk):
                            ]
                  ),
                 ("Vref [V]", "entry"),
-                ("Separate Vref for heating", ["On", "Off"])
+                ("Separate Vref for heating", ["Off", "On"])
             ],
             "S9_S10_Thermometer": [("Type", "entry"), ("Sensitivity", "entry"), ("Sample per sec", "entry")]
         }
@@ -283,7 +287,7 @@ class ParameterApp(tk.Tk):
         S9_S10_Thermometer_frame.grid(
             row=1, column=0, padx=20, pady=20, sticky="ew")
 
-        # 建立提交、取消按鈕框架
+        # 建立儲存、取消按鈕框架
         button_frame = ttk.Frame(param_window)
         button_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
 
@@ -498,7 +502,7 @@ class ParameterApp(tk.Tk):
             # 保存填充的 Thermometer
             self.form_widgets[sensor]["Thermometer"] = form_widgets_for_option_Thermometer
 
-        # 提交按鈕排版
+        # 儲存、取消按鈕排版
         ttk.Button(button_frame, text="儲存", command=lambda: self.save_parameters(
             sensor, check_option.get(), param_window)).pack(side=tk.LEFT, padx=5)
         ttk.Button(button_frame, text="取消", command=param_window.destroy).pack(
@@ -640,16 +644,40 @@ class ParameterApp(tk.Tk):
             self.text_box.insert(tk.END, param_str)
         self.text_box.config(state="disabled")
 
-    def go_to_next_page(self):
+    def go_to_page1(self):
+        """隱藏當前頁面，顯示上一頁面"""
+        # 隱藏第二頁面的所有控件
+        for widget in self.page2_widgets:
+            widget.grid_forget()
+
+        # 顯示第一頁面的控件
+        self.create_page1()
+
+        for (sensor, option), params in self.saved_parameters:
+            if sensor in self.form_widgets and option in self.form_widgets[sensor]:
+                # 填充表單控件
+                for idx, widget in enumerate(self.form_widgets[sensor][option]):
+                    if isinstance(widget, ttk.Combobox):
+                        # 重新設置 Combobox 的選定項目
+                        widget.set(params[idx])
+                    else:
+                        # 重新設置 Entry 的值
+                        widget.delete(0, tk.END)
+                        widget.insert(0, params[idx])
+
+
+
+
+    def go_to_page2(self):
         """隱藏當前頁面，顯示下一頁面"""
         # 隱藏第一頁面的所有控件
         for widget in self.page1_widgets:
             widget.grid_forget()
 
         # 顯示第二頁面的控件
-        self.create_second_page()
+        self.create_page2()
 
-    def create_second_page(self):
+    def create_page2(self):
         """創建第二頁面"""
 
         # 用於儲存第二個頁面上的所有控件
@@ -712,9 +740,18 @@ class ParameterApp(tk.Tk):
             
             row_index += 1
 
+    
+
+        # 加入一個空白的 Label，來佔位以分隔不同的部分
+        row_index += 1
+        empty_label = ttk.Label(self, text="")  # 空白文字
+        empty_label.grid(row=row_index, column=0, columnspan=6)  # 跨越所有列
+        self.page2_widgets.append(empty_label)
+
         # 在表格的最後一行添加 "Measurement settings" 的 Label
+        row_index += 1  # 添加一个空行
         measurement_settings_label = ttk.Label(self, text="Measurement settings")
-        measurement_settings_label.grid(row=row_index, column=0, columnspan=6, padx=10, pady=10)  # 使用 columnspan 覆蓋所有列
+        measurement_settings_label.grid(row=row_index, column=0, columnspan=6, padx=10, pady=10, sticky="W")  # 使用 columnspan 覆蓋所有列
         self.page2_widgets.append(measurement_settings_label)
 
 
@@ -724,17 +761,17 @@ class ParameterApp(tk.Tk):
         heating_label.grid(row=row_index, column=0, padx=10, pady=10)
         self.page2_widgets.append(heating_label)
 
-        setpoint_label = ttk.Label(self, text="Setpoint: ")
-        setpoint_label.grid(row=row_index, column=1, padx=10, pady=10)
-        self.page2_widgets.append(setpoint_label)
+        heating_range_label = ttk.Label(self, text="範圍: 0 ~ 4000")
+        heating_range_label.grid(row=row_index, column=1, padx=10, pady=10)
+        self.page2_widgets.append(heating_range_label)
+
+        heating_setpoint_label = ttk.Label(self, text="Setpoint: ")
+        heating_setpoint_label.grid(row=row_index, column=2, padx=10, pady=10)
+        self.page2_widgets.append(heating_setpoint_label)
 
         self.heating_entry = ttk.Entry(self)
-        self.heating_entry.grid(row=row_index, column=2, padx=10, pady=10)
+        self.heating_entry.grid(row=row_index, column=3, padx=10, pady=10)
         self.page2_widgets.append(self.heating_entry)
-
-        heating_range_label = ttk.Label(self, text="範圍: 0 ~ 4000")
-        heating_range_label.grid(row=row_index, column=3, padx=10, pady=10)
-        self.page2_widgets.append(heating_range_label)
 
         # Cooling time row
         row_index += 1
@@ -742,17 +779,17 @@ class ParameterApp(tk.Tk):
         cooling_label.grid(row=row_index, column=0, padx=10, pady=10)
         self.page2_widgets.append(cooling_label)
 
-        setpoint_label_cooling = ttk.Label(self, text="Setpoint: ")
-        setpoint_label_cooling.grid(row=row_index, column=1, padx=10, pady=10)
-        self.page2_widgets.append(setpoint_label_cooling)
+        cooling_range_label = ttk.Label(self, text="範圍: 0 ~ 4000")
+        cooling_range_label.grid(row=row_index, column=1, padx=10, pady=10)
+        self.page2_widgets.append(cooling_range_label)
+
+        cooling_setpoint_label = ttk.Label(self, text="Setpoint: ")
+        cooling_setpoint_label.grid(row=row_index, column=2, padx=10, pady=10)
+        self.page2_widgets.append(cooling_setpoint_label)
 
         self.cooling_entry = ttk.Entry(self)
-        self.cooling_entry.grid(row=row_index, column=2, padx=10, pady=10)
+        self.cooling_entry.grid(row=row_index, column=3, padx=10, pady=10)
         self.page2_widgets.append(self.cooling_entry)
-
-        cooling_range_label = ttk.Label(self, text="範圍: 0 ~ 4000")
-        cooling_range_label.grid(row=row_index, column=3, padx=10, pady=10)
-        self.page2_widgets.append(cooling_range_label)
 
         # Delay time row
         row_index += 1
@@ -760,22 +797,56 @@ class ParameterApp(tk.Tk):
         delay_label.grid(row=row_index, column=0, padx=10, pady=10)
         self.page2_widgets.append(delay_label)
 
-        setpoint_label_delay = ttk.Label(self, text="Setpoint: ")
-        setpoint_label_delay.grid(row=row_index, column=1, padx=10, pady=10)
-        self.page2_widgets.append(setpoint_label_delay)
+        delay_range_label = ttk.Label(self, text="範圍: 0 ~ 4000")
+        delay_range_label.grid(row=row_index, column=1, padx=10, pady=10)
+        self.page2_widgets.append(delay_range_label)
+
+        delay_setpoint_label = ttk.Label(self, text="Setpoint: ")
+        delay_setpoint_label.grid(row=row_index, column=2, padx=10, pady=10)
+        self.page2_widgets.append(delay_setpoint_label)
 
         self.delay_entry = ttk.Entry(self)
-        self.delay_entry.grid(row=row_index, column=2, padx=10, pady=10)
+        self.delay_entry.grid(row=row_index, column=3, padx=10, pady=10)
         self.page2_widgets.append(self.delay_entry)
 
-        delay_range_label = ttk.Label(self, text="範圍: 0 ~ 4000")
-        delay_range_label.grid(row=row_index, column=3, padx=10, pady=10)
-        self.page2_widgets.append(delay_range_label)
+        # Repeat
+        row_index += 1
+        repeat_label = ttk.Label(self, text="Repeat")
+        repeat_label.grid(row=row_index, column=0, padx=10, pady=10)
+        self.page2_widgets.append(repeat_label)
+
+        repeat_range_label = ttk.Label(self, text="範圍: 1 ~ 100")
+        repeat_range_label.grid(row=row_index, column=1, padx=10, pady=10)
+        self.page2_widgets.append(repeat_range_label)
+
+        repeat_setpoint_label = ttk.Label(self, text="Setpoint: ")
+        repeat_setpoint_label.grid(row=row_index, column=2, padx=10, pady=10)
+        self.page2_widgets.append(repeat_setpoint_label)
+
+        self.repeat_entry = ttk.Entry(self)
+        self.repeat_entry.grid(row=row_index, column=3, padx=10, pady=10)
+        self.page2_widgets.append(self.repeat_entry)
+
+        
+        # 添加儲存、Previous 和 Next 按鈕
+        row_index += 1
+        save_button = ttk.Button(self, text="儲存")
+        save_button.grid(row=row_index, column=4, padx=10, pady=10)
+        self.page2_widgets.append(save_button)
+
+        previous_button = ttk.Button(self, text="Previous", command=self.go_to_page1)
+        previous_button.grid(row=row_index, column=0, padx=10, pady=10)
+        self.page2_widgets.append(previous_button)
+
+        next_button = ttk.Button(self, text="Next")
+        next_button.grid(row=row_index, column=5, padx=10, pady=10)
+        self.page2_widgets.append(next_button)
+
 
         self.update()  # 強制刷新頁面
 
 
-
+   
 
         
 

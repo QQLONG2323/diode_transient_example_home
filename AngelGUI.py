@@ -561,7 +561,6 @@ class ParameterApp(tk.Tk):
         # Save current parameters
         self.saved_parameters[(sensor, option)] = params
         print(f"提交的參數 ({sensor} - {option}): {params}")
-
         print(self.saved_parameters)
 
         # 針對 S1_S3 清除另一個選項的內容
@@ -633,8 +632,35 @@ class ParameterApp(tk.Tk):
             if (sensor, "Measurement_channel") in self.saved_parameters:
                 del self.saved_parameters[(sensor, "Measurement_channel")]
 
+        # 導出 JSON
+        self.export_to_json()
+
         # Close the window
         window.destroy()
+
+    def export_to_json(self):
+        """Export saved parameters to JSON file"""
+
+        # Prepare the data for JSON export
+        json_data = {}
+
+        for (sensor, option), params in self.saved_parameters.items():
+            # Create the "sensor_option" key
+            sensor_option_key = f"{sensor}_{option}"
+
+        # 打开保存对话框让用户选择保存的路径
+        file_path = filedialog.asksaveasfilename(defaultextension=".json",
+                                                filetypes=[("JSON files", "*.json"), ("All files", "*.*")],
+                                                title="保存参数文件")
+
+        if file_path:
+            # 将参数保存为 JSON 格式
+            with open(file_path, 'w', encoding='utf-8') as json_file:
+                json.dump(self.saved_parameters, json_file, ensure_ascii=False, indent=4)
+            print(f"已將參數保存至 {file_path}")
+
+
+    
 
     def show_parameters(self):
         self.text_box.config(state="normal")

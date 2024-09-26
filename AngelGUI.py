@@ -67,7 +67,7 @@ class ParameterApp(tk.Tk):
 
         # 顯示儲存參數按鈕
         parameters_button = ttk.Button(
-            self, text="顯示儲存參數", command=self.show_parameters)
+            self, text="保存目前參數\n&\n顯示目前儲存參數", command=self.show_parameters)
         parameters_button.grid(column=7, row=1, padx=10, pady=10, ipady=30)
         self.page1_widgets.append(parameters_button)
 
@@ -130,13 +130,13 @@ class ParameterApp(tk.Tk):
                 ("Current limit [A]", "entry")
             ],
             "S5_S8_Current_source": [
-                ("Output mode", ["Off", "On"]),
+                ("Output mode", ["Off", "On"]),    
                 ("Range", ["-0.2 A ~ 0.2 A",
                  "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"]),
                 ("Current [A]", "entry")
             ],
             "S5_S8_Measurement_channel": [
-                ("Sensitivity [mV/K]", "entry"),
+                ("Sensitivity [mV/K]", "entry"),                 
                 ("Auto range", ["Off", "On"]),
                 ("Range", ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
                            "Fall scale: 10 V, V(in): -10 V ~ 10 V",
@@ -165,8 +165,7 @@ class ParameterApp(tk.Tk):
         self.check_option = {}  # 儲存 Option
         self.saved_parameters = {}  # 儲存 Option 的參數
         self.form_widgets = {}   # 保存所有動態生成的表單控件
-        # self.input_data = {}
-        # self.widgets = {}
+    
 
         # 排版 Sensor
         for i, (sensor, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 2)):
@@ -390,6 +389,7 @@ class ParameterApp(tk.Tk):
                         entry.insert(
                             0, saved_parameters_for_S1_S3_current_source[i])
                     form_widgets_for_option_S1_S3_current_source.append(entry)
+                    
             # 保存填充的 Current_source
             self.form_widgets[sensor]["Current_source"] = form_widgets_for_option_S1_S3_current_source
 
@@ -406,6 +406,7 @@ class ParameterApp(tk.Tk):
                         combobox.set(
                             saved_parameters_for_S1_S3_voltage_source[i])
                     form_widgets_for_option_voltage_source.append(combobox)
+                    
                 else:
                     entry = ttk.Entry(
                         S1_S3_Voltage_source_frame, state=voltage_source_state, width=40)  # 根據條件禁用或啟用
@@ -415,6 +416,7 @@ class ParameterApp(tk.Tk):
                         entry.insert(
                             0, saved_parameters_for_S1_S3_voltage_source[i])
                     form_widgets_for_option_voltage_source.append(entry)
+                    
 
             # 保存填充的 Voltage_source
             self.form_widgets[sensor]["Voltage_source"] = form_widgets_for_option_voltage_source
@@ -434,6 +436,7 @@ class ParameterApp(tk.Tk):
                             saved_parameters_for_S5_S8_current_source[i])
                     form_widgets_for_option_S5_S8_current_source.append(
                         combobox)
+                    
 
                 else:
                     entry = ttk.Entry(
@@ -444,6 +447,7 @@ class ParameterApp(tk.Tk):
                         entry.insert(
                             0, saved_parameters_for_S5_S8_current_source[i])
                     form_widgets_for_option_S5_S8_current_source.append(entry)
+                    
             # 保存填充的 Current_source
             self.form_widgets[sensor]["Current_source"] = form_widgets_for_option_S5_S8_current_source
 
@@ -461,6 +465,7 @@ class ParameterApp(tk.Tk):
                             saved_parameters_for_S5_S8_Measurement_channel[i])
                     form_widgets_for_option_Measurement_channel.append(
                         combobox)
+                    
                 else:
                     entry = ttk.Entry(
                         S5_S8_Measurement_channel_frame, state=Measurement_channel_state, width=40)   # 根據條件禁用或啟用
@@ -470,6 +475,7 @@ class ParameterApp(tk.Tk):
                         entry.insert(
                             0, saved_parameters_for_S5_S8_Measurement_channel[i])
                     form_widgets_for_option_Measurement_channel.append(entry)
+                    
             # 保存填充的 Measurement_channel
             self.form_widgets[sensor]["Measurement_channel"] = form_widgets_for_option_Measurement_channel
 
@@ -491,6 +497,7 @@ class ParameterApp(tk.Tk):
                         combobox.set(
                             saved_parameters_for_S9_S10_Thermometer[i])
                     form_widgets_for_option_Thermometer.append(combobox)
+                    
                 else:
                     entry = ttk.Entry(S9_S10_Thermometer_frame, width=40)
                     entry.pack(anchor=tk.W, pady=5)
@@ -499,6 +506,7 @@ class ParameterApp(tk.Tk):
                         entry.insert(
                             0, saved_parameters_for_S9_S10_Thermometer[i])
                     form_widgets_for_option_Thermometer.append(entry)
+                    
             # 保存填充的 Thermometer
             self.form_widgets[sensor]["Thermometer"] = form_widgets_for_option_Thermometer
 
@@ -545,11 +553,10 @@ class ParameterApp(tk.Tk):
         # Collect the parameters from the form
         params = []
 
-        # option 可以是 "Current_source" 或 "Voltage_source"
+        # option 可以是 "Current_source" 或 "Voltage_source" 或 "Measurement_channel" 或 "Both"
         for widget in self.form_widgets[sensor][option]:
             if isinstance(widget, ttk.Combobox):
-                # Get the selected value in Combobox
-                params.append(widget.get())
+                params.append(widget.get())   # Get the selected value in Combobox
             else:
                 params.append(widget.get())   # Get the value in Entry
 
@@ -562,6 +569,8 @@ class ParameterApp(tk.Tk):
         self.saved_parameters[(sensor, option)] = params
         print(f"提交的參數 ({sensor} - {option}): {params}")
         print(self.saved_parameters)
+        
+       
 
         # 針對 S1_S3 清除另一個選項的內容
         if option == "Current_source":
@@ -632,11 +641,13 @@ class ParameterApp(tk.Tk):
             if (sensor, "Measurement_channel") in self.saved_parameters:
                 del self.saved_parameters[(sensor, "Measurement_channel")]
 
-        # 導出 JSON
-        self.export_to_json()
+
+        
+
 
         # Close the window
-        window.destroy()
+        window.destroy()  
+
 
     def export_to_json(self):
         """Export saved parameters to JSON file"""
@@ -644,25 +655,49 @@ class ParameterApp(tk.Tk):
         # Prepare the data for JSON export
         json_data = {}
 
+
+        
+
+        
         for (sensor, option), params in self.saved_parameters.items():
             # Create the "sensor_option" key
             sensor_option_key = f"{sensor}_{option}"
+            
+            print(self.saved_parameters)
+            # Retrieve parameter names from SCh_radio_parameters
+            param_structure_key = f"{sensor}_{option}"  # Example: S1_S3_Current_source
+            if param_structure_key == "S1Ch1_Current_source":
+                param_structure = self.SCh_radio_parameters.get("S1_S3_Current_source", [])
+            print(param_structure_key)
+            print(self.SCh_radio_parameters.get(param_structure_key))
+            print(self.SCh_radio_parameters.items())
+            print(param_structure)
 
-        # 打开保存对话框让用户选择保存的路径
-        file_path = filedialog.asksaveasfilename(defaultextension=".json",
-                                                filetypes=[("JSON files", "*.json"), ("All files", "*.*")],
-                                                title="保存参数文件")
+            # Prepare the parameter list with names and values
+            param_list = []
+            
+            for idx, param in enumerate(params):
+                if idx < len(param_structure):
+                    param_name = param_structure[idx][0]  # Extract the parameter name from SCh_radio_parameters
+                    param_list.append((param_name, param))  # Append tuple (param_name, value)
 
-        if file_path:
-            # 将参数保存为 JSON 格式
-            with open(file_path, 'w', encoding='utf-8') as json_file:
-                json.dump(self.saved_parameters, json_file, ensure_ascii=False, indent=4)
-            print(f"已將參數保存至 {file_path}")
+            # Add to the final json_data structure
+            json_data[sensor_option_key] = param_list
+
+        # Write to a JSON file
+        with open('saved_parameters.json', 'w', encoding='utf-8') as json_file:
+            json.dump(json_data, json_file, ensure_ascii=False, indent=4)
+
+        print(f"參數已成功匯出到 saved_parameters.json")
 
 
-    
+
+
+
+
 
     def show_parameters(self):
+        self.export_to_json()
         self.text_box.config(state="normal")
         self.text_box.delete(1.0, tk.END)
         for key, value in self.saved_parameters.items():
@@ -871,18 +906,6 @@ class ParameterApp(tk.Tk):
 
         self.update()  # 強制刷新頁面
 
-
-   
-
-        
-
-
-
-        # # 提交按鈕
-        # submit_button = ttk.Button(
-        #     self, text="提交")
-        # submit_button.grid(column=1, row=1, padx=10, pady=10)
-        # self.page2_widgets.append(submit_button)
 
 
 if __name__ == '__main__':

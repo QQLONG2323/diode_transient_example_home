@@ -79,86 +79,674 @@ class ParameterApp(tk.Tk):
 
         # 定義每個感測器的選項
         self.SCh_radio = {
-            "S1Ch1": ["Current_source", "Voltage_source"],
-            "S1Ch2": ["Current_source", "Voltage_source"],
-            "S3Ch1": ["Current_source", "Voltage_source"],
-            "S3Ch2": ["Current_source", "Voltage_source"],
-            "S5Ch1": ["Current_source", "Measurement_channel", "Both"],
-            "S5Ch2": ["Current_source", "Measurement_channel", "Both"],
-            "S5Ch3": ["Current_source", "Measurement_channel", "Both"],
-            "S5Ch4": ["Current_source", "Measurement_channel", "Both"],
-            "S6Ch1": ["Current_source", "Measurement_channel", "Both"],
-            "S6Ch2": ["Current_source", "Measurement_channel", "Both"],
-            "S6Ch3": ["Current_source", "Measurement_channel", "Both"],
-            "S6Ch4": ["Current_source", "Measurement_channel", "Both"],
-            "S7Ch1": ["Current_source", "Measurement_channel", "Both"],
-            "S7Ch2": ["Current_source", "Measurement_channel", "Both"],
-            "S7Ch3": ["Current_source", "Measurement_channel", "Both"],
-            "S7Ch4": ["Current_source", "Measurement_channel", "Both"],
-            "S8Ch1": ["Current_source", "Measurement_channel", "Both"],
-            "S8Ch2": ["Current_source", "Measurement_channel", "Both"],
-            "S8Ch3": ["Current_source", "Measurement_channel", "Both"],
-            "S8Ch4": ["Current_source", "Measurement_channel", "Both"],
-            "S9Ch1": ["Thermometer"],
-            "S9Ch2": ["Thermometer"],
-            "S9Ch3": ["Thermometer"],
-            "S9Ch4": ["Thermometer"],
-            "S9Ch5": ["Thermometer"],
-            "S9Ch6": ["Thermometer"],
-            "S9Ch7": ["Thermometer"],
-            "S9Ch8": ["Thermometer"],
-            "S10Ch1": ["Thermometer"],
-            "S10Ch2": ["Thermometer"],
-            "S10Ch3": ["Thermometer"],
-            "S10Ch4": ["Thermometer"],
-            "S10Ch5": ["Thermometer"],
-            "S10Ch6": ["Thermometer"],
-            "S10Ch7": ["Thermometer"],
-            "S10Ch8": ["Thermometer"]
+            "S1Ch1": {
+                "Current_source": {
+                    "Output mode": ["Off", "On", "Switching"],
+                    "Current [A]": "entry",
+                    "Voltage limit [V]": "entry"
+                    },
+                "Voltage_source": {
+                    "Output mode": ["Off", "On", "Switching"],
+                    "On-state voltage [V]": "entry",
+                    "Current limit [A]": "entry"
+                }
+                },
+            "S1Ch2": {
+                "Current_source": {
+                    "Output mode": ["Off", "On", "Switching"],
+                    "Current [A]": "entry",
+                    "Voltage limit [V]": "entry"
+                    },
+                "Voltage_source": {
+                    "Output mode": ["Off", "On", "Switching"],
+                    "On-state voltage [V]": "entry",
+                    "Current limit [A]": "entry"
+                }
+                },
+            "S3Ch1": {
+                "Current_source": {
+                    "Output mode": ["Off", "On", "Switching"],
+                    "Current [A]": "entry",
+                    "Voltage limit [V]": "entry"
+                    },
+                "Voltage_source": {
+                    "Output mode": ["Off", "On", "Switching"],
+                    "On-state voltage [V]": "entry",
+                    "Current limit [A]": "entry"
+                }
+                },
+            "S3Ch2": {
+                "Current_source": {
+                    "Output mode": ["Off", "On", "Switching"],
+                    "Current [A]": "entry",
+                    "Voltage limit [V]": "entry"
+                    },
+                "Voltage_source": {
+                    "Output mode": ["Off", "On", "Switching"],
+                    "On-state voltage [V]": "entry",
+                    "Current limit [A]": "entry"
+                }
+                },
+            "S5Ch1": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S5Ch2": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S5Ch3": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S5Ch4": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S6Ch1": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S6Ch2": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S6Ch3": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S6Ch4": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S7Ch1": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S7Ch2": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S7Ch3": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S7Ch4": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S8Ch1": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S8Ch2": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S8Ch3": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S8Ch4": {
+                "Current_source": {
+                    "Output mode": ["Off", "On"],    
+                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry"
+                    },
+                "Measurement_channel": {
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                    },
+                "Both": {} 
+                },
+            "S9Ch1": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S9Ch2": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S9Ch3": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S9Ch4": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S9Ch5": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S9Ch6": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S9Ch7": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S9Ch8": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S10Ch1": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S10Ch2": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S10Ch3": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S10Ch4": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S10Ch5": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S10Ch6": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S10Ch7": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
+            "S10Ch8": {
+                "Thermometer": {
+                    "Type": "entry",
+                    "Sensitivity": "entry",
+                    "Sample per sec": "entry"
+                }
+                },
         }
 
-        # 定義每個選項對應的表單結構
-        self.SCh_radio_parameters = {
-            "S1_S3_Current_source": [
-                ("Output mode", ["Off", "On", "Switching"]),
-                ("Current [A]", "entry"),
-                ("Voltage limit [V]", "entry")
-            ],
-            "S1_S3_Voltage_source": [
-                ("Output mode", ["Off", "On", "Switching"]),
-                ("On-state voltage [V]", "entry"),
-                ("Current limit [A]", "entry")
-            ],
-            "S5_S8_Current_source": [
-                ("Output mode", ["Off", "On"]),    
-                ("Range", ["-0.2 A ~ 0.2 A",
-                 "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"]),
-                ("Current [A]", "entry")
-            ],
-            "S5_S8_Measurement_channel": [
-                ("Sensitivity [mV/K]", "entry"),                 
-                ("Auto range", ["Off", "On"]),
-                ("Range", ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                           "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                           "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                           "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                           "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                           "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                           "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                           "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                           "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                           "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                           "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                           "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                           "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                           "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                           ]
-                 ),
-                ("Vref [V]", "entry"),
-                ("Separate Vref for heating", ["Off", "On"])
-            ],
-            "S9_S10_Thermometer": [("Type", "entry"), ("Sensitivity", "entry"), ("Sample per sec", "entry")]
-        }
+        # # 定義每個選項對應的表單結構
+        # self.SCh_radio_parameters = {
+        #     "S1_S3_Current_source": [
+        #         ("Output mode", ["Off", "On", "Switching"]),
+        #         ("Current [A]", "entry"),
+        #         ("Voltage limit [V]", "entry")
+        #     ],
+        #     "S1_S3_Voltage_source": [
+        #         ("Output mode", ["Off", "On", "Switching"]),
+        #         ("On-state voltage [V]", "entry"),
+        #         ("Current limit [A]", "entry")
+        #     ],
+        #     "S5_S8_Current_source": [
+        #         ("Output mode", ["Off", "On"]),    
+        #         ("Range", ["-0.2 A ~ 0.2 A",
+        #          "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"]),
+        #         ("Current [A]", "entry")
+        #     ],
+        #     "S5_S8_Measurement_channel": [
+        #         ("Sensitivity [mV/K]", "entry"),                 
+        #         ("Auto range", ["Off", "On"]),
+        #         ("Range", ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+        #                    "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+        #                    "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+        #                    "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+        #                    "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+        #                    "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+        #                    "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+        #                    "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+        #                    "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+        #                    "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+        #                    "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+        #                    "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+        #                    "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+        #                    "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+        #                    ]
+        #          ),
+        #         ("Vref [V]", "entry"),
+        #         ("Separate Vref for heating", ["Off", "On"])
+        #     ],
+        #     "S9_S10_Thermometer": [("Type", "entry"), ("Sensitivity", "entry"), ("Sample per sec", "entry")]
+        # }
 
         # 創建 Checkbutton 和 RadioButton 的框架
         self.check_sensor = {}   # 儲存 Sensor
@@ -168,7 +756,7 @@ class ParameterApp(tk.Tk):
     
 
         # 排版 Sensor
-        for i, (sensor, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 2)):
+        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 2)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[sensor] = check_sensor
             checkbutton = ttk.Checkbutton(
@@ -176,7 +764,7 @@ class ParameterApp(tk.Tk):
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
         # 排版 Sensor
-        for i, (sensor, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 2, 4)):
+        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 2, 4)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[sensor] = check_sensor
             checkbutton = ttk.Checkbutton(
@@ -184,7 +772,7 @@ class ParameterApp(tk.Tk):
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
         # 排版 Sensor
-        for i, (sensor, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 4, 8)):
+        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 4, 8)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[sensor] = check_sensor
             checkbutton = ttk.Checkbutton(
@@ -192,7 +780,7 @@ class ParameterApp(tk.Tk):
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
         # 排版 Sensor
-        for i, (sensor, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 8, 12)):
+        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 8, 12)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[sensor] = check_sensor
             checkbutton = ttk.Checkbutton(
@@ -200,7 +788,7 @@ class ParameterApp(tk.Tk):
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
         # 排版 Sensor
-        for i, (sensor, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 12, 16)):
+        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 12, 16)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[sensor] = check_sensor
             checkbutton = ttk.Checkbutton(
@@ -208,7 +796,7 @@ class ParameterApp(tk.Tk):
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
         # 排版 Sensor
-        for i, (sensor, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 16, 20)):
+        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 16, 20)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[sensor] = check_sensor
             checkbutton = ttk.Checkbutton(
@@ -216,7 +804,7 @@ class ParameterApp(tk.Tk):
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
         # 排版 Sensor
-        for i, (sensor, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 20, 28)):
+        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 20, 28)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[sensor] = check_sensor
             checkbutton = ttk.Checkbutton(
@@ -224,7 +812,7 @@ class ParameterApp(tk.Tk):
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
         # 排版 Sensor
-        for i, (sensor, radio_options) in enumerate(itertools.islice(self.SCh_radio.items(), 28, 36)):
+        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 28, 36)):
             check_sensor = tk.BooleanVar()
             self.check_sensor[sensor] = check_sensor
             checkbutton = ttk.Checkbutton(
@@ -241,7 +829,6 @@ class ParameterApp(tk.Tk):
             self.update_form(sensor, disable=True)
 
     # 彈出一個填寫參數的表單視窗
-
     def open_parameter_window(self, sensor):
 
         # 建立彈出視窗
@@ -291,7 +878,7 @@ class ParameterApp(tk.Tk):
         button_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
 
         # 取得對應的 RadioButton 選項
-        radio_options = self.SCh_radio[sensor]
+        radio_options = list(self.SCh_radio[sensor].keys())
 
         # 檢查是否有保存的 RadioButton 選項
         default_radio_option = None
@@ -367,7 +954,7 @@ class ParameterApp(tk.Tk):
 
         if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
             # 填充 S1_S3_Current_source 表單
-            for i, (label_text, field_type) in enumerate(self.SCh_radio_parameters["S1_S3_Current_source"]):
+            for i, (label_text, field_type) in enumerate(self.SCh_radio[sensor]["Current_source"].items()):
                 ttk.Label(S1_S3_Current_source_frame,
                           text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
@@ -392,9 +979,9 @@ class ParameterApp(tk.Tk):
                     
             # 保存填充的 Current_source
             self.form_widgets[sensor]["Current_source"] = form_widgets_for_option_S1_S3_current_source
-
+            
             # 填充 Voltage_source 表單
-            for i, (label_text, field_type) in enumerate(self.SCh_radio_parameters["S1_S3_Voltage_source"]):
+            for i, (label_text, field_type) in enumerate(self.SCh_radio[sensor]["Voltage_source"].items()):
                 ttk.Label(S1_S3_Voltage_source_frame,
                           text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
@@ -423,7 +1010,7 @@ class ParameterApp(tk.Tk):
 
         elif sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:
             # 填充 S5_S8_Current_source 表單
-            for i, (label_text, field_type) in enumerate(self.SCh_radio_parameters["S5_S8_Current_source"]):
+            for i, (label_text, field_type) in enumerate(self.SCh_radio[sensor]["Current_source"].items()):
                 ttk.Label(S5_S8_Current_source_frame,
                           text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
@@ -452,7 +1039,7 @@ class ParameterApp(tk.Tk):
             self.form_widgets[sensor]["Current_source"] = form_widgets_for_option_S5_S8_current_source
 
             # 填充 S5_S8_Measurement_channel 表單
-            for i, (label_text, field_type) in enumerate(self.SCh_radio_parameters["S5_S8_Measurement_channel"]):
+            for i, (label_text, field_type) in enumerate(self.SCh_radio[sensor]["Measurement_channel"].items()):
                 ttk.Label(S5_S8_Measurement_channel_frame,
                           text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
@@ -485,7 +1072,7 @@ class ParameterApp(tk.Tk):
 
         else:
             # 填充 S9_S10_Thermometer 表單
-            for i, (label_text, field_type) in enumerate(self.SCh_radio_parameters["S9_S10_Thermometer"]):
+            for i, (label_text, field_type) in enumerate(self.SCh_radio[sensor]["Thermometer"].items()):
                 ttk.Label(S9_S10_Thermometer_frame,
                           text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
@@ -547,33 +1134,41 @@ class ParameterApp(tk.Tk):
                         for widget in widgets:
                             widget.configure(state="normal")
 
-    def save_parameters(self, sensor, option, window):
+    def save_parameters(self, sensor, check_option, window):
         """Handle form submission and save parameters"""
 
-        # Collect the parameters from the form
-        params = []
+        # Collect the parameters from the form (now using a dictionary to store keys and values)
+        params = {}
 
-        # option 可以是 "Current_source" 或 "Voltage_source" 或 "Measurement_channel" 或 "Both"
-        for widget in self.form_widgets[sensor][option]:
+        # check_option 可以是 "Current_source" 或 "Voltage_source" 或 "Measurement_channel" 或 "Both"
+        form_fields = self.SCh_radio[sensor][check_option].keys()  # Get the field names
+
+        # Iterate over the widgets and save both the field names and their values
+        for field_name, widget in zip(form_fields, self.form_widgets[sensor][check_option]):
             if isinstance(widget, ttk.Combobox):
-                params.append(widget.get())   # Get the selected value in Combobox
+                params[field_name] = widget.get()   # Get the selected value in Combobox
             else:
-                params.append(widget.get())   # Get the value in Entry
+                params[field_name] = widget.get()   # Get the value in Entry
 
         # Delete previously saved parameters for this sensor-option pair
         for key in list(self.saved_parameters):
-            if key == (sensor, option):  # 僅刪除與當前 sensor 和 option 配對的參數
+            if key == (sensor, check_option):  # 僅刪除與當前 sensor 和 check_option 配對的參數
                 del self.saved_parameters[key]
 
         # Save current parameters
-        self.saved_parameters[(sensor, option)] = params
-        print(f"提交的參數 ({sensor} - {option}): {params}")
+        self.saved_parameters[(sensor, check_option)] = params
+
+        # Print the saved parameters with keys and values
+        print(f"提交的參數 ({sensor} - {check_option}): ")
+        for field, value in params.items():
+            print(f"{field}: {value}")
+        
         print(self.saved_parameters)
         
        
 
         # 針對 S1_S3 清除另一個選項的內容
-        if option == "Current_source":
+        if check_option == "Current_source":
             # 清除 Voltage_source 的內容
             if (sensor, "Voltage_source") in self.saved_parameters:
                 del self.saved_parameters[(sensor, "Voltage_source")]
@@ -583,7 +1178,7 @@ class ParameterApp(tk.Tk):
                         widget.set('')  # 清空 combobox
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
-        elif option == "Voltage_source":
+        elif check_option == "Voltage_source":
             # 清除 Current_source 的內容
             if (sensor, "Current_source") in self.saved_parameters:
                 del self.saved_parameters[(sensor, "Current_source")]
@@ -595,10 +1190,10 @@ class ParameterApp(tk.Tk):
                         widget.delete(0, tk.END)  # 清空 entry
 
         # 針對 S5_S8 清除另一個選項的內容或是選擇 Both 的話兩個選項參數都保留
-        if option == "Current_source":
+        if check_option == "Current_source":
             # 清除 Measurement_channel 的內容
             if (sensor, "Measurement_channel") in self.saved_parameters:
-                print(sensor, option)
+                print(sensor, check_option)
                 del self.saved_parameters[(sensor, "Measurement_channel")]
                 for widget in self.form_widgets[sensor]["Measurement_channel"]:
                     if isinstance(widget, ttk.Combobox):
@@ -606,7 +1201,7 @@ class ParameterApp(tk.Tk):
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
             if (sensor, "Both") in self.saved_parameters:
-                print(sensor, option)
+                print(sensor, check_option)
                 del self.saved_parameters[(sensor, "Both")]
                 for widget in self.form_widgets[sensor]["Both"]:
                     if isinstance(widget, ttk.Combobox):
@@ -614,10 +1209,10 @@ class ParameterApp(tk.Tk):
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
 
-        elif option == "Measurement_channel":
+        elif check_option == "Measurement_channel":
             # 清除 Current_source 的內容
             if (sensor, "Current_source") in self.saved_parameters:
-                print(sensor, option)
+                print(sensor, check_option)
                 del self.saved_parameters[(sensor, "Current_source")]
                 for widget in self.form_widgets[sensor]["Current_source"]:
                     if isinstance(widget, ttk.Combobox):
@@ -625,7 +1220,7 @@ class ParameterApp(tk.Tk):
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
             if (sensor, "Both") in self.saved_parameters:
-                print(sensor, option)
+                print(sensor, check_option)
                 del self.saved_parameters[(sensor, "Both")]
                 for widget in self.form_widgets[sensor]["Both"]:
                     if isinstance(widget, ttk.Combobox):
@@ -633,7 +1228,7 @@ class ParameterApp(tk.Tk):
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
 
-        elif option == "Both":
+        elif check_option == "Both":
             # 刪除 Current_source 和 Measurement_channel 的 key (不清空表單)
             if (sensor, "Current_source") in self.saved_parameters:
                 del self.saved_parameters[(sensor, "Current_source")]
@@ -649,50 +1244,29 @@ class ParameterApp(tk.Tk):
         window.destroy()  
 
 
+
+
+    import json
+
     def export_to_json(self):
-        """Export saved parameters to JSON file"""
+        """Export saved parameters to a JSON file"""
 
         # Prepare the data for JSON export
         json_data = {}
 
+        # Iterate over saved parameters and prepare them for JSON output
+        for (sensor, check_option), params in self.saved_parameters.items():
+            # Create the "sensor_option" key to structure the output
+            sensor_check_option = f"{sensor}_{check_option}"
 
-        
+            # Store parameters as a dictionary for each sensor-option pair
+            json_data[sensor_check_option] = params
 
-        
-        for (sensor, option), params in self.saved_parameters.items():
-            # Create the "sensor_option" key
-            sensor_option_key = f"{sensor}_{option}"
-            
-            print(self.saved_parameters)
-            # Retrieve parameter names from SCh_radio_parameters
-            param_structure_key = f"{sensor}_{option}"  # Example: S1_S3_Current_source
-            if param_structure_key == "S1Ch1_Current_source":
-                param_structure = self.SCh_radio_parameters.get("S1_S3_Current_source", [])
-            print(param_structure_key)
-            print(self.SCh_radio_parameters.get(param_structure_key))
-            print(self.SCh_radio_parameters.items())
-            print(param_structure)
-
-            # Prepare the parameter list with names and values
-            param_list = []
-            
-            for idx, param in enumerate(params):
-                if idx < len(param_structure):
-                    param_name = param_structure[idx][0]  # Extract the parameter name from SCh_radio_parameters
-                    param_list.append((param_name, param))  # Append tuple (param_name, value)
-
-            # Add to the final json_data structure
-            json_data[sensor_option_key] = param_list
-
-        # Write to a JSON file
+        # Write the json_data to a JSON file
         with open('saved_parameters.json', 'w', encoding='utf-8') as json_file:
             json.dump(json_data, json_file, ensure_ascii=False, indent=4)
 
-        print(f"參數已成功匯出到 saved_parameters.json")
-
-
-
-
+        print("參數已成功匯出到 saved_parameters.json")
 
 
 

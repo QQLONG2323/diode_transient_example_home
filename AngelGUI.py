@@ -154,7 +154,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S5Ch2": {
                 "Current_source": {
@@ -183,7 +206,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S5Ch3": {
                 "Current_source": {
@@ -212,7 +258,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S5Ch4": {
                 "Current_source": {
@@ -241,7 +310,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S6Ch1": {
                 "Current_source": {
@@ -270,7 +362,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S6Ch2": {
                 "Current_source": {
@@ -299,7 +414,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S6Ch3": {
                 "Current_source": {
@@ -328,7 +466,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S6Ch4": {
                 "Current_source": {
@@ -357,7 +518,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S7Ch1": {
                 "Current_source": {
@@ -386,7 +570,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S7Ch2": {
                 "Current_source": {
@@ -415,7 +622,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S7Ch3": {
                 "Current_source": {
@@ -444,7 +674,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S7Ch4": {
                 "Current_source": {
@@ -473,7 +726,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S8Ch1": {
                 "Current_source": {
@@ -502,7 +778,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S8Ch2": {
                 "Current_source": {
@@ -531,7 +830,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S8Ch3": {
                 "Current_source": {
@@ -560,7 +882,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S8Ch4": {
                 "Current_source": {
@@ -589,7 +934,30 @@ class ParameterApp(tk.Tk):
                     "Vref [V]": "entry",
                     "Separate Vref for heating": ["Off", "On"]
                     },
-                "Both": {} 
+                "Both": {
+                    "Output mode": ["Off", "On"],    
+                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current [A]": "entry",
+                    "Sensitivity [mV/K]": "entry",                 
+                    "Auto range": ["Off", "On"],
+                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                        "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                        "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                        "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                        "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                        ],
+                    "Vref [V]": "entry",
+                    "Separate Vref for heating": ["Off", "On"]
+                } 
                 },
             "S9Ch1": {
                 "Thermometer": {
@@ -705,48 +1073,6 @@ class ParameterApp(tk.Tk):
                 },
         }
 
-        # # 定義每個選項對應的表單結構
-        # self.SCh_radio_parameters = {
-        #     "S1_S3_Current_source": [
-        #         ("Output mode", ["Off", "On", "Switching"]),
-        #         ("Current [A]", "entry"),
-        #         ("Voltage limit [V]", "entry")
-        #     ],
-        #     "S1_S3_Voltage_source": [
-        #         ("Output mode", ["Off", "On", "Switching"]),
-        #         ("On-state voltage [V]", "entry"),
-        #         ("Current limit [A]", "entry")
-        #     ],
-        #     "S5_S8_Current_source": [
-        #         ("Output mode", ["Off", "On"]),    
-        #         ("Range", ["-0.2 A ~ 0.2 A",
-        #          "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"]),
-        #         ("Current [A]", "entry")
-        #     ],
-        #     "S5_S8_Measurement_channel": [
-        #         ("Sensitivity [mV/K]", "entry"),                 
-        #         ("Auto range", ["Off", "On"]),
-        #         ("Range", ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-        #                    "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-        #                    "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-        #                    "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-        #                    "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-        #                    "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-        #                    "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-        #                    "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-        #                    "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-        #                    "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-        #                    "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-        #                    "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-        #                    "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-        #                    "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-        #                    ]
-        #          ),
-        #         ("Vref [V]", "entry"),
-        #         ("Separate Vref for heating", ["Off", "On"])
-        #     ],
-        #     "S9_S10_Thermometer": [("Type", "entry"), ("Sensitivity", "entry"), ("Sample per sec", "entry")]
-        # }
 
         # 創建 Checkbutton 和 RadioButton 的框架
         self.check_sensor = {}   # 儲存 Sensor
@@ -1236,6 +1562,25 @@ class ParameterApp(tk.Tk):
             if (sensor, "Measurement_channel") in self.saved_parameters:
                 del self.saved_parameters[(sensor, "Measurement_channel")]
 
+            both_params = self.saved_parameters[(sensor, check_option)]
+            current_source_params = {}
+            measurement_channel_params = {}
+
+            # 將 both_params 轉換為一個 list，這樣可以按索引操作
+            both_items = list(both_params.items())
+
+            # 使用 itertools.islice 對前3個和後5個分別切片
+            first_3_items = itertools.islice(both_items, 3)  # 前3個
+            last_5_items = itertools.islice(both_items, 3, 8)  # 第4到第8個
+
+            # 將前3個分配到 current_source_params
+            for field, value in first_3_items:
+                current_source_params[field] = value
+
+            # 將後5個分配到 measurement_channel_params
+            for field, value in last_5_items:
+                measurement_channel_params[field] = value
+
 
         
 
@@ -1243,10 +1588,6 @@ class ParameterApp(tk.Tk):
         # Close the window
         window.destroy()  
 
-
-
-
-    import json
 
     def export_to_json(self):
         """Export saved parameters to a JSON file"""
@@ -1318,167 +1659,314 @@ class ParameterApp(tk.Tk):
         # 用於儲存第二個頁面上的所有控件
         self.page2_widgets = []
 
-        # Config Name 輸入框和標籤
-        config_label = ttk.Label(self, text="請輸入 Config Name:")
-        config_label.grid(column=0, row=0, padx=10, pady=10)
-        self.page2_widgets.append(config_label)
+        # 創建框架
+        config_details_frame = ttk.LabelFrame(self, text="Config details")
+        config_details_frame.grid(column=0, row=0, padx=10, pady=10, sticky=tk.NSEW)
+        self.page2_widgets.append(config_details_frame)
 
-        self.config_entry = ttk.Entry(self)
-        self.config_entry.grid(column=1, row=0, padx=10, pady=10)
-        self.page2_widgets.append(self.config_entry)
+        power_steps_frame = ttk.LabelFrame(self, text="Power Steps")
+        power_steps_frame.grid(column=0, row=1, padx=10, pady=10, sticky=tk.NSEW)
+        self.page2_widgets.append(power_steps_frame)
 
-        # 根據 saved_parameters 中的數據動態生成表格
-        measurement_channels = [sensor for sensor, options in self.saved_parameters if "Measurement_channel" in options or "Both" in options]
-        current_sources_s5_s8 = [sensor for sensor, options in self.saved_parameters if ("Current_source" in options and sensor.startswith(('S5', 'S6', 'S7', 'S8'))) or ("Both" in options and sensor.startswith(('S5', 'S6', 'S7', 'S8')))]
-        current_sources_s1_s3 = [sensor for sensor, options in self.saved_parameters if "Current_source" in options and sensor.startswith(('S1', 'S3'))]
-
-        # 顯示 "Calculation Method" 字
-        method_label = ttk.Label(self, text="Calculation Method")
-        method_label.grid(row=1, column=0, padx=10, pady=10)
-        self.page2_widgets.append(method_label)
-
-        # 顯示公式
-        formula_label = ttk.Label(self, text="Diode — Pstep = ||Vmeas,heat · (Idrive + Isense)| - |Vmeas,cool · Isense||")
-        formula_label.grid(row=1, column=1, columnspan=2, padx=10, pady=10)
-        self.page2_widgets.append(formula_label)
-        
-        row_index = 2  # 用來處理表格的起始行
-
-        for sensor in measurement_channels:
-            # 第一欄：顯示 "Diode" 的欄位
-            diode_label = ttk.Label(self, text="Diode")
-            diode_label.grid(row=row_index, column=0, padx=10, pady=10)  # Column 1 顯示 "Diode"
-            self.page2_widgets.append(diode_label)
-            
-            # 第二欄：顯示 Measurement_channel 的感測器
-            label = ttk.Label(self, text=sensor)
-            label.grid(row=row_index, column=1, padx=10, pady=10)
-            self.page2_widgets.append(label)
-
-            # 第三欄：顯示 S5 ~ S8 的 Current_source 選項
-            Isense_label = ttk.Label(self, text="Isense: ")
-            Isense_label.grid(row=row_index, column=2, padx=10, pady=10)
-            self.page2_widgets.append(Isense_label)
-
-            combo_s5_s8 = ttk.Combobox(self, values=current_sources_s5_s8)
-            combo_s5_s8.grid(row=row_index, column=3, padx=10, pady=10)
-            self.page2_widgets.append(combo_s5_s8)
-            
-            # 第四欄：顯示 S1 ~ S3 的 Current_source 選項
-            Idrive_label = ttk.Label(self, text="Idrive: ")
-            Idrive_label.grid(row=row_index, column=4, padx=10, pady=10)
-            self.page2_widgets.append(Idrive_label)
-
-            combo_s1_s3 = ttk.Combobox(self, values=current_sources_s1_s3)
-            combo_s1_s3.grid(row=row_index, column=5, padx=10, pady=10)
-            self.page2_widgets.append(combo_s1_s3)
-            
-            row_index += 1
-
-    
-
-        # 加入一個空白的 Label，來佔位以分隔不同的部分
-        row_index += 1
-        empty_label = ttk.Label(self, text="")  # 空白文字
-        empty_label.grid(row=row_index, column=0, columnspan=6)  # 跨越所有列
-        self.page2_widgets.append(empty_label)
-
-        # 在表格的最後一行添加 "Measurement settings" 的 Label
-        row_index += 1  # 添加一个空行
-        measurement_settings_label = ttk.Label(self, text="Measurement settings")
-        measurement_settings_label.grid(row=row_index, column=0, columnspan=6, padx=10, pady=10, sticky="W")  # 使用 columnspan 覆蓋所有列
-        self.page2_widgets.append(measurement_settings_label)
+        measurement_settings_frame = ttk.LabelFrame(self, text="Measurement settings")
+        measurement_settings_frame.grid(column=0, row=2, padx=10, pady=10, sticky=tk.NSEW)
+        self.page2_widgets.append(measurement_settings_frame)
 
 
-        # Heating time row
-        row_index += 1  # 更新行索引以便繼續添加 Heating, Cooling, Delay 設置
-        heating_label = ttk.Label(self, text="Heating time [s]")
-        heating_label.grid(row=row_index, column=0, padx=10, pady=10)
-        self.page2_widgets.append(heating_label)
+        # connect to THERMOSTAT
+        # 使用 tk.BooleanVar 來控制 connect to THERMOSTAT 的選中狀態
+        self.connect_thermostat_var = tk.BooleanVar(value=False)  # 默認為未選中
+        self.tsp_var = tk.BooleanVar(value=False)  # 默認為未選中
 
-        heating_range_label = ttk.Label(self, text="範圍: 0 ~ 4000")
-        heating_range_label.grid(row=row_index, column=1, padx=10, pady=10)
-        self.page2_widgets.append(heating_range_label)
+        self.connect_thermostat_checkbutton = ttk.Checkbutton(self, text="Connect to Thermostat", variable=self.connect_thermostat_var, command=self.toggle_tspCheckbutton_temperature)
+        self.connect_thermostat_checkbutton.grid(row=3, column=0, padx=10, pady=10, sticky="W")
+        self.page2_widgets.append(self.connect_thermostat_checkbutton)
 
-        heating_setpoint_label = ttk.Label(self, text="Setpoint: ")
-        heating_setpoint_label.grid(row=row_index, column=2, padx=10, pady=10)
-        self.page2_widgets.append(heating_setpoint_label)
+        self.tsp_checkbutton = ttk.Checkbutton(self, text="Calibration Set (TSP)", variable=self.tsp_var, command=self.toggle_tsp_calibration_entry, state="disabled")
+        self.tsp_checkbutton.grid(row=3, column=1, padx=10, pady=10, sticky="W")
+        self.page2_widgets.append(self.tsp_checkbutton)
 
-        self.heating_entry = ttk.Entry(self)
-        self.heating_entry.grid(row=row_index, column=3, padx=10, pady=10)
-        self.page2_widgets.append(self.heating_entry)
 
-        # Cooling time row
-        row_index += 1
-        cooling_label = ttk.Label(self, text="Cooling time [s]")
-        cooling_label.grid(row=row_index, column=0, padx=10, pady=10)
-        self.page2_widgets.append(cooling_label)
+        thermostat_settings_for_measurement_frame = ttk.LabelFrame(self, text="Thermostat Settings for Measurement")
+        thermostat_settings_for_measurement_frame.grid(column=0, row=4, padx=10, pady=10, sticky=tk.NSEW)
+        self.page2_widgets.append(thermostat_settings_for_measurement_frame)
 
-        cooling_range_label = ttk.Label(self, text="範圍: 0 ~ 4000")
-        cooling_range_label.grid(row=row_index, column=1, padx=10, pady=10)
-        self.page2_widgets.append(cooling_range_label)
+        tsp_calibration_frame = ttk.LabelFrame(self, text="TSP calibration")
+        tsp_calibration_frame.grid(column=0, row=5, padx=10, pady=10, sticky=tk.NSEW)
+        self.page2_widgets.append(tsp_calibration_frame)
 
-        cooling_setpoint_label = ttk.Label(self, text="Setpoint: ")
-        cooling_setpoint_label.grid(row=row_index, column=2, padx=10, pady=10)
-        self.page2_widgets.append(cooling_setpoint_label)
+        advanced_thermostat_stability_settings_frame = ttk.LabelFrame(self, text="Advanced thermostat stability settings")
+        advanced_thermostat_stability_settings_frame.grid(column=0, row=6, padx=10, pady=10, sticky=tk.NSEW)
+        self.page2_widgets.append(advanced_thermostat_stability_settings_frame)
 
-        self.cooling_entry = ttk.Entry(self)
-        self.cooling_entry.grid(row=row_index, column=3, padx=10, pady=10)
-        self.page2_widgets.append(self.cooling_entry)
-
-        # Delay time row
-        row_index += 1
-        delay_label = ttk.Label(self, text="Delay time [s]")
-        delay_label.grid(row=row_index, column=0, padx=10, pady=10)
-        self.page2_widgets.append(delay_label)
-
-        delay_range_label = ttk.Label(self, text="範圍: 0 ~ 4000")
-        delay_range_label.grid(row=row_index, column=1, padx=10, pady=10)
-        self.page2_widgets.append(delay_range_label)
-
-        delay_setpoint_label = ttk.Label(self, text="Setpoint: ")
-        delay_setpoint_label.grid(row=row_index, column=2, padx=10, pady=10)
-        self.page2_widgets.append(delay_setpoint_label)
-
-        self.delay_entry = ttk.Entry(self)
-        self.delay_entry.grid(row=row_index, column=3, padx=10, pady=10)
-        self.page2_widgets.append(self.delay_entry)
-
-        # Repeat
-        row_index += 1
-        repeat_label = ttk.Label(self, text="Repeat")
-        repeat_label.grid(row=row_index, column=0, padx=10, pady=10)
-        self.page2_widgets.append(repeat_label)
-
-        repeat_range_label = ttk.Label(self, text="範圍: 1 ~ 100")
-        repeat_range_label.grid(row=row_index, column=1, padx=10, pady=10)
-        self.page2_widgets.append(repeat_range_label)
-
-        repeat_setpoint_label = ttk.Label(self, text="Setpoint: ")
-        repeat_setpoint_label.grid(row=row_index, column=2, padx=10, pady=10)
-        self.page2_widgets.append(repeat_setpoint_label)
-
-        self.repeat_entry = ttk.Entry(self)
-        self.repeat_entry.grid(row=row_index, column=3, padx=10, pady=10)
-        self.page2_widgets.append(self.repeat_entry)
-
-        
         # 添加儲存、Previous 和 Next 按鈕
-        row_index += 1
         save_button = ttk.Button(self, text="儲存")
-        save_button.grid(row=row_index, column=4, padx=10, pady=10)
+        save_button.grid(row=7, column=1, padx=10, pady=10)
         self.page2_widgets.append(save_button)
 
         previous_button = ttk.Button(self, text="Previous", command=self.go_to_page1)
-        previous_button.grid(row=row_index, column=0, padx=10, pady=10)
+        previous_button.grid(row=7, column=0, padx=10, pady=10, sticky="W")
         self.page2_widgets.append(previous_button)
 
         next_button = ttk.Button(self, text="Next")
-        next_button.grid(row=row_index, column=5, padx=10, pady=10)
+        next_button.grid(row=7, column=2, padx=10, pady=10)
         self.page2_widgets.append(next_button)
 
 
+
+        # Config Name 輸入框和標籤
+        config_label = ttk.Label(config_details_frame, text="Config Name:")
+        config_label.grid(column=0, row=0, padx=10, pady=10)
+
+        self.config_entry = ttk.Entry(config_details_frame)
+        self.config_entry.grid(column=1, row=0, padx=10, pady=10)
+
+        # 儲存路徑選擇
+        path_label = ttk.Label(config_details_frame, text="儲存路徑:")
+        path_label.grid(column=0, row=1, padx=10, pady=10)
+       
+        self.path_display = ttk.Label(config_details_frame, text="未選擇路徑")
+        self.path_display.grid(column=1, row=1, padx=10, pady=10)
+
+        def select_directory():
+            # 打開文件夾選擇對話框
+            selected_path = filedialog.askdirectory()
+            if selected_path:  # 如果選擇了路徑
+                self.path_display.config(text=selected_path)
+
+        select_path_button = ttk.Button(config_details_frame, text="選擇路徑", command=select_directory)
+        select_path_button.grid(column=2, row=1, padx=10, pady=10)
+
+        # 根據 saved_parameters 中的數據動態生成表格
+        measurement_channels = [sensor for sensor, check_option in self.saved_parameters if "Measurement_channel" in check_option or "Both" in check_option]
+        current_sources_s5_s8 = [sensor for sensor, check_option in self.saved_parameters if ("Current_source" in check_option and sensor.startswith(('S5', 'S6', 'S7', 'S8'))) or ("Both" in check_option and sensor.startswith(('S5', 'S6', 'S7', 'S8')))]
+        current_sources_s1_s3 = [sensor for sensor, check_option in self.saved_parameters if "Current_source" in check_option and sensor.startswith(('S1', 'S3'))]
+
+        # 顯示 "Calculation Method" 字
+        method_label = ttk.Label(power_steps_frame, text="Calculation Method")
+        method_label.grid(row=0, column=0, padx=10, pady=10)
+
+        # 顯示公式
+        formula_label = ttk.Label(power_steps_frame, text="Diode — Pstep = ||Vmeas,heat · (Idrive + Isense)| - |Vmeas,cool · Isense||")
+        formula_label.grid(row=0, column=1, columnspan=2, padx=10, pady=10)
+        
+        row_index = 1  # 用來處理表格的起始行
+
+        for sensor in measurement_channels:
+            # 第一欄：顯示 "Diode" 的欄位
+            diode_label = ttk.Label(power_steps_frame, text="Diode")
+            diode_label.grid(row=row_index, column=0, padx=10, pady=10)  
+            
+            # 第二欄：顯示 Measurement_channel 的感測器
+            label = ttk.Label(power_steps_frame, text=sensor)
+            label.grid(row=row_index, column=1, padx=10, pady=10, sticky="E")
+
+            # 第三欄：顯示 S5 ~ S8 的 Current_source 選項
+            Isense_label = ttk.Label(power_steps_frame, text="Isense: ")
+            Isense_label.grid(row=row_index, column=2, padx=10, pady=10, sticky="E")
+
+            combo_s5_s8 = ttk.Combobox(power_steps_frame, values=current_sources_s5_s8)
+            combo_s5_s8.grid(row=row_index, column=3, padx=10, pady=10)
+            
+            # 第四欄：顯示 S1 ~ S3 的 Current_source 選項
+            Idrive_label = ttk.Label(power_steps_frame, text="Idrive: ")
+            Idrive_label.grid(row=row_index, column=4, padx=10, pady=10)
+
+            combo_s1_s3 = ttk.Combobox(power_steps_frame, values=current_sources_s1_s3)
+            combo_s1_s3.grid(row=row_index, column=5, padx=10, pady=10)
+            
+            row_index += 1
+
+
+        # Heating time row
+        heating_label = ttk.Label(measurement_settings_frame, text="Heating time [s]")
+        heating_label.grid(row=0, column=0, padx=10, pady=10)
+
+        heating_range_label = ttk.Label(measurement_settings_frame, text="範圍: 0 ~ 4000")
+        heating_range_label.grid(row=0, column=1, padx=10, pady=10)
+       
+        heating_setpoint_label = ttk.Label(measurement_settings_frame, text="Setpoint: ")
+        heating_setpoint_label.grid(row=0, column=2, padx=10, pady=10)
+
+        self.heating_entry = ttk.Entry(measurement_settings_frame)
+        self.heating_entry.grid(row=0, column=3, padx=10, pady=10)
+
+        # Cooling time row
+        cooling_label = ttk.Label(measurement_settings_frame, text="Cooling time [s]")
+        cooling_label.grid(row=1, column=0, padx=10, pady=10, sticky="W")
+        
+        cooling_range_label = ttk.Label(measurement_settings_frame, text="範圍: 0 ~ 4000")
+        cooling_range_label.grid(row=1, column=1, padx=10, pady=10)
+  
+
+        cooling_setpoint_label = ttk.Label(measurement_settings_frame, text="Setpoint: ")
+        cooling_setpoint_label.grid(row=1, column=2, padx=10, pady=10)
+
+        self.cooling_entry = ttk.Entry(measurement_settings_frame)
+        self.cooling_entry.grid(row=1, column=3, padx=10, pady=10)
+
+        # Delay time row
+        delay_label = ttk.Label(measurement_settings_frame, text="Delay time [s]")
+        delay_label.grid(row=2, column=0, padx=10, pady=10, sticky="W")
+        
+        delay_range_label = ttk.Label(measurement_settings_frame, text="範圍: 0 ~ 4000")
+        delay_range_label.grid(row=2, column=1, padx=10, pady=10)
+
+        delay_setpoint_label = ttk.Label(measurement_settings_frame, text="Setpoint: ")
+        delay_setpoint_label.grid(row=2, column=2, padx=10, pady=10)
+
+        self.delay_entry = ttk.Entry(measurement_settings_frame)
+        self.delay_entry.grid(row=2, column=3, padx=10, pady=10)
+
+        # Repeat
+        # 使用 tk.BooleanVar 來控制 Repeat 的選中狀態
+        self.repeat_var = tk.BooleanVar(value=False)  # 默認為未選中
+
+        # 使用 ttk.Checkbutton 來啟用或禁用 repeat_entry
+        self.repeat_checkbutton = ttk.Checkbutton(measurement_settings_frame, text="Repeat [times]", variable=self.repeat_var, command=self.toggle_repeat_entry)
+        self.repeat_checkbutton.grid(row=4, column=0, padx=10, pady=10)
+
+        repeat_range_label = ttk.Label(measurement_settings_frame, text="範圍: 1 ~ 100")
+        repeat_range_label.grid(row=4, column=1, padx=10, pady=10)
+
+        repeat_setpoint_label = ttk.Label(measurement_settings_frame, text="Setpoint: ")
+        repeat_setpoint_label.grid(row=4, column=2, padx=10, pady=10)
+
+        # Repeat 的 Entry
+        self.repeat_entry = ttk.Entry(measurement_settings_frame, state="disabled")  # 初始狀態為禁用
+        self.repeat_entry.grid(row=4, column=3, padx=10, pady=10)
+
+
+        # Temperature [°C]
+        temperature_label = ttk.Label(thermostat_settings_for_measurement_frame, text="Temperature [°C]")
+        temperature_label.grid(row=0, column=0, padx=10, pady=10)
+
+        temperature_range_label = ttk.Label(thermostat_settings_for_measurement_frame, text="範圍: -45 ~ 160")
+        temperature_range_label.grid(row=0, column=1, padx=10, pady=10)
+
+        temperature_setpoint_label = ttk.Label(thermostat_settings_for_measurement_frame, text="Setpoint: ")
+        temperature_setpoint_label.grid(row=0, column=2, padx=10, pady=10)
+
+        self.temperature_entry = ttk.Entry(thermostat_settings_for_measurement_frame, state="disabled")  # 初始狀態為禁用
+        self.temperature_entry.grid(row=0, column=3, padx=10, pady=10)
+
+
+        # TSP calibration
+        # Tmin [°C]
+        tmin_label = ttk.Label(tsp_calibration_frame, text="Tmin [°C]")
+        tmin_label.grid(row=0, column=0, padx=10, pady=10)
+
+        tmin_range_label = ttk.Label(tsp_calibration_frame, text="範圍: -45 ~ 160")
+        tmin_range_label.grid(row=0, column=1, padx=10, pady=10)
+
+        tmin_setpoint_label = ttk.Label(tsp_calibration_frame, text="Setpoint: ")
+        tmin_setpoint_label.grid(row=0, column=2, padx=10, pady=10)
+
+        self.tmin_entry = ttk.Entry(tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
+        self.tmin_entry.grid(row=0, column=3, padx=10, pady=10)
+
+        # Tmax [°C]
+        tmax_label = ttk.Label(tsp_calibration_frame, text="Tmax [°C]")
+        tmax_label.grid(row=1, column=0, padx=10, pady=10)
+
+        tmax_range_label = ttk.Label(tsp_calibration_frame, text="範圍: -45 ~ 160")
+        tmax_range_label.grid(row=1, column=1, padx=10, pady=10)
+
+        tmax_setpoint_label = ttk.Label(tsp_calibration_frame, text="Setpoint: ")
+        tmax_setpoint_label.grid(row=1, column=2, padx=10, pady=10)
+
+        self.tmax_entry = ttk.Entry(tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
+        self.tmax_entry.grid(row=1, column=3, padx=10, pady=10)
+
+        # Tstep [°C]
+        tstep_label = ttk.Label(tsp_calibration_frame, text="Tstep [°C]")
+        tstep_label.grid(row=2, column=0, padx=10, pady=10)
+
+        tstep_range_label = ttk.Label(tsp_calibration_frame, text="範圍: 1 ~ 205")
+        tstep_range_label.grid(row=2, column=1, padx=10, pady=10)
+
+        tstep_setpoint_label = ttk.Label(tsp_calibration_frame, text="Setpoint: ")
+        tstep_setpoint_label.grid(row=2, column=2, padx=10, pady=10)
+
+        self.tstep_entry = ttk.Entry(tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
+        self.tstep_entry.grid(row=2, column=3, padx=10, pady=10)
+
+        
+                     
+
+
+
+
+        
+        
+        
+                                 
+
+
+        # Time window [s]
+        # Max. allowed temp. change [°C]
+        # ΔT from target [°C]
+        # Timeout [s]
+
+        
+
+
+
+
+
+
+
+
+
+
+    
+        
+
+
         self.update()  # 強制刷新頁面
+
+
+    def toggle_repeat_entry(self):
+        """用來啟用或禁用 repeat_entry 的回調函數"""
+        if self.repeat_var.get():  # 如果 Checkbutton 被選中
+            self.repeat_entry.config(state="normal")  # 啟用輸入框
+        else:
+            self.repeat_entry.delete(0, tk.END)  # 清空輸入框的內容
+            self.repeat_entry.config(state="disabled")  # 禁用輸入框
+
+    def toggle_tspCheckbutton_temperature(self):
+        """用來啟用或禁用 tsp 選項以及 temperature"""
+        if self.connect_thermostat_var.get():  # 如果 "Connect to Thermostat" Checkbutton 被選中
+            self.tsp_checkbutton.config(state="normal")  # 啟用 TSP Checkbutton
+            self.temperature_entry.config(state="normal")  # 啟用 temperature 輸入框
+        else:
+            self.tsp_var.set(False)  # 清空 TSP Checkbutton 內容
+            self.tsp_checkbutton.config(state="disabled")  # 禁用 TSP Checkbutton
+            self.temperature_entry.delete(0, tk.END)  # 清空 temperature 輸入框的內容
+            self.temperature_entry.config(state="disabled")  # 禁用 temperature 輸入框
+            self.tmin_entry.delete(0, tk.END)  # 清空 tmin 輸入框的內容
+            self.tmin_entry.config(state="disabled")  # 禁用 tmin 輸入框
+            self.tmax_entry.delete(0, tk.END)  # 清空 tmax 輸入框的內容
+            self.tmax_entry.config(state="disabled")  # 禁用 tmax 輸入框
+            self.tstep_entry.delete(0, tk.END)  # 清空 tstep 輸入框的內容
+            self.tstep_entry.config(state="disabled")  # 禁用 tstep 輸入框
+
+    def toggle_tsp_calibration_entry(self):
+        """用來啟用或禁用 TSP calibration 的輸入框"""
+        if self.tsp_var.get():  # 如果 tspCheckbutton 被選中
+            self.tmin_entry.config(state="normal")  # 啟用 tmin 輸入框
+            self.tmax_entry.config(state="normal")  # 啟用 tmax 輸入框
+            self.tstep_entry.config(state="normal")  # 啟用 tstep 輸入框
+        else:
+            self.tmin_entry.delete(0, tk.END)  # 清空 tmin 輸入框的內容
+            self.tmin_entry.config(state="disabled")  # 禁用 tmin 輸入框
+            self.tmax_entry.delete(0, tk.END)  # 清空 tmax 輸入框的內容
+            self.tmax_entry.config(state="disabled")  # 禁用 tmax 輸入框
+            self.tstep_entry.delete(0, tk.END)  # 清空 tstep 輸入框的內容
+            self.tstep_entry.config(state="disabled")  # 禁用 tstep 輸入框
+
+    
+            
 
 
 

@@ -59,22 +59,10 @@ class ParameterApp(tk.Tk):
         TH800_S10_frame.grid(column=7, row=0, padx=10, pady=10, sticky=tk.NSEW)
         self.page1_widgets.append(TH800_S10_frame)
 
-        # 顯示儲存所有參數的框框
-        self.text_box = tk.Text(self, width=100, height=10, state="disabled")
-        self.text_box.grid(column=0, row=1, columnspan=7,
-                           rowspan=2, padx=10, pady=10)
-        self.page1_widgets.append(self.text_box)
-
-        # 顯示儲存參數按鈕
-        parameters_button = ttk.Button(
-            self, text="保存目前參數\n&\n顯示目前儲存參數", command=self.show_parameters)
-        parameters_button.grid(column=7, row=1, padx=10, pady=10, ipady=30)
-        self.page1_widgets.append(parameters_button)
-
         # Next 按鈕，按下後隱藏當前頁面並進入下一步的頁面
         next_button = ttk.Button(
             self, text="Next", command=self.go_to_page2)
-        next_button.grid(column=7, row=2, padx=10, pady=10)
+        next_button.grid(column=7, row=1, padx=10, pady=10)
         self.page1_widgets.append(next_button)
 
         # 定義每個感測器的選項
@@ -1600,14 +1588,6 @@ class ParameterApp(tk.Tk):
 
         print("參數已成功匯出到 saved_parameters.json")
 
-    def show_parameters(self):
-        self.export_to_json()
-        self.text_box.config(state="normal")
-        self.text_box.delete(1.0, tk.END)
-        for key, value in self.saved_parameters.items():
-            param_str = f"{key}: {value}\n\n"
-            self.text_box.insert(tk.END, param_str)
-        self.text_box.config(state="disabled")
 
     def go_to_page1(self):
         """隱藏當前頁面，顯示上一頁面"""
@@ -1631,6 +1611,8 @@ class ParameterApp(tk.Tk):
                         widget.insert(0, params[idx])
 
     def go_to_page2(self):
+        # 儲存參數至 JSON 檔
+        self.export_to_json()
         """隱藏當前頁面，顯示下一頁面"""
         # 隱藏第一頁面的所有控件
         for widget in self.page1_widgets:
@@ -1641,6 +1623,9 @@ class ParameterApp(tk.Tk):
 
     def create_page2(self):
         """創建第二頁面"""
+
+        # 創建存儲第二頁參數的容器
+        self.page2_parameters = {}
 
         # 用於儲存第二個頁面上的所有控件
         self.page2_widgets = []
@@ -1672,12 +1657,14 @@ class ParameterApp(tk.Tk):
         self.connect_thermostat_checkbutton.grid(
             row=3, column=0, padx=10, pady=10)
         self.page2_widgets.append(self.connect_thermostat_checkbutton)
+        self.page2_parameters['Connect_to_Thermostat'] = self.connect_thermostat_var.get()
 
         self.tsp_checkbutton = ttk.Checkbutton(
             self, text="Calibration Set (TSP)", variable=self.tsp_var, command=self.toggle_tsp_calibration_entry, state="disabled")
         self.tsp_checkbutton.grid(
             row=5, column=0, padx=10, pady=10)
         self.page2_widgets.append(self.tsp_checkbutton)
+        self.page2_parameters['TSP'] = self.tsp_var.get()
 
         thermostat_settings_for_measurement_frame = ttk.LabelFrame(
             self, text="Thermostat Settings for Measurement")
@@ -1696,17 +1683,13 @@ class ParameterApp(tk.Tk):
             column=0, row=7, padx=10, pady=10, sticky=tk.NSEW)
         self.page2_widgets.append(advanced_thermostat_stability_settings_frame)
 
-        # 添加儲存、Previous 和 Next 按鈕
-        save_button = ttk.Button(self, text="儲存")
-        save_button.grid(row=8, column=1, padx=10, pady=10)
-        self.page2_widgets.append(save_button)
-
+        # 添加 Previous 和 Next 按鈕
         previous_button = ttk.Button(
             self, text="Previous", command=self.go_to_page1)
         previous_button.grid(row=8, column=0, padx=10, pady=10, sticky="W")
         self.page2_widgets.append(previous_button)
 
-        next_button = ttk.Button(self, text="Next")
+        next_button = ttk.Button(self, text="Next", command=self.page2_export_to_json)
         next_button.grid(row=8, column=2, padx=10, pady=10)
         self.page2_widgets.append(next_button)
 
@@ -1716,6 +1699,7 @@ class ParameterApp(tk.Tk):
 
         self.config_entry = ttk.Entry(config_details_frame)
         self.config_entry.grid(column=1, row=0, padx=10, pady=10)
+        self.page2_parameters['Config_Name'] = self.config_entry.get()
 
         # 儲存路徑選擇
         path_label = ttk.Label(config_details_frame, text="儲存路徑:")
@@ -1723,6 +1707,7 @@ class ParameterApp(tk.Tk):
 
         self.path_display = ttk.Label(config_details_frame, text="未選擇路徑")
         self.path_display.grid(column=1, row=1, padx=10, pady=10)
+        self.page2_parameters['storage_path'] = self.path_display.cget("text")
 
         def select_directory():
             # 打開文件夾選擇對話框
@@ -1759,25 +1744,28 @@ class ParameterApp(tk.Tk):
             diode_label.grid(row=row_index, column=0, padx=10, pady=10)
 
             # 第二欄：顯示 Measurement_channel 的感測器
-            label = ttk.Label(power_steps_frame, text=sensor)
-            label.grid(row=row_index, column=1, padx=10, pady=10, sticky="E")
+            self.ms_401_label = ttk.Label(power_steps_frame, text=sensor)
+            self.ms_401_label.grid(row=row_index, column=1, padx=10, pady=10, sticky="E")
+            self.page2_parameters['MS_401'] = self.ms_401_label.cget("text")
 
             # 第三欄：顯示 S5 ~ S8 的 Current_source 選項
             Isense_label = ttk.Label(power_steps_frame, text="Isense: ")
             Isense_label.grid(row=row_index, column=2,
                               padx=10, pady=10, sticky="E")
 
-            combo_s5_s8 = ttk.Combobox(
+            self.combo_s5_s8 = ttk.Combobox(
                 power_steps_frame, values=current_sources_s5_s8)
-            combo_s5_s8.grid(row=row_index, column=3, padx=10, pady=10)
-
+            self.combo_s5_s8.grid(row=row_index, column=3, padx=10, pady=10)
+            self.page2_parameters['Isense'] = self.combo_s5_s8.get()
+            
             # 第四欄：顯示 S1 ~ S3 的 Current_source 選項
             Idrive_label = ttk.Label(power_steps_frame, text="Idrive: ")
             Idrive_label.grid(row=row_index, column=4, padx=10, pady=10)
 
-            combo_s1_s3 = ttk.Combobox(
+            self.combo_s1_s3 = ttk.Combobox(
                 power_steps_frame, values=current_sources_s1_s3)
-            combo_s1_s3.grid(row=row_index, column=5, padx=10, pady=10)
+            self.combo_s1_s3.grid(row=row_index, column=5, padx=10, pady=10)
+            self.page2_parameters['Idrive'] = self.combo_s1_s3.get()
 
             row_index += 1
 
@@ -1796,6 +1784,7 @@ class ParameterApp(tk.Tk):
 
         self.heating_entry = ttk.Entry(measurement_settings_frame)
         self.heating_entry.grid(row=0, column=3, padx=10, pady=10)
+        self.page2_parameters['Heating_time'] = self.heating_entry.get()
 
         # Cooling time row
         cooling_label = ttk.Label(
@@ -1812,6 +1801,7 @@ class ParameterApp(tk.Tk):
 
         self.cooling_entry = ttk.Entry(measurement_settings_frame)
         self.cooling_entry.grid(row=1, column=3, padx=10, pady=10)
+        self.page2_parameters['Cooling_time'] = self.cooling_entry.get()
 
         # Delay time row
         delay_label = ttk.Label(
@@ -1828,6 +1818,7 @@ class ParameterApp(tk.Tk):
 
         self.delay_entry = ttk.Entry(measurement_settings_frame)
         self.delay_entry.grid(row=2, column=3, padx=10, pady=10)
+        self.page2_parameters['Delay_time'] = self.delay_entry.get()
 
         # Repeat
         # 使用 tk.BooleanVar 來控制 Repeat 的選中狀態
@@ -1837,6 +1828,7 @@ class ParameterApp(tk.Tk):
         self.repeat_checkbutton = ttk.Checkbutton(
             measurement_settings_frame, text="Repeat [times]", variable=self.repeat_var, command=self.toggle_repeat_entry)
         self.repeat_checkbutton.grid(row=4, column=0, padx=10, pady=10)
+        self.page2_parameters['Repeat'] = self.repeat_var.get()
 
         repeat_range_label = ttk.Label(
             measurement_settings_frame, text="範圍: 1 ~ 100")
@@ -1850,6 +1842,7 @@ class ParameterApp(tk.Tk):
         self.repeat_entry = ttk.Entry(
             measurement_settings_frame, state="disabled")  # 初始狀態為禁用
         self.repeat_entry.grid(row=4, column=3, padx=10, pady=10)
+        self.page2_parameters['Repeat_times'] = self.repeat_entry.get()
 
         # Temperature [°C]
         temperature_label = ttk.Label(
@@ -1867,6 +1860,7 @@ class ParameterApp(tk.Tk):
         self.temperature_entry = ttk.Entry(
             thermostat_settings_for_measurement_frame, state="disabled")  # 初始狀態為禁用
         self.temperature_entry.grid(row=0, column=3, padx=10, pady=10)
+        self.page2_parameters['Temperature'] = self.temperature_entry.get()
 
         # TSP calibration
         # Tmin [°C]
@@ -1884,6 +1878,7 @@ class ParameterApp(tk.Tk):
         self.tmin_entry = ttk.Entry(
             tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
         self.tmin_entry.grid(row=0, column=3, padx=10, pady=10)
+        self.page2_parameters['Tmin'] = self.tmin_entry.get()
 
         # Tmax [°C]
         tmax_label = ttk.Label(tsp_calibration_frame, text="Tmax [°C]")
@@ -1900,6 +1895,7 @@ class ParameterApp(tk.Tk):
         self.tmax_entry = ttk.Entry(
             tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
         self.tmax_entry.grid(row=1, column=3, padx=10, pady=10)
+        self.page2_parameters['Tmax'] = self.tmax_entry.get()
 
         # Tstep [°C]
         tstep_label = ttk.Label(tsp_calibration_frame, text="Tstep [°C]")
@@ -1916,6 +1912,8 @@ class ParameterApp(tk.Tk):
         self.tstep_entry = ttk.Entry(
             tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
         self.tstep_entry.grid(row=2, column=3, padx=10, pady=10)
+        self.page2_parameters['Tstep'] = self.tstep_entry.get()
+
 
         # Time window [s]
         # Max. allowed temp. change [°C]
@@ -1963,6 +1961,54 @@ class ParameterApp(tk.Tk):
             self.tmax_entry.config(state="disabled")  # 禁用 tmax 輸入框
             self.tstep_entry.delete(0, tk.END)  # 清空 tstep 輸入框的內容
             self.tstep_entry.config(state="disabled")  # 禁用 tstep 輸入框
+
+
+    def page2_export_to_json(self):
+        # 定義 JSON 檔案路徑
+        file_path = 'saved_parameters.json'
+
+
+        # 確保控件的值是最新的
+        self.page2_parameters['Config_Name'] = self.config_entry.get()
+        self.page2_parameters['storage_path'] = self.path_display.cget("text")
+        self.page2_parameters['MS_401'] = self.ms_401_label.cget("text")
+        self.page2_parameters['Isense'] = self.combo_s5_s8.get()
+        self.page2_parameters['Idrive'] = self.combo_s1_s3.get()
+        self.page2_parameters['Heating_time'] = self.heating_entry.get()
+        self.page2_parameters['Cooling_time'] = self.cooling_entry.get()
+        self.page2_parameters['Delay_time'] = self.delay_entry.get()
+        self.page2_parameters['Repeat'] = self.repeat_var.get()
+        self.page2_parameters['Repeat_times'] = self.repeat_entry.get()
+        self.page2_parameters['Connect_to_Thermostat'] = self.connect_thermostat_var.get()
+        self.page2_parameters['Temperature'] = self.temperature_entry.get()
+        self.page2_parameters['TSP'] = self.tsp_var.get()
+        self.page2_parameters['Tmin'] = self.tmin_entry.get()
+        self.page2_parameters['Tmax'] = self.tmax_entry.get()
+        self.page2_parameters['Tstep'] = self.tstep_entry.get()
+
+
+        # 檢查檔案是否存在
+        if os.path.exists(file_path):
+            # 如果存在，打開檔案並讀取現有內容
+            with open(file_path, 'r') as file:
+                try:
+                    # 讀取已存在的資料
+                    saved_data = json.load(file)
+                except json.JSONDecodeError:
+                    # 如果檔案是空的或格式錯誤，初始化為空字典
+                    saved_data = {}
+        else:
+            # 如果檔案不存在，初始化為空字典
+            saved_data = {}
+
+        # 將新參數添加進去
+        saved_data.update(self.page2_parameters)
+
+        # 將更新後的資料寫回到 JSON 文件中
+        with open(file_path, 'w') as file:
+            json.dump(saved_data, file, indent=4)
+
+        print("參數已成功儲存至 saved_parameters.json")
 
 
 if __name__ == '__main__':

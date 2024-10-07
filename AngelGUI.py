@@ -1738,6 +1738,11 @@ class ParameterApp(tk.Tk):
 
         row_index = 1  # 用來處理表格的起始行
 
+        # 在類的初始化方法中初始化列表
+        self.ms_401_labels = []
+        self.combo_s5_s8s = []
+        self.combo_s1_s3s = []
+
         for sensor in measurement_channels:
             # 第一欄：顯示 "Diode" 的欄位
             diode_label = ttk.Label(power_steps_frame, text="Diode")
@@ -1746,7 +1751,10 @@ class ParameterApp(tk.Tk):
             # 第二欄：顯示 Measurement_channel 的感測器
             self.ms_401_label = ttk.Label(power_steps_frame, text=sensor)
             self.ms_401_label.grid(row=row_index, column=1, padx=10, pady=10, sticky="E")
-            self.page2_parameters['MS_401'] = self.ms_401_label.cget("text")
+            # self.page2_parameters 已寫在下面
+
+            # 將 ms_401_label 加入到 ms_401_labels 列表中
+            self.ms_401_labels.append(self.ms_401_label)
 
             # 第三欄：顯示 S5 ~ S8 的 Current_source 選項
             Isense_label = ttk.Label(power_steps_frame, text="Isense: ")
@@ -1756,7 +1764,10 @@ class ParameterApp(tk.Tk):
             self.combo_s5_s8 = ttk.Combobox(
                 power_steps_frame, values=current_sources_s5_s8)
             self.combo_s5_s8.grid(row=row_index, column=3, padx=10, pady=10)
-            self.page2_parameters['Isense'] = self.combo_s5_s8.get()
+            # self.page2_parameters 已寫在下面
+
+            # 將 combo_s5_s8 加入到 combo_s5_s8s 列表中
+            self.combo_s5_s8s.append(self.combo_s5_s8)
             
             # 第四欄：顯示 S1 ~ S3 的 Current_source 選項
             Idrive_label = ttk.Label(power_steps_frame, text="Idrive: ")
@@ -1765,7 +1776,10 @@ class ParameterApp(tk.Tk):
             self.combo_s1_s3 = ttk.Combobox(
                 power_steps_frame, values=current_sources_s1_s3)
             self.combo_s1_s3.grid(row=row_index, column=5, padx=10, pady=10)
-            self.page2_parameters['Idrive'] = self.combo_s1_s3.get()
+            # self.page2_parameters 已寫在下面
+
+            # 將 combo_s1_s3 加入到 combo_s1_s3s 列表中
+            self.combo_s1_s3s.append(self.combo_s1_s3)
 
             row_index += 1
 
@@ -1971,9 +1985,6 @@ class ParameterApp(tk.Tk):
         # 確保控件的值是最新的
         self.page2_parameters['Config_Name'] = self.config_entry.get()
         self.page2_parameters['storage_path'] = self.path_display.cget("text")
-        self.page2_parameters['MS_401'] = self.ms_401_label.cget("text")
-        self.page2_parameters['Isense'] = self.combo_s5_s8.get()
-        self.page2_parameters['Idrive'] = self.combo_s1_s3.get()
         self.page2_parameters['Heating_time'] = self.heating_entry.get()
         self.page2_parameters['Cooling_time'] = self.cooling_entry.get()
         self.page2_parameters['Delay_time'] = self.delay_entry.get()
@@ -1985,6 +1996,21 @@ class ParameterApp(tk.Tk):
         self.page2_parameters['Tmin'] = self.tmin_entry.get()
         self.page2_parameters['Tmax'] = self.tmax_entry.get()
         self.page2_parameters['Tstep'] = self.tstep_entry.get()
+
+        # 初始化 Sensors 列表
+        sensors_data = []
+
+        # 將每一行的 `ms_401_label`、`combo_s5_s8`、`combo_s1_s3` 的值儲存到列表中
+        for i in range(len(self.ms_401_labels)):
+            sensor_info = {
+                'MS_401': self.ms_401_labels[i].cget("text"),  # 传感器标签
+                'Isense': self.combo_s5_s8s[i].get(),  # 用户选择的 Isense 值
+                'Idrive': self.combo_s1_s3s[i].get()   # 用户选择的 Idrive 值
+            }
+            sensors_data.append(sensor_info)
+
+        # 將 Sensors 列表保存到 page2_parameters
+        self.page2_parameters['Measurement_channel'] = sensors_data
 
 
         # 檢查檔案是否存在

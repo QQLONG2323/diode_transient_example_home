@@ -21,6 +21,13 @@ command_query_api_version = {
     "Command": "GET_API_VERSION"
 }
 
+command_enable_thermostat = {
+    "Command": "ENABLE_THERMOSTAT",
+    "Alias": "/THERMOSTAT/0"
+}
+
+
+
 command_save_config = {
     "Command": "SAVE_CONFIG",
     "Type": "TransientModel",
@@ -128,39 +135,67 @@ command_save_config = {
                 }
             }
         ],
-        "ThermometerCardChParams": [
-            # {
-            #     "Alias": Unique_system_selected_alias,
-            #     "UserAlias": User_defined_alias,
-            #     "Sensitivity": {
-            #         "default": [ List_of_coefficients_in_volt_per_degrees ],
-            #         "locked": False,
-            #     },
-            #     "PowerStep": PowerStep,
-            #     "RangeIdx": {
-            #         "default": id,
-            #         "locked": False
-            #     },
-            #     "SamplePerSecIdx": {
-            #         "default": id,
-            #         "locked": False
-            #     }
-            # }
-        ],
+        # "ThermometerCardChParams": [
+        #     {
+        #         "Alias": Unique_system_selected_alias,
+        #         "UserAlias": User_defined_alias,
+        #         "Sensitivity": {
+        #             "default": [ List_of_coefficients_in_volt_per_degrees ],
+        #             "locked": False,
+        #         },
+        #         "PowerStep": PowerStep,
+        #         "RangeIdx": {
+        #             "default": id,
+        #             "locked": False
+        #         },
+        #         "SamplePerSecIdx": {
+        #             "default": id,
+        #             "locked": False
+        #         }
+        #     }
+        # ],
         # THERMOSTAT_CONFIG
         "ThermostatParams": [
             {
-                "Alias": "/THERMOSTAT/0",
-                "UserAlias": "Th0",
-                "SetTemperature": 25,
-                "StabilityCriteria":{
-                    "DtMinMax": 0.1,
-                    "DtTarget": 0.25,
-                    "TimeWindow": 60,
-                    "Timeout": 1800
-                },
-                "WaitForStabilityBeforeMeas": True
+            "Alias": "/THERMOSTAT/0",
+            "UserAlias": "Th0",
+            "SetTemperature": {
+            "default": 30,
+            "locked": False,
+            "max": 50,
+            "min": 0
+            },
+            "StabilityCriteria": {
+            "DtMinMax": {
+            "default": 0.1,
+            "locked": False,
+            "max": 10,
+            "min": 0
+            },
+            "DtTarget": {
+                "default": 0.25,
+                "locked": False,
+                "max": 10,
+                "min": 0
+            },
+            "TimeWindow": {
+                "default": 60,
+                "locked": False,
+                "max": 100,
+                "min": 0
+            },
+            "Timeout": {
+                "default": 1800,
+                "locked": False,
+                "max": 2000,
+                "min": 0
             }
+            },
+            "WaitForStabilityBeforeMeas": {
+            "default": True,
+            "locked": False
+            }
+        }
         ],
         "TriggerOutputParams": [
 
@@ -196,7 +231,7 @@ command_save_config = {
             "max": 1000
         },
         "Repeat": {
-            "default": 2,
+            "default": 1,
             "locked": False,
             "min": 1,
             "max": 100
@@ -355,7 +390,18 @@ if __name__ == '__main__':
         api_version_str = api_version["Answer"]
         api_version_str = api_version_str[:api_version_str.find('.')]
         if api_version_str != "2":
-            raise Exception("Not supported major api version")              
+            raise Exception("Not supported major api version") 
+
+
+        # ---- Enable Thermostat
+        if do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
+            print("thermostat is ready")
+        else:
+            raise Exception("Cannot Enable Thermostat")
+
+
+
+
 
         # ---- Save config
         if not do_web_socket_bool_query(websocket_transport, command_save_config):

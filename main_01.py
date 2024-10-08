@@ -9,7 +9,6 @@ from websocket import WebSocket
 from websocket import create_connection
 from typing import Dict
 import urllib.request
-import GUI
 
 IP_ADDRESS = "192.168.20.99"
 

@@ -23,7 +23,7 @@ command_query_api_version = {
 
 command_save_config = {
     "Command": "SAVE_CONFIG",
-    "Type": "Config",
+    "Type": "TransientModel",
     "ConfigName": "diode_config",
     "ConfigParams": {
         "Description": "Test"
@@ -38,7 +38,7 @@ command_save_config = {
                     "locked": False
                 },
                 "SetCurrent": {
-                    "default": 0.02,
+                    "default": 0.005,
                     "locked": False,
                     "min": -0.2,
                     "max": 0.2
@@ -73,7 +73,7 @@ command_save_config = {
                     "locked": False
                 },
                 "SetCurrent": {
-                    "default": 2,
+                    "default": 1,
                     "locked": False,
                     "min": -2,
                     "max": 2
@@ -149,18 +149,18 @@ command_save_config = {
         ],
         # THERMOSTAT_CONFIG
         "ThermostatParams": [
-            # {
-            #     "Alias": "/THERMOSTAT/0",
-            #     "UserAlias": "Th0",
-            #     "SetTemperature": 25,
-            #     "StabilityCriteria":{
-            #         "DtMinMax": 0.1,
-            #         "DtTarget": 0.25,
-            #         "TimeWindow": 60,
-            #         "Timeout": 1800
-            #     },
-            #     "WaitForStabilityBeforeMeas": True
-            # }
+            {
+                "Alias": "/THERMOSTAT/0",
+                "UserAlias": "Th0",
+                "SetTemperature": 25,
+                "StabilityCriteria":{
+                    "DtMinMax": 0.1,
+                    "DtTarget": 0.25,
+                    "TimeWindow": 60,
+                    "Timeout": 1800
+                },
+                "WaitForStabilityBeforeMeas": True
+            }
         ],
         "TriggerOutputParams": [
 
@@ -196,7 +196,7 @@ command_save_config = {
             "max": 1000
         },
         "Repeat": {
-            "default": 3,
+            "default": 2,
             "locked": False,
             "min": 1,
             "max": 100

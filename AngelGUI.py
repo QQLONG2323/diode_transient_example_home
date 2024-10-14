@@ -1956,10 +1956,6 @@ class ParameterApp(tk.Tk):
         self.rth_measurement_cycling_repeat_entry.grid(row=7, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters['Rth Measurement Cycling Repeat'] =  self.rth_measurement_cycling_repeat_entry.get()
 
-
-
-
-
         # Temperature [°C]
         temperature_label = ttk.Label(
             thermostat_settings_for_measurement_frame, text="Temperature [°C]")
@@ -2092,17 +2088,12 @@ class ParameterApp(tk.Tk):
         self.page2_parameters['Delay_time'] = self.delay_entry.get()
         self.page2_parameters['Repeat'] = self.repeat_var.get()
         self.page2_parameters['Repeat_times'] = self.repeat_entry.get()
-
         self.page2_parameters['Pulse Cycling On [s]'] = self.pulse_cycling_on_entry.get()
         self.page2_parameters['Pulse Cycling Off [s]'] = self.pulse_cycling_off_entry.get()
         self.page2_parameters['Pulse Cycling Repeat'] =  self.pulse_cycling_repeat_entry.get()
         self.page2_parameters['Rth Measurement Heating Times'] = self.rth_measurement_heating_times_entry.get()
         self.page2_parameters['Rth Measurement Cooling Times'] = self.rth_measurement_cooling_times_entry.get()
         self.page2_parameters['Rth Measurement Cycling Repeat'] =  self.rth_measurement_cycling_repeat_entry.get()
-
-
-
-
         self.page2_parameters['Connect_to_Thermostat'] = self.connect_thermostat_var.get()
         self.page2_parameters['Temperature'] = self.temperature_entry.get()
         self.page2_parameters['TSP'] = self.tsp_var.get()

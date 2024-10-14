@@ -17,7 +17,7 @@ class ParameterApp(tk.Tk):
         super().__init__()
 
         self.title("T3STER SI")
-        self.geometry("1024x768")
+        self.geometry("1280x960")
 
         self.create_page1()
 

@@ -1647,6 +1647,12 @@ class ParameterApp(tk.Tk):
             column=0, row=2, padx=10, pady=10, sticky=tk.NSEW)
         self.page2_widgets.append(measurement_settings_frame)
 
+        cycling_test_frame = ttk.LabelFrame(
+            self, text="Cycling Test")
+        cycling_test_frame.grid(
+            column=0, row=3, padx=10, pady=10, sticky=tk.NSEW)
+        self.page2_widgets.append(cycling_test_frame)
+
         # connect to THERMOSTAT
         # 使用 tk.BooleanVar 來控制 connect to THERMOSTAT 的選中狀態
         self.connect_thermostat_var = tk.BooleanVar(value=False)  # 默認為未選中
@@ -1655,42 +1661,42 @@ class ParameterApp(tk.Tk):
         self.connect_thermostat_checkbutton = ttk.Checkbutton(
             self, text="Connect to Thermostat", variable=self.connect_thermostat_var, command=self.toggle_tspCheckbutton_temperature)
         self.connect_thermostat_checkbutton.grid(
-            row=3, column=0, padx=10, pady=10)
+            row=4, column=0, padx=10, pady=10)
         self.page2_widgets.append(self.connect_thermostat_checkbutton)
         self.page2_parameters['Connect_to_Thermostat'] = self.connect_thermostat_var.get()
 
         self.tsp_checkbutton = ttk.Checkbutton(
             self, text="Calibration Set (TSP)", variable=self.tsp_var, command=self.toggle_tsp_calibration_entry, state="disabled")
         self.tsp_checkbutton.grid(
-            row=5, column=0, padx=10, pady=10)
+            row=6, column=0, padx=10, pady=10)
         self.page2_widgets.append(self.tsp_checkbutton)
         self.page2_parameters['TSP'] = self.tsp_var.get()
 
         thermostat_settings_for_measurement_frame = ttk.LabelFrame(
             self, text="Thermostat Settings for Measurement")
         thermostat_settings_for_measurement_frame.grid(
-            column=0, row=4, padx=10, pady=10, sticky=tk.NSEW)
+            column=0, row=5, padx=10, pady=10, sticky=tk.NSEW)
         self.page2_widgets.append(thermostat_settings_for_measurement_frame)
 
         tsp_calibration_frame = ttk.LabelFrame(self, text="TSP calibration")
         tsp_calibration_frame.grid(
-            column=0, row=6, padx=10, pady=10, sticky=tk.NSEW)
+            column=0, row=7, padx=10, pady=10, sticky=tk.NSEW)
         self.page2_widgets.append(tsp_calibration_frame)
 
         advanced_thermostat_stability_settings_frame = ttk.LabelFrame(
             self, text="Advanced thermostat stability settings")
         advanced_thermostat_stability_settings_frame.grid(
-            column=0, row=7, padx=10, pady=10, sticky=tk.NSEW)
+            column=0, row=8, padx=10, pady=10, sticky=tk.NSEW)
         self.page2_widgets.append(advanced_thermostat_stability_settings_frame)
 
         # 添加 Previous 和 Next 按鈕
         previous_button = ttk.Button(
             self, text="Previous", command=self.go_to_page1)
-        previous_button.grid(row=8, column=0, padx=10, pady=10, sticky="W")
+        previous_button.grid(row=9, column=0, padx=10, pady=10, sticky="W")
         self.page2_widgets.append(previous_button)
 
         next_button = ttk.Button(self, text="Next", command=self.page2_export_to_json)
-        next_button.grid(row=8, column=2, padx=10, pady=10)
+        next_button.grid(row=9, column=2, padx=10, pady=10)
         self.page2_widgets.append(next_button)
 
         # Config Name 輸入框和標籤
@@ -1858,6 +1864,71 @@ class ParameterApp(tk.Tk):
         self.repeat_entry.grid(row=4, column=3, padx=10, pady=10)
         self.page2_parameters['Repeat_times'] = self.repeat_entry.get()
 
+        # Cycling Test
+        multi_pulse_cycling_label = ttk.Label(cycling_test_frame, text="Multi Pulse Cycling")
+        multi_pulse_cycling_label.grid(row=0, column=0, padx=10, pady=10)
+
+        pulse_cycling_on_label = ttk.Label(
+            cycling_test_frame, text="Pulse Cycling On [s]: ")
+        pulse_cycling_on_label.grid(row=1, column=0, padx=10, pady=10)
+
+        self.pulse_cycling_on_entry = ttk.Entry(
+            cycling_test_frame)
+        self.pulse_cycling_on_entry.grid(row=1, column=1, padx=10, pady=10)
+        self.page2_parameters['Pulse Cycling On [s]'] = self.pulse_cycling_on_entry.get()
+
+        pulse_cycling_off_label = ttk.Label(
+            cycling_test_frame, text="Pulse Cycling Off [s]: ")
+        pulse_cycling_off_label.grid(row=2, column=0, padx=10, pady=10)
+
+        self.pulse_cycling_off_entry = ttk.Entry(
+            cycling_test_frame)
+        self.pulse_cycling_off_entry.grid(row=2, column=1, padx=10, pady=10)
+        self.page2_parameters['Pulse Cycling Off [s]'] = self.pulse_cycling_off_entry.get()
+
+        pulse_cycling_repeat_label = ttk.Label(
+            cycling_test_frame, text="Pulse Cycling Repeat: ")
+        pulse_cycling_repeat_label.grid(row=3, column=0, padx=10, pady=10)
+
+        self.pulse_cycling_repeat_entry = ttk.Entry(
+            cycling_test_frame)
+        self.pulse_cycling_repeat_entry.grid(row=3, column=1, padx=10, pady=10)
+        self.page2_parameters['Pulse Cycling Repeat'] =  self.pulse_cycling_repeat_entry.get()
+
+        rth_measurement_label = ttk.Label(cycling_test_frame, text="Rth Measurement")
+        rth_measurement_label.grid(row=4, column=0, padx=10, pady=10)
+
+        rth_measurement_heating_times_label = ttk.Label(
+            cycling_test_frame, text="Rth Measurement Heating Times: ")
+        rth_measurement_heating_times_label.grid(row=5, column=0, padx=10, pady=10)
+
+        self.rth_measurement_heating_times_entry = ttk.Entry(
+            cycling_test_frame)
+        self.rth_measurement_heating_times_entry.grid(row=5, column=1, padx=10, pady=10)
+        self.page2_parameters['Rth Measurement Heating Times'] = self.rth_measurement_heating_times_entry.get()
+
+        rth_measurement_cooling_times_label = ttk.Label(
+            cycling_test_frame, text="Rth Measurement Cooling Times: ")
+        rth_measurement_cooling_times_label.grid(row=6, column=0, padx=10, pady=10)
+
+        self.rth_measurement_cooling_times_entry = ttk.Entry(
+            cycling_test_frame)
+        self.rth_measurement_cooling_times_entry.grid(row=6, column=1, padx=10, pady=10)
+        self.page2_parameters['Rth Measurement Cooling Times'] = self.rth_measurement_cooling_times_entry.get()
+
+        rth_measurement_cycling_repeat_label = ttk.Label(
+            cycling_test_frame, text="Rth Measurement Cycling Repeat: ")
+        rth_measurement_cycling_repeat_label.grid(row=7, column=0, padx=10, pady=10)
+
+        self.rth_measurement_cycling_repeat_entry = ttk.Entry(
+            cycling_test_frame)
+        self.rth_measurement_cycling_repeat_entry.grid(row=7, column=1, padx=10, pady=10)
+        self.page2_parameters['Rth Measurement Cycling Repeat'] =  self.rth_measurement_cycling_repeat_entry.get()
+
+
+
+
+
         # Temperature [°C]
         temperature_label = ttk.Label(
             thermostat_settings_for_measurement_frame, text="Temperature [°C]")
@@ -1990,6 +2061,17 @@ class ParameterApp(tk.Tk):
         self.page2_parameters['Delay_time'] = self.delay_entry.get()
         self.page2_parameters['Repeat'] = self.repeat_var.get()
         self.page2_parameters['Repeat_times'] = self.repeat_entry.get()
+
+        self.page2_parameters['Pulse Cycling On [s]'] = self.pulse_cycling_on_entry.get()
+        self.page2_parameters['Pulse Cycling Off [s]'] = self.pulse_cycling_off_entry.get()
+        self.page2_parameters['Pulse Cycling Repeat'] =  self.pulse_cycling_repeat_entry.get()
+        self.page2_parameters['Rth Measurement Heating Times'] = self.rth_measurement_heating_times_entry.get()
+        self.page2_parameters['Rth Measurement Cooling Times'] = self.rth_measurement_cooling_times_entry.get()
+        self.page2_parameters['Rth Measurement Cycling Repeat'] =  self.rth_measurement_cycling_repeat_entry.get()
+
+
+
+
         self.page2_parameters['Connect_to_Thermostat'] = self.connect_thermostat_var.get()
         self.page2_parameters['Temperature'] = self.temperature_entry.get()
         self.page2_parameters['TSP'] = self.tsp_var.get()

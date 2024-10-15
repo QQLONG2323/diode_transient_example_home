@@ -28,32 +28,18 @@ command_save_config = {
         "Description": "Test configuration"
     },
     "Resources": {
-        "CurrentSourceParams": [
-            {
-                "Alias": "/T3STER/0/LP220/SLOT1/CH0",
-                "UserAlias": "S1CH1",
-                "OutputMode": {"default": config_data["S1Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S1Ch1_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S1Ch1_Current_source"]["Voltage limit [V]"], "locked": False}
-            },
-            {
-                "Alias": "/T3STER/0/LP220/SLOT1/CH1",
-                "UserAlias": "S3Ch1",
-                "OutputMode": {"default": config_data["S3Ch1_Voltage_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S3Ch1_Voltage_source"]["Current limit [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S3Ch1_Voltage_source"]["On-state voltage [V]"], "locked": False}
-            }
-        ],
-        "MeasCardChParams": [
-            {
-                "Alias": "/T3STER/0/MS401/SLOT5/CH0",
-                "UserAlias": "S6Ch1",
-                "Sensitivity": {"default": [config_data["S6Ch1_Measurement_channel"]["Sensitivity [mV/K]"]], "locked": False},
-                "AutoRange": {"default": config_data["S6Ch1_Measurement_channel"]["Auto range"] == "On", "locked": False},
-                "Uref": {"default": config_data["S6Ch1_Measurement_channel"]["Vref [V]"], "locked": False},
-                "UrefSwitching": {"default": config_data["S6Ch1_Measurement_channel"]["Separate Vref for heating"] == "On", "locked": False}
-            }
-        ],
+        "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"]
+        ,
+        # "MeasCardChParams": [
+        #     {
+        #         "Alias": "/T3STER/0/MS401/SLOT5/CH0",
+        #         "UserAlias": "S6Ch1",
+        #         "Sensitivity": {"default": [config_data["S6Ch1_Measurement_channel"]["Sensitivity [mV/K]"]], "locked": False},
+        #         "AutoRange": {"default": config_data["S6Ch1_Measurement_channel"]["Auto range"] == "On", "locked": False},
+        #         "Uref": {"default": config_data["S6Ch1_Measurement_channel"]["Vref [V]"], "locked": False},
+        #         "UrefSwitching": {"default": config_data["S6Ch1_Measurement_channel"]["Separate Vref for heating"] == "On", "locked": False}
+        #     }
+        # ],
         "ThermostatParams": [
             {
                 "Alias": "/THERMOSTAT/0",
@@ -87,43 +73,43 @@ def do_web_socket_bool_query(ws: WebSocket, command: Dict) -> bool:
 
 
 if __name__ == '__main__':
-
-    print("Measurement started")
-    websocket_url = "ws://" + IP_ADDRESS + ":8085"
-    websocket_transport = WebSocket()
+    print(command_save_config)
+    # print("Measurement started")
+    # websocket_url = "ws://" + IP_ADDRESS + ":8085"
+    # websocket_transport = WebSocket()
     
-    try:
-        # ---- Initialize and open websocket
-        websocket_transport.connect(websocket_url)
-        websocket_transport.settimeout(10)
+    # try:
+    #     # ---- Initialize and open websocket
+    #     websocket_transport.connect(websocket_url)
+    #     websocket_transport.settimeout(10)
 
-        # ---- Query system state
-        if do_web_socket_bool_query(websocket_transport, command_system_ready):
-            print("System is ready")
-        else:
-            raise Exception("System is NOT ready, returning...")
+    #     # ---- Query system state
+    #     if do_web_socket_bool_query(websocket_transport, command_system_ready):
+    #         print("System is ready")
+    #     else:
+    #         raise Exception("System is NOT ready, returning...")
 
-        # ---- Check api version
-        api_version = do_web_socket_string_query(websocket_transport, command_query_api_version)
-        print("Api version: " + api_version["Answer"])
-        api_version_str = api_version["Answer"]
-        api_version_str = api_version_str[:api_version_str.find('.')]
-        if api_version_str != "2":
-            raise Exception("Not supported major api version")              
+    #     # ---- Check api version
+    #     api_version = do_web_socket_string_query(websocket_transport, command_query_api_version)
+    #     print("Api version: " + api_version["Answer"])
+    #     api_version_str = api_version["Answer"]
+    #     api_version_str = api_version_str[:api_version_str.find('.')]
+    #     if api_version_str != "2":
+    #         raise Exception("Not supported major api version")              
 
-        # ---- Enable Thermostat
-        if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
-            raise Exception("Cannot Enable Thermostat")
+    #     # ---- Enable Thermostat
+    #     if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
+    #         raise Exception("Cannot Enable Thermostat")
 
-        # ---- Save config
-        if not do_web_socket_bool_query(websocket_transport, command_save_config):
-            raise Exception("Cannot save config")
+    #     # ---- Save config
+    #     if not do_web_socket_bool_query(websocket_transport, command_save_config):
+    #         raise Exception("Cannot save config")
 
-        # ---- Allocate resources and start measurement process...
+    #     # ---- Allocate resources and start measurement process...
         
-    except Exception as e:
-         print("Error: " + str(e))
+    # except Exception as e:
+    #      print("Error: " + str(e))
 
-    # Close
-    websocket_transport.close()
+    # # Close
+    # websocket_transport.close()
     print("Exit")

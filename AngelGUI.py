@@ -118,7 +118,7 @@ class ParameterApp(tk.Tk):
             "S5Ch1": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -170,7 +170,7 @@ class ParameterApp(tk.Tk):
             "S5Ch2": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -222,7 +222,7 @@ class ParameterApp(tk.Tk):
             "S5Ch3": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -274,7 +274,7 @@ class ParameterApp(tk.Tk):
             "S5Ch4": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -326,7 +326,7 @@ class ParameterApp(tk.Tk):
             "S6Ch1": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -378,7 +378,7 @@ class ParameterApp(tk.Tk):
             "S6Ch2": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -430,7 +430,7 @@ class ParameterApp(tk.Tk):
             "S6Ch3": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -482,7 +482,7 @@ class ParameterApp(tk.Tk):
             "S6Ch4": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -534,7 +534,7 @@ class ParameterApp(tk.Tk):
             "S7Ch1": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -586,7 +586,7 @@ class ParameterApp(tk.Tk):
             "S7Ch2": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -638,7 +638,7 @@ class ParameterApp(tk.Tk):
             "S7Ch3": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -690,7 +690,7 @@ class ParameterApp(tk.Tk):
             "S7Ch4": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -742,7 +742,7 @@ class ParameterApp(tk.Tk):
             "S8Ch1": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -794,7 +794,7 @@ class ParameterApp(tk.Tk):
             "S8Ch2": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -846,7 +846,7 @@ class ParameterApp(tk.Tk):
             "S8Ch3": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -898,7 +898,7 @@ class ParameterApp(tk.Tk):
             "S8Ch4": {
                 "Current_source": {
                     "Output mode": ["Off", "On"],
-                    "Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -2074,6 +2074,353 @@ class ParameterApp(tk.Tk):
             self.tstep_entry.delete(0, tk.END)  # 清空 tstep 輸入框的內容
             self.tstep_entry.config(state="disabled")  # 禁用 tstep 輸入框
 
+    def fill_current_source_params(self, config_data):
+        current_source_params = []    
+       
+        if "S1Ch1_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT1/CH0",
+                "UserAlias": "S1Ch1",
+                "OutputMode": {"default": config_data["S1Ch1_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S1Ch1_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S1Ch1_Current_source"]["Voltage limit [V]"], "locked": False}
+            })
+        
+        if "S1Ch2_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT1/CH1",
+                "UserAlias": "S1Ch2",
+                "OutputMode": {"default": config_data["S1Ch2_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S1Ch2_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S1Ch2_Current_source"]["Voltage limit [V]"], "locked": False}
+            })
+        
+        if "S3Ch1_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT3/CH0",
+                "UserAlias": "S3Ch1",
+                "OutputMode": {"default": config_data["S3Ch1_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S3Ch1_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S3Ch1_Current_source"]["Voltage limit [V]"], "locked": False}
+            })
+        
+        if "S3Ch2_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT3/CH1",
+                "UserAlias": "S3Ch2",
+                "OutputMode": {"default": config_data["S3Ch2_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S3Ch2_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S3Ch2_Current_source"]["Voltage limit [V]"], "locked": False}
+            })
+
+        if "S5Ch1_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT5/CH0",
+                "UserAlias": "S5Ch1",
+                "OutputMode": {"default": config_data["S5Ch1_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S5Ch1_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S5Ch1_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S5Ch2_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT5/CH1",
+                "UserAlias": "S5Ch2",
+                "OutputMode": {"default": config_data["S5Ch2_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S5Ch2_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S5Ch2_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S5Ch3_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT5/CH2",
+                "UserAlias": "S5Ch3",
+                "OutputMode": {"default": config_data["S5Ch3_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S5Ch3_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S5Ch3_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S5Ch4_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT5/CH3",
+                "UserAlias": "S5Ch4",
+                "OutputMode": {"default": config_data["S5Ch4_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S5Ch4_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S5Ch4_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S6Ch1_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT6/CH0",
+                "UserAlias": "S6Ch1",
+                "OutputMode": {"default": config_data["S6Ch1_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S6Ch1_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S6Ch1_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S6Ch2_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT6/CH1",
+                "UserAlias": "S6Ch2",
+                "OutputMode": {"default": config_data["S6Ch2_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S6Ch2_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S6Ch2_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S6Ch3_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT6/CH2",
+                "UserAlias": "S6Ch3",
+                "OutputMode": {"default": config_data["S6Ch3_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S6Ch3_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S6Ch3_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S6Ch4_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT6/CH3",
+                "UserAlias": "S6Ch4",
+                "OutputMode": {"default": config_data["S6Ch4_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S6Ch4_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S6Ch4_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S7Ch1_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT7/CH0",
+                "UserAlias": "S7Ch1",
+                "OutputMode": {"default": config_data["S7Ch1_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S7Ch1_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S7Ch1_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S7Ch2_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT7/CH1",
+                "UserAlias": "S7Ch2",
+                "OutputMode": {"default": config_data["S7Ch2_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S7Ch2_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S7Ch2_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S7Ch3_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT7/CH2",
+                "UserAlias": "S7Ch3",
+                "OutputMode": {"default": config_data["S7Ch3_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S7Ch3_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S7Ch3_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S7Ch4_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT7/CH3",
+                "UserAlias": "S7Ch4",
+                "OutputMode": {"default": config_data["S7Ch4_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S7Ch4_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S7Ch4_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S8Ch1_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT8/CH0",
+                "UserAlias": "S8Ch1",
+                "OutputMode": {"default": config_data["S8Ch1_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S8Ch1_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S8Ch1_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S8Ch2_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT8/CH1",
+                "UserAlias": "S8Ch2",
+                "OutputMode": {"default": config_data["S8Ch2_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S8Ch2_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S8Ch2_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S8Ch3_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT8/CH2",
+                "UserAlias": "S8Ch3",
+                "OutputMode": {"default": config_data["S8Ch3_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S8Ch3_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S8Ch3_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S8Ch4_Current_source" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT8/CH3",
+                "UserAlias": "S8Ch4",
+                "OutputMode": {"default": config_data["S8Ch4_Current_source"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S8Ch4_Current_source"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S8Ch4_Current_source"]["Range"], "locked": False}
+            })
+
+        if "S5Ch1_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT5/CH0",
+                "UserAlias": "S5Ch1",
+                "OutputMode": {"default": config_data["S5Ch1_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S5Ch1_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S5Ch1_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S5Ch2_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT5/CH1",
+                "UserAlias": "S5Ch2",
+                "OutputMode": {"default": config_data["S5Ch2_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S5Ch2_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S5Ch2_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S5Ch3_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT5/CH2",
+                "UserAlias": "S5Ch3",
+                "OutputMode": {"default": config_data["S5Ch3_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S5Ch3_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S5Ch3_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S5Ch4_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT5/CH3",
+                "UserAlias": "S5Ch4",
+                "OutputMode": {"default": config_data["S5Ch4_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S5Ch4_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S5Ch4_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S6Ch1_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT6/CH0",
+                "UserAlias": "S6Ch1",
+                "OutputMode": {"default": config_data["S6Ch1_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S6Ch1_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S6Ch1_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S6Ch2_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT6/CH1",
+                "UserAlias": "S6Ch2",
+                "OutputMode": {"default": config_data["S6Ch2_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S6Ch2_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S6Ch2_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S6Ch3_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT6/CH2",
+                "UserAlias": "S6Ch3",
+                "OutputMode": {"default": config_data["S6Ch3_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S6Ch3_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S6Ch3_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S6Ch4_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT6/CH3",
+                "UserAlias": "S6Ch4",
+                "OutputMode": {"default": config_data["S6Ch4_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S6Ch4_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S6Ch4_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S7Ch1_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT7/CH0",
+                "UserAlias": "S7Ch1",
+                "OutputMode": {"default": config_data["S7Ch1_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S7Ch1_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S7Ch1_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S7Ch2_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT7/CH1",
+                "UserAlias": "S7Ch2",
+                "OutputMode": {"default": config_data["S7Ch2_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S7Ch2_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S7Ch2_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S7Ch3_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT7/CH2",
+                "UserAlias": "S7Ch3",
+                "OutputMode": {"default": config_data["S7Ch3_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S7Ch3_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S7Ch3_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S7Ch4_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT7/CH3",
+                "UserAlias": "S7Ch4",
+                "OutputMode": {"default": config_data["S7Ch4_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S7Ch4_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S7Ch4_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S8Ch1_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT8/CH0",
+                "UserAlias": "S8Ch1",
+                "OutputMode": {"default": config_data["S8Ch1_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S8Ch1_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S8Ch1_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S8Ch2_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT8/CH1",
+                "UserAlias": "S8Ch2",
+                "OutputMode": {"default": config_data["S8Ch2_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S8Ch2_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S8Ch2_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S8Ch3_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT8/CH2",
+                "UserAlias": "S8Ch3",
+                "OutputMode": {"default": config_data["S8Ch3_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S8Ch3_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S8Ch3_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        if "S8Ch4_Both" in config_data:
+            current_source_params.append({
+                "Alias": "/T3STER/0/LP220/SLOT8/CH3",
+                "UserAlias": "S8Ch4",
+                "OutputMode": {"default": config_data["S8Ch4_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S8Ch4_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S8Ch4_Both"]["Current_source_Range"], "locked": False}
+            })
+
+        return current_source_params
+
+    def fill_measurement_params(self, config_data):
+        measurement_params = [] 
+
+        if "S5Ch1_Measurement_channel" in config_data:
+            measurement_params.append({
+                "Alias": "/T3STER/0/MS401/SLOT5/CH0",
+                "UserAlias": "S5Ch1",
+                "OutputMode": {"default": config_data["S5Ch1_Both"]["Output mode"], "locked": False},
+                "SetCurrent": {"default": config_data["S5Ch1_Both"]["Current [A]"], "locked": False},
+                "VoltageCorner": {"default": config_data["S5Ch1_Both"]["Current_source_Range"], "locked": False}
+            })
+
+
+
+
+
+
+
 
     def page2_export_to_json(self):
         # 定義 JSON 檔案路徑
@@ -2130,6 +2477,19 @@ class ParameterApp(tk.Tk):
         else:
             # 如果檔案不存在，初始化為空字典
             saved_data = {}
+
+
+        # 使用 fill_current_source_params 填充數據
+        config_data = saved_data  # 使用已存在的 JSON 檔案數據
+        current_source_data = []
+        current_source_data.extend(self.fill_current_source_params(config_data))
+
+        # 如果有數據，將其放入 saved_data 中
+        if "Resources" not in saved_data:
+            saved_data["Resources"] = {}
+        saved_data["Resources"]["CurrentSourceParams"] = current_source_data
+
+
 
         # 將新參數添加進去
         saved_data.update(self.page2_parameters)

@@ -140,7 +140,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -164,7 +165,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S5Ch2": {
@@ -192,7 +194,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -216,7 +219,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S5Ch3": {
@@ -244,7 +248,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -268,7 +273,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S5Ch4": {
@@ -296,7 +302,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -320,7 +327,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S6Ch1": {
@@ -348,7 +356,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -372,7 +381,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S6Ch2": {
@@ -400,7 +410,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -424,7 +435,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S6Ch3": {
@@ -452,7 +464,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -476,7 +489,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S6Ch4": {
@@ -504,7 +518,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -528,7 +543,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S7Ch1": {
@@ -556,7 +572,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -580,7 +597,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S7Ch2": {
@@ -608,7 +626,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -632,7 +651,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S7Ch3": {
@@ -660,7 +680,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -684,7 +705,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S7Ch4": {
@@ -712,7 +734,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -736,7 +759,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S8Ch1": {
@@ -764,7 +788,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -788,7 +813,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S8Ch2": {
@@ -816,7 +842,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -840,7 +867,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S8Ch3": {
@@ -868,7 +896,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -892,7 +921,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S8Ch4": {
@@ -920,7 +950,8 @@ class ParameterApp(tk.Tk):
                               "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                               ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 },
                 "Both": {
                     "Output mode": ["Off", "On"],
@@ -944,7 +975,8 @@ class ParameterApp(tk.Tk):
                                                   "Fall scale: 8 V, V(in): -80 V ~ 80 V",
                                                   ],
                     "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"]
+                    "Separate Vref for heating": ["Off", "On"],
+                    "Vref,heating [V]": "entry"
                 }
             },
             "S9Ch1": {
@@ -2075,15 +2107,63 @@ class ParameterApp(tk.Tk):
             self.tstep_entry.config(state="disabled")  # 禁用 tstep 輸入框
 
     def fill_current_source_params(self, config_data):
+
+        self.sensor_rename = {
+            "S1Ch1": "/T3STER/0/LP220/SLOT1/CH0",
+            "S1Ch2": "/T3STER/0/LP220/SLOT1/CH1",
+            "S3Ch1": "/T3STER/0/LP220/SLOT3/CH0",
+            "S3Ch2": "/T3STER/0/LP220/SLOT3/CH1",
+            "S5Ch1": "/T3STER/0/MS401/SLOT5/CH0",
+            "S5Ch2": "/T3STER/0/MS401/SLOT5/CH1",
+            "S5Ch3": "/T3STER/0/MS401/SLOT5/CH2",
+            "S5Ch4": "/T3STER/0/MS401/SLOT5/CH3",
+            "S6Ch1": "/T3STER/0/MS401/SLOT6/CH0",
+            "S6Ch2": "/T3STER/0/MS401/SLOT6/CH1",
+            "S6Ch3": "/T3STER/0/MS401/SLOT6/CH2",
+            "S6Ch4": "/T3STER/0/MS401/SLOT6/CH3",
+            "S7Ch1": "/T3STER/0/MS401/SLOT7/CH0",
+            "S7Ch2": "/T3STER/0/MS401/SLOT7/CH1",
+            "S7Ch3": "/T3STER/0/MS401/SLOT7/CH2",
+            "S7Ch4": "/T3STER/0/MS401/SLOT7/CH3",
+            "S8Ch1": "/T3STER/0/MS401/SLOT8/CH0",
+            "S8Ch2": "/T3STER/0/MS401/SLOT8/CH1",
+            "S8Ch3": "/T3STER/0/MS401/SLOT8/CH2",
+            "S8Ch4": "/T3STER/0/MS401/SLOT8/CH3"
+        }
+
+        self.range_rename = {
+            "Fall scale: 20 V, V(in): -10 V ~ 10 V": 9,
+            "Fall scale: 10 V, V(in): -10 V ~ 10 V": 10,
+            "Fall scale: 4 V, V(in): -10 V ~ 10 V": 11,
+            "Fall scale: 2 V, V(in): -10 V ~ 10 V": 12,
+            "Fall scale: 1 V, V(in): -10 V ~ 10 V": 13,
+            "Fall scale: 20 V, V(in): -20 V ~ 20 V": 6,
+            "Fall scale: 8 V, V(in): -20 V ~ 20 V": 7,
+            "Fall scale: 4 V, V(in): -20 V ~ 20 V": 8,
+            "Fall scale: 40 V, V(in): -40 V ~ 40 V": 3,
+            "Fall scale: 16 V, V(in): -40 V ~ 40 V": 4,
+            "Fall scale: 8 V, V(in): -40 V ~ 40 V": 5,
+            "Fall scale: 32 V, V(in): -80 V ~ 80 V": 0,
+            "Fall scale: 16 V, V(in): -80 V ~ 80 V": 1,
+            "Fall scale: 8 V, V(in): -80 V ~ 80 V": 2
+        }
+
+       
+
+
+
+
+
         current_source_params = []    
+
        
         if "S1Ch1_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT1/CH0",
+                "Alias": self.sensor_rename["S1Ch1"],
                 "UserAlias": "S1Ch1",
                 "OutputMode": {"default": config_data["S1Ch1_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": config_data["S1Ch1_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S1Ch1_Current_source"]["Voltage limit [V]"], "locked": False}
+                "VoltageCorner": {"default": config_data["S1Ch1_Current_source"]["Voltage limit [V]"], "locked": False},
             })
         
         if "S1Ch2_Current_source" in config_data:
@@ -2404,16 +2484,48 @@ class ParameterApp(tk.Tk):
         return current_source_params
 
     def fill_measurement_params(self, config_data):
-        measurement_params = [] 
 
-        if "S5Ch1_Measurement_channel" in config_data:
-            measurement_params.append({
-                "Alias": "/T3STER/0/MS401/SLOT5/CH0",
-                "UserAlias": "S5Ch1",
-                "OutputMode": {"default": config_data["S5Ch1_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S5Ch1_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S5Ch1_Both"]["Current_source_Range"], "locked": False}
-            })
+        measurement_params = [] 
+        measurement_channels = config_data["Measurement_channel"]
+
+        # 遍歷 Measurement_channel 列表
+        for channel in measurement_channels:
+            ms_401_value = channel["MS_401"]  # 當前的 MS_401 值
+            isense_value = channel["Isense"]  # 當前的 Isense 值
+            idrive_value = channel["Idrive"]  # 當前的 Idrive 值
+            
+            # 使用 self.sensor_rename 转换 Isense 和 Idrive 值
+            isense_path = self.sensor_rename.get(isense_value, "")
+            idrive_path = self.sensor_rename.get(idrive_value, "")
+
+            # 創建 SI 看得懂的參數列表
+            if f"{ms_401_value}_Measurement_channel" in config_data:
+                    measurement_params.append({
+                        "Alias": self.sensor_rename.get(ms_401_value, ""),
+                        "UserAlias": ms_401_value,
+                        "Sensitivity": {"default": [config_data[f"{ms_401_value}_Measurement_channel"]["Sensitivity [mV/K]"]], "locked": False},
+                        "AutoRange": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Auto range"], "locked": False},
+                        "Uref": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Vref [V]"], "locked": False},
+                        "UrefSwitching": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Separate Vref for heating"], "locked": False},
+                        "UrefHeating": config_data[f"{ms_401_value}_Measurement_channel"]["Vref,heating [V]"],
+                        "PowerStep": f"@POWERSTEP_DIODE;{isense_path};{idrive_path}",
+                        "RangeIdx": 
+                    })
+
+            if f"{ms_401_value}_Both" in config_data:
+                    measurement_params.append({
+                        "Alias": self.sensor_rename.get(ms_401_value, ""),
+                        "UserAlias": ms_401_value,
+                        "Sensitivity": {"default": [config_data[f"{ms_401_value}_Both"]["Sensitivity [mV/K]"]], "locked": False},
+                        "AutoRange": {"default": config_data[f"{ms_401_value}_Both"]["Auto range"], "locked": False},
+                        "Uref": {"default": config_data[f"{ms_401_value}_Both"]["Vref [V]"], "locked": False},
+                        "UrefSwitching": {"default": config_data[f"{ms_401_value}_Both"]["Separate Vref for heating"], "locked": False},
+                        "UrefHeating": config_data[f"{ms_401_value}_Both"]["Vref,heating [V]"],
+                        "PowerStep": f"@POWERSTEP_DIODE;{isense_path};{idrive_path}",
+                        "RangeIdx": 
+                    })
+
+        return measurement_params
 
 
 
@@ -2462,6 +2574,7 @@ class ParameterApp(tk.Tk):
 
         # 將 Sensors 列表保存到 page2_parameters
         self.page2_parameters['Measurement_channel'] = sensors_data
+        
 
 
         # 檢查檔案是否存在
@@ -2478,21 +2591,23 @@ class ParameterApp(tk.Tk):
             # 如果檔案不存在，初始化為空字典
             saved_data = {}
 
+        # 將新參數添加進去
+        saved_data.update(self.page2_parameters)
 
         # 使用 fill_current_source_params 填充數據
         config_data = saved_data  # 使用已存在的 JSON 檔案數據
         current_source_data = []
         current_source_data.extend(self.fill_current_source_params(config_data))
+        measurement_channel_data = []
+        measurement_channel_data.extend(self.fill_measurement_params(config_data))
 
         # 如果有數據，將其放入 saved_data 中
         if "Resources" not in saved_data:
             saved_data["Resources"] = {}
         saved_data["Resources"]["CurrentSourceParams"] = current_source_data
+        saved_data["Resources"]["MeasCardChParams"] = measurement_channel_data
+        
 
-
-
-        # 將新參數添加進去
-        saved_data.update(self.page2_parameters)
 
         # 將更新後的資料寫回到 JSON 文件中
         with open(file_path, 'w') as file:

@@ -10,6 +10,10 @@ from tkinter import filedialog
 import os
 import main_01
 import itertools
+from io import StringIO
+import sys
+
+
 
 
 class ParameterApp(tk.Tk):
@@ -20,6 +24,8 @@ class ParameterApp(tk.Tk):
         self.geometry("1280x960")
 
         self.create_page1()
+
+
 
     def create_page1(self):
 
@@ -1757,10 +1763,14 @@ class ParameterApp(tk.Tk):
             scrollable_frame, text="Previous", command=self.go_to_page1)
         previous_button.grid(row=9, column=0, padx=10, pady=10, sticky="W")
         
-
         next_button = ttk.Button(scrollable_frame, text="Next", command=self.page2_export_to_json)
-        next_button.grid(row=9, column=2, padx=10, pady=10)
+        next_button.grid(row=9, column=0, padx=10, pady=10, sticky="E")
      
+        # 添加進度提示框，默認禁用
+        self.progress_text = tk.Text(scrollable_frame, height=10, state="disabled")
+        self.progress_text.grid(row=10, column=0, padx=10, pady=10, sticky=tk.NSEW)
+        
+
 
         # Config Name 輸入框和標籤
         config_label = ttk.Label(config_details_frame, text="Config Name:")
@@ -2106,6 +2116,8 @@ class ParameterApp(tk.Tk):
             self.tstep_entry.delete(0, tk.END)  # 清空 tstep 輸入框的內容
             self.tstep_entry.config(state="disabled")  # 禁用 tstep 輸入框
 
+
+    # 獲取 SI 所需的 CurrentSourceParams 參數值
     def fill_current_source_params(self, config_data):
 
         self.sensor_rename = {
@@ -2483,6 +2495,7 @@ class ParameterApp(tk.Tk):
 
         return current_source_params
 
+    # 獲取 SI 所需的 MeasCardChParams 參數值
     def fill_measurement_params(self, config_data):
 
         measurement_params = [] 
@@ -2494,36 +2507,44 @@ class ParameterApp(tk.Tk):
             isense_value = channel["Isense"]  # 當前的 Isense 值
             idrive_value = channel["Idrive"]  # 當前的 Idrive 值
             
-            # 使用 self.sensor_rename 转换 Isense 和 Idrive 值
+            # 使用 self.sensor_rename 轉換 Isense 和 Idrive 值
             isense_path = self.sensor_rename.get(isense_value, "")
             idrive_path = self.sensor_rename.get(idrive_value, "")
 
             # 創建 SI 看得懂的參數列表
             if f"{ms_401_value}_Measurement_channel" in config_data:
-                    measurement_params.append({
-                        "Alias": self.sensor_rename.get(ms_401_value, ""),
-                        "UserAlias": ms_401_value,
-                        "Sensitivity": {"default": [config_data[f"{ms_401_value}_Measurement_channel"]["Sensitivity [mV/K]"]], "locked": False},
-                        "AutoRange": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Auto range"], "locked": False},
-                        "Uref": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Vref [V]"], "locked": False},
-                        "UrefSwitching": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Separate Vref for heating"], "locked": False},
-                        "UrefHeating": config_data[f"{ms_401_value}_Measurement_channel"]["Vref,heating [V]"],
-                        "PowerStep": f"@POWERSTEP_DIODE;{isense_path};{idrive_path}",
-                        "RangeIdx": 
-                    })
+                    
+                range_value = config_data[f"{ms_401_value}_Measurement_channel"].get("Range", "")
+                range_idx = self.range_rename.get(range_value, None)  # 從 range_rename 獲取對應的索引
+
+                measurement_params.append({
+                    "Alias": self.sensor_rename.get(ms_401_value, ""),
+                    "UserAlias": ms_401_value,
+                    "Sensitivity": {"default": [config_data[f"{ms_401_value}_Measurement_channel"]["Sensitivity [mV/K]"]], "locked": False},
+                    "AutoRange": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Auto range"], "locked": False},
+                    "Uref": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Vref [V]"], "locked": False},
+                    "UrefSwitching": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Separate Vref for heating"], "locked": False},
+                    "UrefHeating": config_data[f"{ms_401_value}_Measurement_channel"]["Vref,heating [V]"],
+                    "PowerStep": f"@POWERSTEP_DIODE;{isense_path};{idrive_path}",
+                    "RangeIdx": range_idx
+                })
 
             if f"{ms_401_value}_Both" in config_data:
-                    measurement_params.append({
-                        "Alias": self.sensor_rename.get(ms_401_value, ""),
-                        "UserAlias": ms_401_value,
-                        "Sensitivity": {"default": [config_data[f"{ms_401_value}_Both"]["Sensitivity [mV/K]"]], "locked": False},
-                        "AutoRange": {"default": config_data[f"{ms_401_value}_Both"]["Auto range"], "locked": False},
-                        "Uref": {"default": config_data[f"{ms_401_value}_Both"]["Vref [V]"], "locked": False},
-                        "UrefSwitching": {"default": config_data[f"{ms_401_value}_Both"]["Separate Vref for heating"], "locked": False},
-                        "UrefHeating": config_data[f"{ms_401_value}_Both"]["Vref,heating [V]"],
-                        "PowerStep": f"@POWERSTEP_DIODE;{isense_path};{idrive_path}",
-                        "RangeIdx": 
-                    })
+                    
+                range_value = config_data[f"{ms_401_value}_Both"].get("Measurement_channel_Range", "")
+                range_idx = self.range_rename.get(range_value, None)  # 从 range_rename 获取对应的索引
+                    
+                measurement_params.append({
+                    "Alias": self.sensor_rename.get(ms_401_value, ""),
+                    "UserAlias": ms_401_value,
+                    "Sensitivity": {"default": [config_data[f"{ms_401_value}_Both"]["Sensitivity [mV/K]"]], "locked": False},
+                    "AutoRange": {"default": config_data[f"{ms_401_value}_Both"]["Auto range"], "locked": False},
+                    "Uref": {"default": config_data[f"{ms_401_value}_Both"]["Vref [V]"], "locked": False},
+                    "UrefSwitching": {"default": config_data[f"{ms_401_value}_Both"]["Separate Vref for heating"], "locked": False},
+                    "UrefHeating": config_data[f"{ms_401_value}_Both"]["Vref,heating [V]"],
+                    "PowerStep": f"@POWERSTEP_DIODE;{isense_path};{idrive_path}",
+                    "RangeIdx": range_idx
+                })
 
         return measurement_params
 
@@ -2594,7 +2615,7 @@ class ParameterApp(tk.Tk):
         # 將新參數添加進去
         saved_data.update(self.page2_parameters)
 
-        # 使用 fill_current_source_params 填充數據
+        # 使用 fill_current_source_params 以及 fill_measurement_params 填充數據
         config_data = saved_data  # 使用已存在的 JSON 檔案數據
         current_source_data = []
         current_source_data.extend(self.fill_current_source_params(config_data))
@@ -2614,6 +2635,94 @@ class ParameterApp(tk.Tk):
             json.dump(saved_data, file, indent=4)
 
         print("參數已成功儲存至 saved_parameters.json")
+
+
+
+        # 啟用進度提示框
+        self.progress_text.config(state="normal")
+        self.progress_text.delete(1.0, tk.END)  # 清空現有內容
+
+        # 重定向標準輸出到文本框
+        sys.stdout = StringIO()
+        
+        # try:
+        #     # ---- Initialize and open websocket
+        #     websocket_transport.connect(websocket_url)
+        #     websocket_transport.settimeout(10)
+
+        #     # ---- Query system state
+        #     if do_web_socket_bool_query(websocket_transport, command_system_ready):
+        #         print("System is ready")
+        #     else:
+        #         raise Exception("System is NOT ready, returning...")
+
+        #     # ---- Check api version
+        #     api_version = do_web_socket_string_query(websocket_transport, command_query_api_version)
+        #     print("Api version: " + api_version["Answer"])
+        #     api_version_str = api_version["Answer"]
+        #     api_version_str = api_version_str[:api_version_str.find('.')]
+        #     if api_version_str != "2":
+        #         raise Exception("Not supported major api version")              
+
+        #     # ---- Enable Thermostat
+        #     if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
+        #         raise Exception("Cannot Enable Thermostat")
+
+        #     # ---- Save config
+        #     if not do_web_socket_bool_query(websocket_transport, command_save_config):
+        #         raise Exception("Cannot save config")
+
+        #     # ---- Allocate resources and start measurement process...
+        #     if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
+        #         raise Exception("Cannot allocate resources")
+        #     while True:
+        #         sleep(1)
+        #         task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
+        #         print("Waiting allocation to finish...")
+        #         if task_status["Answer"] == "RUN":
+        #             break
+
+        #     # ---- Start thermal transient measurement
+        #     if not do_web_socket_string_query(websocket_transport, command_start_transient):
+        #         raise Exception("Cannot start measurement")
+
+        #     # ---- Query measurement status
+        #     busy = True
+        #     while busy:
+        #         sleep(1)
+        #         task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
+        #         print("Measuring, please wait..." + str(task_status["Percentage"]) + "%")
+        #         if task_status["Answer"] != "RUN":
+        #             busy = False
+
+        #     # ---- Get and download measurement data
+        #     file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
+        #     print(file_list)
+        #     print("Results:")
+        #     for file in file_list['Result']:
+        #         print("Downloading " + file["Filename"])
+        #         link = "http://" + IP_ADDRESS + ":8085" + file["Filename"]
+        #         urllib.request.urlretrieve(link, link[(link.rfind("/")+1):])
+
+        #     # ---- Release resources: thermal transient task and resource allocation
+        #     if not do_web_socket_bool_query(websocket_transport, command_remove_transient_task):
+        #         raise Exception("Cannot remove transient task")
+
+        #     if not do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc):
+        #         raise Exception("Cannot remove allocation task")
+
+        #     print("Measurement finished")
+    
+        # except Exception as e:
+        #     print("Error: " + str(e))
+
+        # 將重定向的內容顯示在進度框中
+        progress_output = sys.stdout.getvalue()
+        self.progress_text.insert(tk.END, progress_output)
+        self.progress_text.config(state="disabled")  # 禁用編輯
+
+        # 將標準輸出還原
+        sys.stdout = sys.__stdout__
 
 
 if __name__ == '__main__':

@@ -6,6 +6,8 @@ from websocket import WebSocket
 from websocket import create_connection
 from typing import Dict
 import urllib.request
+import AngelGUI
+from AngelGUI import ParameterApp
 
 # 配置 IP 地址
 IP_ADDRESS = "192.168.20.99"
@@ -28,18 +30,10 @@ command_save_config = {
         "Description": "Test configuration"
     },
     "Resources": {
-        "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"]
-        ,
-        # "MeasCardChParams": [
-        #     {
-        #         "Alias": "/T3STER/0/MS401/SLOT5/CH0",
-        #         "UserAlias": "S6Ch1",
-        #         "Sensitivity": {"default": [config_data["S6Ch1_Measurement_channel"]["Sensitivity [mV/K]"]], "locked": False},
-        #         "AutoRange": {"default": config_data["S6Ch1_Measurement_channel"]["Auto range"] == "On", "locked": False},
-        #         "Uref": {"default": config_data["S6Ch1_Measurement_channel"]["Vref [V]"], "locked": False},
-        #         "UrefSwitching": {"default": config_data["S6Ch1_Measurement_channel"]["Separate Vref for heating"] == "On", "locked": False}
-        #     }
-        # ],
+        "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
+        
+        "MeasCardChParams": config_data["Resources"]["MeasCardChParams"],
+        
         "ThermostatParams": [
             {
                 "Alias": "/THERMOSTAT/0",
@@ -53,8 +47,129 @@ command_save_config = {
         "CoolingTime": {"default": config_data["Cooling_time"], "locked": False},
         "DelayTime": {"default": config_data["Delay_time"], "locked": False},
         "Repeat": {"default": config_data["Repeat_times"], "locked": False}
+    },
+
+
+
+
+    # # TSP is Optional
+    # "TspCalibParams": {
+    #     "CustomTemperature": {
+    #         "default": 25,
+    #         "locked": False,
+    #         "max": 160,
+    #         "min": -45
+    #     },
+    #     "DutStability": {
+    #         "default": False,
+    #         "locked": False,
+    #     },
+    #     "EndAction": {
+    #         "default": "CustomTemp",
+    #         "locked": False,
+    #     },
+    #     "Mode": {
+    #         "default": "Upwards",
+    #         "locked": False,
+    #     },
+    #     "ThtIntSensor": {
+    #         "default": True,
+    #         "locked": False,
+    #     },
+    #     "Tmax": {
+    #         "default": 85,
+    #         "locked": False,
+    #         "max": 160,
+    #         "min": -45
+    #     },
+    #     "Tmin": {
+    #         "default": 25,
+    #         "locked": False,
+    #         "max": 160,
+    #         "min": -45
+    #     },
+    #     "Tstep": {
+    #         "default": 15,
+    #         "locked": False,
+    #         "max": 205, 
+    #         "min": 1
+    #     }
+    #     },
+
+    # SourceTimingControl is Optional
+    "SourceTimingControl": {
+        "locked": False,
+        "Enabled": False,
+        "ReversePowerOff": True,
+        "WaitForInstrumentDelay": True,
+        "PowerOn": [
+
+        ],
+        "PowerOff": [
+
+        ]
     }
 }
+
+command_do_resource_alloc = {
+    "Command": "START_TASK",
+    "TaskMode": "MONITORING_RESOURCE_ALLOCATION",
+    "ConfigName": "diode_config",
+    "TaskAlias": "diode_config",
+    "LoadConfig": True,
+    # It is recommended to maintain websocket connection (and not use this optional parameter)
+    "HandleUserDisconnect": False
+}
+
+command_start_transient = {
+    "Command": "START_TASK",
+    "TaskMode": "TRANSIENT",
+    "ConfigName": "diode_config",
+    "TaskAlias": "diode_config_transient",
+    "LoadConfig": True
+}
+
+command_query_alloc_task_status = {
+    "Command": "QUERY_TASK_STATUS",
+    "TaskAlias": "diode_config"
+}
+
+command_query_measurement_task_status = {
+    "Command": "QUERY_TASK_STATUS",
+    "TaskAlias": "diode_config_transient"
+}
+
+command_get_file_list = {
+    "Command": "QUERY_TASK_RESULT_FILE_LIST",
+    "TaskAlias": "diode_config_transient"
+}
+
+command_query_task_list = {
+    "Command": "QUERY_TASKLIST"
+}
+
+command_query_transient_task_presence = {
+    "Command": "QUERY_TASK_PRESENCE",
+    "TaskAlias": "diode_config_transient"
+}
+
+command_remove_transient_task = {
+    "Command": "STOP_AND_REMOVE_TASK",
+    "TaskAlias": "diode_config_transient"
+}
+
+command_query_resource_alloc_task_presence = {
+    "Command": "QUERY_TASK_PRESENCE",
+    "TaskAlias": "diode_config"
+}
+
+command_remove_resource_alloc = {
+    "Command": "STOP_AND_REMOVE_TASK",
+    "TaskAlias": "diode_config"
+}
+
+
+
 
 # WebSocket 操作的相關函數和測量流程不變
 
@@ -73,43 +188,89 @@ def do_web_socket_bool_query(ws: WebSocket, command: Dict) -> bool:
 
 
 if __name__ == '__main__':
-    print(command_save_config)
-    # print("Measurement started")
-    # websocket_url = "ws://" + IP_ADDRESS + ":8085"
-    # websocket_transport = WebSocket()
     
-    # try:
-    #     # ---- Initialize and open websocket
-    #     websocket_transport.connect(websocket_url)
-    #     websocket_transport.settimeout(10)
+    
+    ParameterApp.progress_text.config(state="normal")
 
-    #     # ---- Query system state
-    #     if do_web_socket_bool_query(websocket_transport, command_system_ready):
-    #         print("System is ready")
-    #     else:
-    #         raise Exception("System is NOT ready, returning...")
+    app = ParameterApp()
+    app.mainloop()  # 启动 GUI
 
-    #     # ---- Check api version
-    #     api_version = do_web_socket_string_query(websocket_transport, command_query_api_version)
-    #     print("Api version: " + api_version["Answer"])
-    #     api_version_str = api_version["Answer"]
-    #     api_version_str = api_version_str[:api_version_str.find('.')]
-    #     if api_version_str != "2":
-    #         raise Exception("Not supported major api version")              
+    print("Measurement started")
+    websocket_url = "ws://" + IP_ADDRESS + ":8085"
+    websocket_transport = WebSocket()
 
-    #     # ---- Enable Thermostat
-    #     if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
-    #         raise Exception("Cannot Enable Thermostat")
+    
+    try:
+        # ---- Initialize and open websocket
+        websocket_transport.connect(websocket_url)
+        websocket_transport.settimeout(10)
 
-    #     # ---- Save config
-    #     if not do_web_socket_bool_query(websocket_transport, command_save_config):
-    #         raise Exception("Cannot save config")
+        # ---- Query system state
+        if do_web_socket_bool_query(websocket_transport, command_system_ready):
+            print("System is ready")
+        else:
+            raise Exception("System is NOT ready, returning...")
 
-    #     # ---- Allocate resources and start measurement process...
-        
-    # except Exception as e:
-    #      print("Error: " + str(e))
+        # ---- Check api version
+        api_version = do_web_socket_string_query(websocket_transport, command_query_api_version)
+        print("Api version: " + api_version["Answer"])
+        api_version_str = api_version["Answer"]
+        api_version_str = api_version_str[:api_version_str.find('.')]
+        if api_version_str != "2":
+            raise Exception("Not supported major api version")              
 
-    # # Close
-    # websocket_transport.close()
+        # ---- Enable Thermostat
+        if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
+            raise Exception("Cannot Enable Thermostat")
+
+        # ---- Save config
+        if not do_web_socket_bool_query(websocket_transport, command_save_config):
+            raise Exception("Cannot save config")
+
+        # ---- Allocate resources and start measurement process...
+        if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
+            raise Exception("Cannot allocate resources")
+        while True:
+            sleep(1)
+            task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
+            print("Waiting allocation to finish...")
+            if task_status["Answer"] == "RUN":
+                break
+
+        # ---- Start thermal transient measurement
+        if not do_web_socket_string_query(websocket_transport, command_start_transient):
+            raise Exception("Cannot start measurement")
+
+        # ---- Query measurement status
+        busy = True
+        while busy:
+            sleep(1)
+            task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
+            print("Measuring, please wait..." + str(task_status["Percentage"]) + "%")
+            if task_status["Answer"] != "RUN":
+                busy = False
+
+        # ---- Get and download measurement data
+        file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
+        print(file_list)
+        print("Results:")
+        for file in file_list['Result']:
+            print("Downloading " + file["Filename"])
+            link = "http://" + IP_ADDRESS + ":8085" + file["Filename"]
+            urllib.request.urlretrieve(link, link[(link.rfind("/")+1):])
+
+        # ---- Release resources: thermal transient task and resource allocation
+        if not do_web_socket_bool_query(websocket_transport, command_remove_transient_task):
+            raise Exception("Cannot remove transient task")
+
+        if not do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc):
+            raise Exception("Cannot remove allocation task")
+
+        print("Measurement finished")
+    
+    except Exception as e:
+         print("Error: " + str(e))
+
+    # Close
+    websocket_transport.close()
     print("Exit")

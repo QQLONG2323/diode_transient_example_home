@@ -9,7 +9,7 @@ from websocket import WebSocket
 from websocket import create_connection
 from typing import Dict
 import urllib.request
-# import GUI
+
 
 IP_ADDRESS = "192.168.20.99"
 
@@ -335,6 +335,7 @@ def do_web_socket_bool_query(ws: WebSocket, command: Dict) -> bool:
 if __name__ == '__main__':
 
     print("Measurement started")
+
     websocket_url = "ws://" + IP_ADDRESS + ":8085"
     websocket_transport = WebSocket()
     

@@ -29,12 +29,7 @@ command_enable_thermostat = {
 
 
 command_save_config = {
-    "Command": "SAVE_CONFIG",
-    "Type": "TransientModel",
-    "ConfigName": "diode_config",
-    "ConfigParams": {
-        "Description": "Test"
-    },
+    
     "Resources": {
         "CurrentSourceParams": [
             {
@@ -102,39 +97,10 @@ command_save_config = {
         # "VoltageSourceParams": [
 
         # ],
-        "MeasCardChParams": [
-            {
-                "Alias": "/T3STER/0/MS401/SLOT5/CH0",
-                "UserAlias": "S5CH1",
-                "Sensitivity": {
-                    "locked": False,
-                    "default": [
-                        0.002
-                    ]
-                },
-                "PowerStep":"@POWERSTEP_DIODE;/T3STER/0/MS401/SLOT5/CH0;/T3STER/0/LP220/SLOT1/CH0",
-                "RangeIdx":{
-                    "locked": False,
-                    "default": 9
-                },
-                "AutoRange": {
-                    "locked": False,
-                    "default": False
-                },
-                "Uref": {
-                    "locked": False,
-                    "default": 0.0
-                },
-                "UrefSwitching": {
-                    "locked": False,
-                    "default": False
-                },
-                "UrefHeating": {
-                    "locked": False,
-                    "default": 0
-                }
-            }
-        ],
+        
+
+
+
         # "ThermometerCardChParams": [
         #     {
         #         "Alias": Unique_system_selected_alias,

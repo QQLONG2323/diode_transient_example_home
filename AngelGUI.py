@@ -8,7 +8,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 import os
-import main_01
+from Variable import websocket_test
 import itertools
 from io import StringIO
 import sys
@@ -1498,7 +1498,7 @@ class ParameterApp(tk.Tk):
                 # Get the selected value in Combobox
                 params[field_name] = widget.get()
             else:
-                params[field_name] = widget.get()   # Get the value in Entry
+                params[field_name] = float(widget.get())   # Get the value in Entry
 
         # Delete previously saved parameters for this sensor-option pair
         for key in list(self.saved_parameters):
@@ -1617,8 +1617,13 @@ class ParameterApp(tk.Tk):
             # Create the "sensor_option" key to structure the output
             sensor_check_option = f"{sensor}_{check_option}"
 
+            modified_params = {
+            key: ("PC" if value == "Switching" else value)
+            for key, value in params.items()
+        }
+
             # Store parameters as a dictionary for each sensor-option pair
-            json_data[sensor_check_option] = params
+            json_data[sensor_check_option] = modified_params
 
         # Write the json_data to a JSON file
         with open('saved_parameters.json', 'w', encoding='utf-8') as json_file:
@@ -1719,56 +1724,67 @@ class ParameterApp(tk.Tk):
             scrollable_frame, text="Measurement settings")
         measurement_settings_frame.grid(
             column=0, row=2, padx=10, pady=10, sticky=tk.NSEW)
-      
+        
+
+        # 是否使用重複測量功能
+        # 使用 tk.BooleanVar 來控制 Cycling Test 的選中狀態
+        self.cycling_test_var = tk.BooleanVar(value=False)  # 默認為未選中
+        
+        self.cycling_test_checkbutton = ttk.Checkbutton(
+            scrollable_frame, text="Cycling Test", variable=self.cycling_test_var, command=self.toggle_cycling_test_checkbutton)
+        self.cycling_test_checkbutton.grid(
+            row=3, column=0, padx=10, pady=10)
+        self.page2_parameters['Cycling_Test'] = self.cycling_test_var.get()
+
 
         cycling_test_frame = ttk.LabelFrame(
             scrollable_frame, text="Cycling Test")
         cycling_test_frame.grid(
-            column=0, row=3, padx=10, pady=10, sticky=tk.NSEW)
+            column=0, row=4, padx=10, pady=10, sticky=tk.NSEW)
      
 
-        # connect to THERMOSTAT
-        # 使用 tk.BooleanVar 來控制 connect to THERMOSTAT 的選中狀態
+        # connect to THERMOSTAT 、是否使用 TSP
+        # 使用 tk.BooleanVar 來控制 connect to THERMOSTAT 、 是否使用 TSP 的選中狀態
         self.connect_thermostat_var = tk.BooleanVar(value=False)  # 默認為未選中
         self.tsp_var = tk.BooleanVar(value=False)  # 默認為未選中
 
         self.connect_thermostat_checkbutton = ttk.Checkbutton(
             scrollable_frame, text="Connect to Thermostat", variable=self.connect_thermostat_var, command=self.toggle_tspCheckbutton_temperature)
         self.connect_thermostat_checkbutton.grid(
-            row=4, column=0, padx=10, pady=10)
+            row=5, column=0, padx=10, pady=10)
         self.page2_parameters['Connect_to_Thermostat'] = self.connect_thermostat_var.get()
 
         self.tsp_checkbutton = ttk.Checkbutton(
             scrollable_frame, text="Calibration Set (TSP)", variable=self.tsp_var, command=self.toggle_tsp_calibration_entry, state="disabled")
         self.tsp_checkbutton.grid(
-            row=6, column=0, padx=10, pady=10)
+            row=7, column=0, padx=10, pady=10)
         self.page2_parameters['TSP'] = self.tsp_var.get()
 
         thermostat_settings_for_measurement_frame = ttk.LabelFrame(
             scrollable_frame, text="Thermostat Settings for Measurement")
         thermostat_settings_for_measurement_frame.grid(
-            column=0, row=5, padx=10, pady=10, sticky=tk.NSEW)
+            column=0, row=6, padx=10, pady=10, sticky=tk.NSEW)
 
         tsp_calibration_frame = ttk.LabelFrame(scrollable_frame, text="TSP calibration")
         tsp_calibration_frame.grid(
-            column=0, row=7, padx=10, pady=10, sticky=tk.NSEW)
+            column=0, row=8, padx=10, pady=10, sticky=tk.NSEW)
 
         advanced_thermostat_stability_settings_frame = ttk.LabelFrame(
             scrollable_frame, text="Advanced thermostat stability settings")
         advanced_thermostat_stability_settings_frame.grid(
-            column=0, row=8, padx=10, pady=10, sticky=tk.NSEW)
+            column=0, row=9, padx=10, pady=10, sticky=tk.NSEW)
 
         # 添加 Previous 和 Next 按鈕
         previous_button = ttk.Button(
             scrollable_frame, text="Previous", command=self.go_to_page1)
-        previous_button.grid(row=9, column=0, padx=10, pady=10, sticky="W")
+        previous_button.grid(row=10, column=0, padx=10, pady=10, sticky="W")
         
         next_button = ttk.Button(scrollable_frame, text="Next", command=self.page2_export_to_json)
-        next_button.grid(row=9, column=0, padx=10, pady=10, sticky="E")
+        next_button.grid(row=10, column=0, padx=10, pady=10, sticky="E")
      
         # 添加進度提示框，默認禁用
         self.progress_text = tk.Text(scrollable_frame, height=10, state="disabled")
-        self.progress_text.grid(row=10, column=0, padx=10, pady=10, sticky=tk.NSEW)
+        self.progress_text.grid(row=11, column=0, padx=10, pady=10, sticky=tk.NSEW)
         
 
 
@@ -1946,7 +1962,7 @@ class ParameterApp(tk.Tk):
         pulse_cycling_on_label.grid(row=1, column=0, padx=10, pady=10, sticky="W")
 
         self.pulse_cycling_on_entry = ttk.Entry(
-            cycling_test_frame)
+            cycling_test_frame, state="disabled")
         self.pulse_cycling_on_entry.grid(row=1, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters['Pulse Cycling On [s]'] = self.pulse_cycling_on_entry.get()
 
@@ -1955,7 +1971,7 @@ class ParameterApp(tk.Tk):
         pulse_cycling_off_label.grid(row=2, column=0, padx=10, pady=10, sticky="W")
 
         self.pulse_cycling_off_entry = ttk.Entry(
-            cycling_test_frame)
+            cycling_test_frame, state="disabled")
         self.pulse_cycling_off_entry.grid(row=2, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters['Pulse Cycling Off [s]'] = self.pulse_cycling_off_entry.get()
 
@@ -1964,7 +1980,7 @@ class ParameterApp(tk.Tk):
         pulse_cycling_repeat_label.grid(row=3, column=0, padx=10, pady=10, sticky="W")
 
         self.pulse_cycling_repeat_entry = ttk.Entry(
-            cycling_test_frame)
+            cycling_test_frame, state="disabled")
         self.pulse_cycling_repeat_entry.grid(row=3, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters['Pulse Cycling Repeat'] =  self.pulse_cycling_repeat_entry.get()
 
@@ -1976,7 +1992,7 @@ class ParameterApp(tk.Tk):
         rth_measurement_heating_times_label.grid(row=5, column=0, padx=10, pady=10, sticky="W")
 
         self.rth_measurement_heating_times_entry = ttk.Entry(
-            cycling_test_frame)
+            cycling_test_frame, state="disabled")
         self.rth_measurement_heating_times_entry.grid(row=5, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters['Rth Measurement Heating Times'] = self.rth_measurement_heating_times_entry.get()
 
@@ -1985,7 +2001,7 @@ class ParameterApp(tk.Tk):
         rth_measurement_cooling_times_label.grid(row=6, column=0, padx=10, pady=10, sticky="W")
 
         self.rth_measurement_cooling_times_entry = ttk.Entry(
-            cycling_test_frame)
+            cycling_test_frame, state="disabled")
         self.rth_measurement_cooling_times_entry.grid(row=6, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters['Rth Measurement Cooling Times'] = self.rth_measurement_cooling_times_entry.get()
 
@@ -1994,7 +2010,7 @@ class ParameterApp(tk.Tk):
         rth_measurement_cycling_repeat_label.grid(row=7, column=0, padx=10, pady=10, sticky="W")
 
         self.rth_measurement_cycling_repeat_entry = ttk.Entry(
-            cycling_test_frame)
+            cycling_test_frame, state="disabled")
         self.rth_measurement_cycling_repeat_entry.grid(row=7, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters['Rth Measurement Cycling Repeat'] =  self.rth_measurement_cycling_repeat_entry.get()
 
@@ -2084,6 +2100,31 @@ class ParameterApp(tk.Tk):
             self.repeat_entry.delete(0, tk.END)  # 清空輸入框的內容
             self.repeat_entry.config(state="disabled")  # 禁用輸入框
 
+
+    def toggle_cycling_test_checkbutton(self):
+        """用來啟用或禁用 Cycling Test 的輸入框"""
+        if self.cycling_test_var.get():  # 如果 cycling_test_checkbutton 被選中
+            self.pulse_cycling_on_entry.config(state="normal")  # 啟用 pulse cycling on 輸入框
+            self.pulse_cycling_off_entry.config(state="normal")  # 啟用 pulse cycling off 輸入框
+            self.pulse_cycling_repeat_entry.config(state="normal")  # 啟用 pulse cycling repeat 輸入框
+            self.rth_measurement_heating_times_entry.config(state="normal")  # 啟用 rth measurement heating times 輸入框
+            self.rth_measurement_cooling_times_entry.config(state="normal")  # 啟用 rth measurement cooling times 輸入框
+            self.rth_measurement_cycling_repeat_entry.config(state="normal")  # 啟用 rth measurement cycling repeat 輸入框
+        else:
+            self.pulse_cycling_on_entry.delete(0, tk.END)  # 清空 pulse cycling on 輸入框的內容
+            self.pulse_cycling_on_entry.config(state="disabled")  # 禁用 pulse cycling on 輸入框
+            self.pulse_cycling_off_entry.delete(0, tk.END)  # 清空 pulse cycling off 輸入框的內容
+            self.pulse_cycling_off_entry.config(state="disabled")  # 禁用 pulse cycling off 輸入框
+            self.pulse_cycling_repeat_entry.delete(0, tk.END)  # 清空 pulse cycling repeat 輸入框的內容
+            self.pulse_cycling_repeat_entry.config(state="disabled")  # 禁用 pulse cycling repeat 輸入框
+            self.rth_measurement_heating_times_entry.delete(0, tk.END)  # 清空 rth measurement heating times 輸入框的內容
+            self.rth_measurement_heating_times_entry.config(state="disabled")  # 禁用 rth measurement heating times 輸入框
+            self.rth_measurement_cooling_times_entry.delete(0, tk.END)  # 清空 rth measurement cooling times 輸入框的內容
+            self.rth_measurement_cooling_times_entry.config(state="disabled")  # 禁用 rth measurement cooling times 輸入框
+            self.rth_measurement_cycling_repeat_entry.delete(0, tk.END)  # 清空 rth measurement cycling repeat 輸入框的內容
+            self.rth_measurement_cycling_repeat_entry.config(state="disabled")  # 禁用 rth measurement cycling repeat 輸入框
+    
+    
     def toggle_tspCheckbutton_temperature(self):
         """用來啟用或禁用 tsp 選項以及 temperature"""
         if self.connect_thermostat_var.get():  # 如果 "Connect to Thermostat" Checkbutton 被選中
@@ -2174,8 +2215,8 @@ class ParameterApp(tk.Tk):
                 "Alias": self.sensor_rename["S1Ch1"],
                 "UserAlias": "S1Ch1",
                 "OutputMode": {"default": config_data["S1Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S1Ch1_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S1Ch1_Current_source"]["Voltage limit [V]"], "locked": False},
+                "SetCurrent": {"default": float(config_data["S1Ch1_Current_source"]["Current [A]"]), "locked": False},
+                "VoltageCorner": {"default": float(config_data["S1Ch1_Current_source"]["Voltage limit [V]"]), "locked": False},
             })
         
         if "S1Ch2_Current_source" in config_data:
@@ -2210,8 +2251,8 @@ class ParameterApp(tk.Tk):
                 "Alias": "/T3STER/0/LP220/SLOT5/CH0",
                 "UserAlias": "S5Ch1",
                 "OutputMode": {"default": config_data["S5Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S5Ch1_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S5Ch1_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S5Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S5Ch1_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S5Ch2_Current_source" in config_data:
@@ -2219,8 +2260,8 @@ class ParameterApp(tk.Tk):
                 "Alias": "/T3STER/0/LP220/SLOT5/CH1",
                 "UserAlias": "S5Ch2",
                 "OutputMode": {"default": config_data["S5Ch2_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S5Ch2_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S5Ch2_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S5Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S5Ch2_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S5Ch3_Current_source" in config_data:
@@ -2354,8 +2395,8 @@ class ParameterApp(tk.Tk):
                 "Alias": "/T3STER/0/LP220/SLOT5/CH0",
                 "UserAlias": "S5Ch1",
                 "OutputMode": {"default": config_data["S5Ch1_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S5Ch1_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S5Ch1_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S5Ch1_Both"]["Current [A]"]), "locked": False},
+                "VoltageCorner": {"default": float(config_data["S5Ch1_Both"]["Current_source_Range"]), "locked": False}
             })
 
         if "S5Ch2_Both" in config_data:
@@ -2521,12 +2562,12 @@ class ParameterApp(tk.Tk):
                     "Alias": self.sensor_rename.get(ms_401_value, ""),
                     "UserAlias": ms_401_value,
                     "Sensitivity": {"default": [config_data[f"{ms_401_value}_Measurement_channel"]["Sensitivity [mV/K]"]], "locked": False},
+                    "PowerStep": f"@POWERSTEP_DIODE;{isense_path};{idrive_path}",
+                    "RangeIdx": {"default": range_idx, "locked": False},
                     "AutoRange": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Auto range"], "locked": False},
                     "Uref": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Vref [V]"], "locked": False},
                     "UrefSwitching": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Separate Vref for heating"], "locked": False},
-                    "UrefHeating": config_data[f"{ms_401_value}_Measurement_channel"]["Vref,heating [V]"],
-                    "PowerStep": f"@POWERSTEP_DIODE;{isense_path};{idrive_path}",
-                    "RangeIdx": range_idx
+                    "UrefHeating": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Vref,heating [V]"], "locked": False}                   
                 })
 
             if f"{ms_401_value}_Both" in config_data:
@@ -2538,12 +2579,12 @@ class ParameterApp(tk.Tk):
                     "Alias": self.sensor_rename.get(ms_401_value, ""),
                     "UserAlias": ms_401_value,
                     "Sensitivity": {"default": [config_data[f"{ms_401_value}_Both"]["Sensitivity [mV/K]"]], "locked": False},
+                    "PowerStep": f"@POWERSTEP_DIODE;{isense_path};{idrive_path}",
+                    "RangeIdx": {"default": range_idx, "locked": False},
                     "AutoRange": {"default": config_data[f"{ms_401_value}_Both"]["Auto range"], "locked": False},
                     "Uref": {"default": config_data[f"{ms_401_value}_Both"]["Vref [V]"], "locked": False},
                     "UrefSwitching": {"default": config_data[f"{ms_401_value}_Both"]["Separate Vref for heating"], "locked": False},
-                    "UrefHeating": config_data[f"{ms_401_value}_Both"]["Vref,heating [V]"],
-                    "PowerStep": f"@POWERSTEP_DIODE;{isense_path};{idrive_path}",
-                    "RangeIdx": range_idx
+                    "UrefHeating": {"default": config_data[f"{ms_401_value}_Both"]["Vref,heating [V]"], "locked": False}
                 })
 
         return measurement_params
@@ -2563,9 +2604,9 @@ class ParameterApp(tk.Tk):
         # 確保控件的值是最新的
         self.page2_parameters['Config_Name'] = self.config_entry.get()
         self.page2_parameters['storage_path'] = self.path_display.cget("text")
-        self.page2_parameters['Heating_time'] = self.heating_entry.get()
-        self.page2_parameters['Cooling_time'] = self.cooling_entry.get()
-        self.page2_parameters['Delay_time'] = self.delay_entry.get()
+        self.page2_parameters['Heating_time'] = float(self.heating_entry.get())
+        self.page2_parameters['Cooling_time'] = float(self.cooling_entry.get())
+        self.page2_parameters['Delay_time'] = float(self.delay_entry.get())
         self.page2_parameters['Repeat'] = self.repeat_var.get()
         self.page2_parameters['Repeat_times'] = self.repeat_entry.get()
         self.page2_parameters['Pulse Cycling On [s]'] = self.pulse_cycling_on_entry.get()
@@ -2637,84 +2678,29 @@ class ParameterApp(tk.Tk):
         print("參數已成功儲存至 saved_parameters.json")
 
 
-
         # 啟用進度提示框
         self.progress_text.config(state="normal")
         self.progress_text.delete(1.0, tk.END)  # 清空現有內容
 
+
+        # 保存標準輸出
+        original_stdout = sys.stdout
+
         # 重定向標準輸出到文本框
         sys.stdout = StringIO()
         
-        # try:
-        #     # ---- Initialize and open websocket
-        #     websocket_transport.connect(websocket_url)
-        #     websocket_transport.settimeout(10)
+        with open('saved_parameters.json', 'r') as file:
+            config_data = json.load(file)
 
-        #     # ---- Query system state
-        #     if do_web_socket_bool_query(websocket_transport, command_system_ready):
-        #         print("System is ready")
-        #     else:
-        #         raise Exception("System is NOT ready, returning...")
+        try:
+        #     # 執行 WebSocket 測試，並顯示進度
+        #     # if config_data["Cycling_Test"] == "false":           
+            websocket_test()
+        #     # else:
+        #     #     None
 
-        #     # ---- Check api version
-        #     api_version = do_web_socket_string_query(websocket_transport, command_query_api_version)
-        #     print("Api version: " + api_version["Answer"])
-        #     api_version_str = api_version["Answer"]
-        #     api_version_str = api_version_str[:api_version_str.find('.')]
-        #     if api_version_str != "2":
-        #         raise Exception("Not supported major api version")              
-
-        #     # ---- Enable Thermostat
-        #     if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
-        #         raise Exception("Cannot Enable Thermostat")
-
-        #     # ---- Save config
-        #     if not do_web_socket_bool_query(websocket_transport, command_save_config):
-        #         raise Exception("Cannot save config")
-
-        #     # ---- Allocate resources and start measurement process...
-        #     if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
-        #         raise Exception("Cannot allocate resources")
-        #     while True:
-        #         sleep(1)
-        #         task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
-        #         print("Waiting allocation to finish...")
-        #         if task_status["Answer"] == "RUN":
-        #             break
-
-        #     # ---- Start thermal transient measurement
-        #     if not do_web_socket_string_query(websocket_transport, command_start_transient):
-        #         raise Exception("Cannot start measurement")
-
-        #     # ---- Query measurement status
-        #     busy = True
-        #     while busy:
-        #         sleep(1)
-        #         task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
-        #         print("Measuring, please wait..." + str(task_status["Percentage"]) + "%")
-        #         if task_status["Answer"] != "RUN":
-        #             busy = False
-
-        #     # ---- Get and download measurement data
-        #     file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
-        #     print(file_list)
-        #     print("Results:")
-        #     for file in file_list['Result']:
-        #         print("Downloading " + file["Filename"])
-        #         link = "http://" + IP_ADDRESS + ":8085" + file["Filename"]
-        #         urllib.request.urlretrieve(link, link[(link.rfind("/")+1):])
-
-        #     # ---- Release resources: thermal transient task and resource allocation
-        #     if not do_web_socket_bool_query(websocket_transport, command_remove_transient_task):
-        #         raise Exception("Cannot remove transient task")
-
-        #     if not do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc):
-        #         raise Exception("Cannot remove allocation task")
-
-        #     print("Measurement finished")
-    
-        # except Exception as e:
-        #     print("Error: " + str(e))
+        except Exception as e:
+            print(f"Error: {str(e)}")
 
         # 將重定向的內容顯示在進度框中
         progress_output = sys.stdout.getvalue()
@@ -2722,7 +2708,7 @@ class ParameterApp(tk.Tk):
         self.progress_text.config(state="disabled")  # 禁用編輯
 
         # 將標準輸出還原
-        sys.stdout = sys.__stdout__
+        sys.stdout = original_stdout
 
 
 if __name__ == '__main__':

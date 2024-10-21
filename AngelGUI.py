@@ -8,10 +8,10 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 import os
-from Variable import websocket_test
 import itertools
 from io import StringIO
 import sys
+
 
 
 
@@ -123,7 +123,7 @@ class ParameterApp(tk.Tk):
             },
             "S5Ch1": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -150,7 +150,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -177,7 +177,7 @@ class ParameterApp(tk.Tk):
             },
             "S5Ch2": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -204,7 +204,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -231,7 +231,7 @@ class ParameterApp(tk.Tk):
             },
             "S5Ch3": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -258,7 +258,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -285,7 +285,7 @@ class ParameterApp(tk.Tk):
             },
             "S5Ch4": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -312,7 +312,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -339,7 +339,7 @@ class ParameterApp(tk.Tk):
             },
             "S6Ch1": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -366,7 +366,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -393,7 +393,7 @@ class ParameterApp(tk.Tk):
             },
             "S6Ch2": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -420,7 +420,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -447,7 +447,7 @@ class ParameterApp(tk.Tk):
             },
             "S6Ch3": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -474,7 +474,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -501,7 +501,7 @@ class ParameterApp(tk.Tk):
             },
             "S6Ch4": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -528,7 +528,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -555,7 +555,7 @@ class ParameterApp(tk.Tk):
             },
             "S7Ch1": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -582,7 +582,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -609,7 +609,7 @@ class ParameterApp(tk.Tk):
             },
             "S7Ch2": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -636,7 +636,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -663,7 +663,7 @@ class ParameterApp(tk.Tk):
             },
             "S7Ch3": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -690,7 +690,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -717,7 +717,7 @@ class ParameterApp(tk.Tk):
             },
             "S7Ch4": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -744,7 +744,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -771,7 +771,7 @@ class ParameterApp(tk.Tk):
             },
             "S8Ch1": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -798,7 +798,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -825,7 +825,7 @@ class ParameterApp(tk.Tk):
             },
             "S8Ch2": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -852,7 +852,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -879,7 +879,7 @@ class ParameterApp(tk.Tk):
             },
             "S8Ch3": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -906,7 +906,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -933,7 +933,7 @@ class ParameterApp(tk.Tk):
             },
             "S8Ch4": {
                 "Current_source": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Range": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
@@ -960,7 +960,7 @@ class ParameterApp(tk.Tk):
                     "Vref,heating [V]": "entry"
                 },
                 "Both": {
-                    "Output mode": ["Off", "On"],
+                    "Output mode": ["Off", "ON"],
                     "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
@@ -1523,7 +1523,7 @@ class ParameterApp(tk.Tk):
                 # 清空界面上的 Voltage_source 表單內容
                 for widget in self.form_widgets[sensor]["Voltage_source"]:
                     if isinstance(widget, ttk.Combobox):
-                        widget.set('')  # 清空 combobox
+                        widget.set("")  # 清空 combobox
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
         elif check_option == "Voltage_source":
@@ -1533,7 +1533,7 @@ class ParameterApp(tk.Tk):
                 # 清空界面上的 Current_source 表單內容
                 for widget in self.form_widgets[sensor]["Current_source"]:
                     if isinstance(widget, ttk.Combobox):
-                        widget.set('')  # 清空 combobox
+                        widget.set("")  # 清空 combobox
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
 
@@ -1545,7 +1545,7 @@ class ParameterApp(tk.Tk):
                 del self.saved_parameters[(sensor, "Measurement_channel")]
                 for widget in self.form_widgets[sensor]["Measurement_channel"]:
                     if isinstance(widget, ttk.Combobox):
-                        widget.set('')  # 清空 combobox
+                        widget.set("")  # 清空 combobox
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
             if (sensor, "Both") in self.saved_parameters:
@@ -1553,7 +1553,7 @@ class ParameterApp(tk.Tk):
                 del self.saved_parameters[(sensor, "Both")]
                 for widget in self.form_widgets[sensor]["Both"]:
                     if isinstance(widget, ttk.Combobox):
-                        widget.set('')  # 清空 combobox
+                        widget.set("")  # 清空 combobox
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
 
@@ -1564,7 +1564,7 @@ class ParameterApp(tk.Tk):
                 del self.saved_parameters[(sensor, "Current_source")]
                 for widget in self.form_widgets[sensor]["Current_source"]:
                     if isinstance(widget, ttk.Combobox):
-                        widget.set('')  # 清空 combobox
+                        widget.set("")  # 清空 combobox
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
             if (sensor, "Both") in self.saved_parameters:
@@ -1572,7 +1572,7 @@ class ParameterApp(tk.Tk):
                 del self.saved_parameters[(sensor, "Both")]
                 for widget in self.form_widgets[sensor]["Both"]:
                     if isinstance(widget, ttk.Combobox):
-                        widget.set('')  # 清空 combobox
+                        widget.set("")  # 清空 combobox
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
 
@@ -1617,16 +1617,28 @@ class ParameterApp(tk.Tk):
             # Create the "sensor_option" key to structure the output
             sensor_check_option = f"{sensor}_{check_option}"
 
-            modified_params = {
-            key: ("PC" if value == "Switching" else value)
-            for key, value in params.items()
-        }
+            modified_params = {}
+            for key, value in params.items():
+                if value == "Switching":
+                    # 將 "Switching" 轉換為 "PC"
+                    modified_params[key] = "PC"
+                elif key == "Auto range" or key == "Separate Vref for heating":
+                    # 將 "On" 轉換為 True，"Off" 轉換為 False
+                    if value == "On":
+                        modified_params[key] = True
+                    elif value == "Off":
+                        modified_params[key] = False
+                    else:
+                        modified_params[key] = value  # 保持原來的值
+                else:
+                    # 保持原來的值
+                    modified_params[key] = value
 
             # Store parameters as a dictionary for each sensor-option pair
             json_data[sensor_check_option] = modified_params
 
         # Write the json_data to a JSON file
-        with open('saved_parameters.json', 'w', encoding='utf-8') as json_file:
+        with open("saved_parameters.json", "w", encoding="utf-8") as json_file:
             json.dump(json_data, json_file, ensure_ascii=False, indent=4)
 
         print("參數已成功匯出到 saved_parameters.json")
@@ -1734,7 +1746,7 @@ class ParameterApp(tk.Tk):
             scrollable_frame, text="Cycling Test", variable=self.cycling_test_var, command=self.toggle_cycling_test_checkbutton)
         self.cycling_test_checkbutton.grid(
             row=3, column=0, padx=10, pady=10)
-        self.page2_parameters['Cycling_Test'] = self.cycling_test_var.get()
+        self.page2_parameters["Cycling_Test"] = self.cycling_test_var.get()
 
 
         cycling_test_frame = ttk.LabelFrame(
@@ -1752,13 +1764,13 @@ class ParameterApp(tk.Tk):
             scrollable_frame, text="Connect to Thermostat", variable=self.connect_thermostat_var, command=self.toggle_tspCheckbutton_temperature)
         self.connect_thermostat_checkbutton.grid(
             row=5, column=0, padx=10, pady=10)
-        self.page2_parameters['Connect_to_Thermostat'] = self.connect_thermostat_var.get()
+        self.page2_parameters["Connect_to_Thermostat"] = self.connect_thermostat_var.get()
 
         self.tsp_checkbutton = ttk.Checkbutton(
             scrollable_frame, text="Calibration Set (TSP)", variable=self.tsp_var, command=self.toggle_tsp_calibration_entry, state="disabled")
         self.tsp_checkbutton.grid(
             row=7, column=0, padx=10, pady=10)
-        self.page2_parameters['TSP'] = self.tsp_var.get()
+        self.page2_parameters["TSP"] = self.tsp_var.get()
 
         thermostat_settings_for_measurement_frame = ttk.LabelFrame(
             scrollable_frame, text="Thermostat Settings for Measurement")
@@ -1794,7 +1806,7 @@ class ParameterApp(tk.Tk):
 
         self.config_entry = ttk.Entry(config_details_frame)
         self.config_entry.grid(column=1, row=0, padx=10, pady=10)
-        self.page2_parameters['Config_Name'] = self.config_entry.get()
+        self.page2_parameters["Config_Name"] = self.config_entry.get()
 
         # 儲存路徑選擇
         path_label = ttk.Label(config_details_frame, text="儲存路徑:")
@@ -1802,7 +1814,7 @@ class ParameterApp(tk.Tk):
 
         self.path_display = ttk.Label(config_details_frame, text="未選擇路徑")
         self.path_display.grid(column=1, row=1, padx=10, pady=10)
-        self.page2_parameters['storage_path'] = self.path_display.cget("text")
+        self.page2_parameters["storage_path"] = self.path_display.cget("text")
 
         def select_directory():
             # 打開文件夾選擇對話框
@@ -1818,9 +1830,9 @@ class ParameterApp(tk.Tk):
         measurement_channels = [
             sensor for sensor, check_option in self.saved_parameters if "Measurement_channel" in check_option or "Both" in check_option]
         current_sources_s5_s8 = [sensor for sensor, check_option in self.saved_parameters if ("Current_source" in check_option and sensor.startswith(
-            ('S5', 'S6', 'S7', 'S8'))) or ("Both" in check_option and sensor.startswith(('S5', 'S6', 'S7', 'S8')))]
+            ("S5", "S6", "S7", "S8"))) or ("Both" in check_option and sensor.startswith(("S5", "S6", "S7", "S8")))]
         current_sources_s1_s3 = [
-            sensor for sensor, check_option in self.saved_parameters if "Current_source" in check_option and sensor.startswith(('S1', 'S3'))]
+            sensor for sensor, check_option in self.saved_parameters if "Current_source" in check_option and sensor.startswith(("S1", "S3"))]
 
         # 顯示 "Calculation Method" 字
         method_label = ttk.Label(power_steps_frame, text="Calculation Method")
@@ -1893,7 +1905,7 @@ class ParameterApp(tk.Tk):
 
         self.heating_entry = ttk.Entry(measurement_settings_frame)
         self.heating_entry.grid(row=0, column=3, padx=10, pady=10)
-        self.page2_parameters['Heating_time'] = self.heating_entry.get()
+        self.page2_parameters["Heating_time"] = self.heating_entry.get()
 
         # Cooling time row
         cooling_label = ttk.Label(
@@ -1910,7 +1922,7 @@ class ParameterApp(tk.Tk):
 
         self.cooling_entry = ttk.Entry(measurement_settings_frame)
         self.cooling_entry.grid(row=1, column=3, padx=10, pady=10)
-        self.page2_parameters['Cooling_time'] = self.cooling_entry.get()
+        self.page2_parameters["Cooling_time"] = self.cooling_entry.get()
 
         # Delay time row
         delay_label = ttk.Label(
@@ -1927,31 +1939,31 @@ class ParameterApp(tk.Tk):
 
         self.delay_entry = ttk.Entry(measurement_settings_frame)
         self.delay_entry.grid(row=2, column=3, padx=10, pady=10)
-        self.page2_parameters['Delay_time'] = self.delay_entry.get()
+        self.page2_parameters["Delay_time"] = self.delay_entry.get()
 
-        # Repeat
-        # 使用 tk.BooleanVar 來控制 Repeat 的選中狀態
-        self.repeat_var = tk.BooleanVar(value=False)  # 默認為未選中
+        # # Repeat
+        # # 使用 tk.BooleanVar 來控制 Repeat 的選中狀態
+        # self.repeat_var = tk.BooleanVar(value=False)  # 默認為未選中
 
-        # 使用 ttk.Checkbutton 來啟用或禁用 repeat_entry
-        self.repeat_checkbutton = ttk.Checkbutton(
-            measurement_settings_frame, text="Repeat [times]", variable=self.repeat_var, command=self.toggle_repeat_entry)
-        self.repeat_checkbutton.grid(row=4, column=0, padx=10, pady=10)
-        self.page2_parameters['Repeat'] = self.repeat_var.get()
+        # # 使用 ttk.Checkbutton 來啟用或禁用 repeat_entry
+        # self.repeat_checkbutton = ttk.Checkbutton(
+        #     measurement_settings_frame, text="Repeat [times]", variable=self.repeat_var, command=self.toggle_repeat_entry)
+        # self.repeat_checkbutton.grid(row=4, column=0, padx=10, pady=10)
+        # self.page2_parameters["Repeat"] = self.repeat_var.get()
 
-        repeat_range_label = ttk.Label(
-            measurement_settings_frame, text="範圍: 1 ~ 100")
-        repeat_range_label.grid(row=4, column=1, padx=10, pady=10)
+        # repeat_range_label = ttk.Label(
+        #     measurement_settings_frame, text="範圍: 1 ~ 100")
+        # repeat_range_label.grid(row=4, column=1, padx=10, pady=10)
 
-        repeat_setpoint_label = ttk.Label(
-            measurement_settings_frame, text="Setpoint: ")
-        repeat_setpoint_label.grid(row=4, column=2, padx=10, pady=10)
+        # repeat_setpoint_label = ttk.Label(
+        #     measurement_settings_frame, text="Setpoint: ")
+        # repeat_setpoint_label.grid(row=4, column=2, padx=10, pady=10)
 
-        # Repeat 的 Entry
-        self.repeat_entry = ttk.Entry(
-            measurement_settings_frame, state="disabled")  # 初始狀態為禁用
-        self.repeat_entry.grid(row=4, column=3, padx=10, pady=10)
-        self.page2_parameters['Repeat_times'] = self.repeat_entry.get()
+        # # Repeat 的 Entry
+        # self.repeat_entry = ttk.Entry(
+        #     measurement_settings_frame, state="disabled")  # 初始狀態為禁用
+        # self.repeat_entry.grid(row=4, column=3, padx=10, pady=10)
+        # self.page2_parameters["Repeat_times"] = self.repeat_entry.get()
 
         # Cycling Test
         multi_pulse_cycling_label = ttk.Label(cycling_test_frame, text="Multi Pulse Cycling")
@@ -1964,7 +1976,7 @@ class ParameterApp(tk.Tk):
         self.pulse_cycling_on_entry = ttk.Entry(
             cycling_test_frame, state="disabled")
         self.pulse_cycling_on_entry.grid(row=1, column=1, padx=10, pady=10, sticky="W")
-        self.page2_parameters['Pulse Cycling On [s]'] = self.pulse_cycling_on_entry.get()
+        self.page2_parameters["Pulse Cycling On [s]"] = self.pulse_cycling_on_entry.get()
 
         pulse_cycling_off_label = ttk.Label(
             cycling_test_frame, text="Pulse Cycling Off [s]: ")
@@ -1973,7 +1985,7 @@ class ParameterApp(tk.Tk):
         self.pulse_cycling_off_entry = ttk.Entry(
             cycling_test_frame, state="disabled")
         self.pulse_cycling_off_entry.grid(row=2, column=1, padx=10, pady=10, sticky="W")
-        self.page2_parameters['Pulse Cycling Off [s]'] = self.pulse_cycling_off_entry.get()
+        self.page2_parameters["Pulse Cycling Off [s]"] = self.pulse_cycling_off_entry.get()
 
         pulse_cycling_repeat_label = ttk.Label(
             cycling_test_frame, text="Pulse Cycling Repeat: ")
@@ -1982,7 +1994,7 @@ class ParameterApp(tk.Tk):
         self.pulse_cycling_repeat_entry = ttk.Entry(
             cycling_test_frame, state="disabled")
         self.pulse_cycling_repeat_entry.grid(row=3, column=1, padx=10, pady=10, sticky="W")
-        self.page2_parameters['Pulse Cycling Repeat'] =  self.pulse_cycling_repeat_entry.get()
+        self.page2_parameters["Pulse Cycling Repeat"] =  self.pulse_cycling_repeat_entry.get()
 
         rth_measurement_label = ttk.Label(cycling_test_frame, text="Rth Measurement")
         rth_measurement_label.grid(row=4, column=0, padx=10, pady=10, columnspan=2)
@@ -1994,7 +2006,7 @@ class ParameterApp(tk.Tk):
         self.rth_measurement_heating_times_entry = ttk.Entry(
             cycling_test_frame, state="disabled")
         self.rth_measurement_heating_times_entry.grid(row=5, column=1, padx=10, pady=10, sticky="W")
-        self.page2_parameters['Rth Measurement Heating Times'] = self.rth_measurement_heating_times_entry.get()
+        self.page2_parameters["Rth Measurement Heating Times"] = self.rth_measurement_heating_times_entry.get()
 
         rth_measurement_cooling_times_label = ttk.Label(
             cycling_test_frame, text="Rth Measurement Cooling Times: ")
@@ -2003,7 +2015,7 @@ class ParameterApp(tk.Tk):
         self.rth_measurement_cooling_times_entry = ttk.Entry(
             cycling_test_frame, state="disabled")
         self.rth_measurement_cooling_times_entry.grid(row=6, column=1, padx=10, pady=10, sticky="W")
-        self.page2_parameters['Rth Measurement Cooling Times'] = self.rth_measurement_cooling_times_entry.get()
+        self.page2_parameters["Rth Measurement Cooling Times"] = self.rth_measurement_cooling_times_entry.get()
 
         rth_measurement_cycling_repeat_label = ttk.Label(
             cycling_test_frame, text="Rth Measurement Cycling Repeat: ")
@@ -2012,7 +2024,7 @@ class ParameterApp(tk.Tk):
         self.rth_measurement_cycling_repeat_entry = ttk.Entry(
             cycling_test_frame, state="disabled")
         self.rth_measurement_cycling_repeat_entry.grid(row=7, column=1, padx=10, pady=10, sticky="W")
-        self.page2_parameters['Rth Measurement Cycling Repeat'] =  self.rth_measurement_cycling_repeat_entry.get()
+        self.page2_parameters["Rth Measurement Cycling Repeat"] =  self.rth_measurement_cycling_repeat_entry.get()
 
         # Temperature [°C]
         temperature_label = ttk.Label(
@@ -2030,7 +2042,7 @@ class ParameterApp(tk.Tk):
         self.temperature_entry = ttk.Entry(
             thermostat_settings_for_measurement_frame, state="disabled")  # 初始狀態為禁用
         self.temperature_entry.grid(row=0, column=3, padx=10, pady=10)
-        self.page2_parameters['Temperature'] = self.temperature_entry.get()
+        self.page2_parameters["Temperature"] = self.temperature_entry.get()
 
         # TSP calibration
         # Tmin [°C]
@@ -2048,7 +2060,7 @@ class ParameterApp(tk.Tk):
         self.tmin_entry = ttk.Entry(
             tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
         self.tmin_entry.grid(row=0, column=3, padx=10, pady=10)
-        self.page2_parameters['Tmin'] = self.tmin_entry.get()
+        self.page2_parameters["Tmin"] = self.tmin_entry.get()
 
         # Tmax [°C]
         tmax_label = ttk.Label(tsp_calibration_frame, text="Tmax [°C]")
@@ -2065,7 +2077,7 @@ class ParameterApp(tk.Tk):
         self.tmax_entry = ttk.Entry(
             tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
         self.tmax_entry.grid(row=1, column=3, padx=10, pady=10)
-        self.page2_parameters['Tmax'] = self.tmax_entry.get()
+        self.page2_parameters["Tmax"] = self.tmax_entry.get()
 
         # Tstep [°C]
         tstep_label = ttk.Label(tsp_calibration_frame, text="Tstep [°C]")
@@ -2082,7 +2094,7 @@ class ParameterApp(tk.Tk):
         self.tstep_entry = ttk.Entry(
             tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
         self.tstep_entry.grid(row=2, column=3, padx=10, pady=10)
-        self.page2_parameters['Tstep'] = self.tstep_entry.get()
+        self.page2_parameters["Tstep"] = self.tstep_entry.get()
 
 
         # Time window [s]
@@ -2092,13 +2104,13 @@ class ParameterApp(tk.Tk):
 
         self.update()  # 強制刷新頁面
 
-    def toggle_repeat_entry(self):
-        """用來啟用或禁用 repeat_entry 的回調函數"""
-        if self.repeat_var.get():  # 如果 Checkbutton 被選中
-            self.repeat_entry.config(state="normal")  # 啟用輸入框
-        else:
-            self.repeat_entry.delete(0, tk.END)  # 清空輸入框的內容
-            self.repeat_entry.config(state="disabled")  # 禁用輸入框
+    # def toggle_repeat_entry(self):
+    #     """用來啟用或禁用 repeat_entry 的回調函數"""
+    #     if self.repeat_var.get():  # 如果 Checkbutton 被選中
+    #         self.repeat_entry.config(state="normal")  # 啟用輸入框
+    #     else:
+    #         self.repeat_entry.delete(0, tk.END)  # 清空輸入框的內容
+    #         self.repeat_entry.config(state="disabled")  # 禁用輸入框
 
 
     def toggle_cycling_test_checkbutton(self):
@@ -2110,6 +2122,12 @@ class ParameterApp(tk.Tk):
             self.rth_measurement_heating_times_entry.config(state="normal")  # 啟用 rth measurement heating times 輸入框
             self.rth_measurement_cooling_times_entry.config(state="normal")  # 啟用 rth measurement cooling times 輸入框
             self.rth_measurement_cycling_repeat_entry.config(state="normal")  # 啟用 rth measurement cycling repeat 輸入框
+            self.heating_entry.delete(0, tk.END)   # 清空 heating 輸入框的內容
+            self.heating_entry.config(state="disabled")   #禁用 heating 輸入框
+            self.cooling_entry.delete(0, tk.END)   # 清空 cooling 輸入框的內容
+            self.cooling_entry.config(state="disabled")   #禁用 cooling 輸入框
+            self.delay_entry.delete(0, tk.END)   # 清空 delay 輸入框的內容
+            self.delay_entry.config(state="disabled")   #禁用 delay 輸入框
         else:
             self.pulse_cycling_on_entry.delete(0, tk.END)  # 清空 pulse cycling on 輸入框的內容
             self.pulse_cycling_on_entry.config(state="disabled")  # 禁用 pulse cycling on 輸入框
@@ -2123,6 +2141,9 @@ class ParameterApp(tk.Tk):
             self.rth_measurement_cooling_times_entry.config(state="disabled")  # 禁用 rth measurement cooling times 輸入框
             self.rth_measurement_cycling_repeat_entry.delete(0, tk.END)  # 清空 rth measurement cycling repeat 輸入框的內容
             self.rth_measurement_cycling_repeat_entry.config(state="disabled")  # 禁用 rth measurement cycling repeat 輸入框
+            self.heating_entry.config(state="normal")
+            self.cooling_entry.config(state="normal")
+            self.delay_entry.config(state="normal")
     
     
     def toggle_tspCheckbutton_temperature(self):
@@ -2214,41 +2235,97 @@ class ParameterApp(tk.Tk):
             current_source_params.append({
                 "Alias": self.sensor_rename["S1Ch1"],
                 "UserAlias": "S1Ch1",
+                "Delay": {
+                    "DelayFallingUs": {
+                        "default": 0,
+                        "locked": False,
+                        "min": -16383,
+                        "max": 5000
+                    },
+                    "DelayRisingUs": {
+                        "default": 0,
+                        "locked": False,
+                        "min": -16383,
+                        "max": 16383
+                    }
+                },
                 "OutputMode": {"default": config_data["S1Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S1Ch1_Current_source"]["Current [A]"]), "locked": False},
-                "VoltageCorner": {"default": float(config_data["S1Ch1_Current_source"]["Voltage limit [V]"]), "locked": False},
+                "SetCurrent": {"default": float(config_data["S1Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -2, "max": 2},
+                "VoltageCorner": {"default": float(config_data["S1Ch1_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10}
             })
         
         if "S1Ch2_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT1/CH1",
+                "Alias": self.sensor_rename["S1Ch2"],
                 "UserAlias": "S1Ch2",
+                "Delay": {
+                    "DelayFallingUs": {
+                        "default": 0,
+                        "locked": False,
+                        "min": -16383,
+                        "max": 5000
+                    },
+                    "DelayRisingUs": {
+                        "default": 0,
+                        "locked": False,
+                        "min": -16383,
+                        "max": 16383
+                    }
+                },
                 "OutputMode": {"default": config_data["S1Ch2_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S1Ch2_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S1Ch2_Current_source"]["Voltage limit [V]"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S1Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -2, "max": 2},
+                "VoltageCorner": {"default": float(config_data["S1Ch2_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10}
             })
         
         if "S3Ch1_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT3/CH0",
+                "Alias": self.sensor_rename["S3Ch1"],
                 "UserAlias": "S3Ch1",
+                "Delay": {
+                    "DelayFallingUs": {
+                        "default": 0,
+                        "locked": False,
+                        "min": -16383,
+                        "max": 5000
+                    },
+                    "DelayRisingUs": {
+                        "default": 0,
+                        "locked": False,
+                        "min": -16383,
+                        "max": 16383
+                    }
+                },
                 "OutputMode": {"default": config_data["S3Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S3Ch1_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S3Ch1_Current_source"]["Voltage limit [V]"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S3Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -2, "max": 2},
+                "VoltageCorner": {"default": float(config_data["S3Ch1_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10}
             })
         
         if "S3Ch2_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT3/CH1",
+                "Alias": self.sensor_rename["S3Ch2"],
                 "UserAlias": "S3Ch2",
+                "Delay": {
+                    "DelayFallingUs": {
+                        "default": 0,
+                        "locked": False,
+                        "min": -16383,
+                        "max": 5000
+                    },
+                    "DelayRisingUs": {
+                        "default": 0,
+                        "locked": False,
+                        "min": -16383,
+                        "max": 16383
+                    }
+                },
                 "OutputMode": {"default": config_data["S3Ch2_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S3Ch2_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S3Ch2_Current_source"]["Voltage limit [V]"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S3Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -2, "max": 2},
+                "VoltageCorner": {"default": float(config_data["S3Ch2_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10}
             })
 
         if "S5Ch1_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT5/CH0",
+                "Alias": self.sensor_rename["S5Ch1"],
                 "UserAlias": "S5Ch1",
                 "OutputMode": {"default": config_data["S5Ch1_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S5Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
@@ -2257,7 +2334,7 @@ class ParameterApp(tk.Tk):
 
         if "S5Ch2_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT5/CH1",
+                "Alias": self.sensor_rename["S5Ch2"],
                 "UserAlias": "S5Ch2",
                 "OutputMode": {"default": config_data["S5Ch2_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S5Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
@@ -2266,272 +2343,272 @@ class ParameterApp(tk.Tk):
 
         if "S5Ch3_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT5/CH2",
+                "Alias": self.sensor_rename["S5Ch3"],
                 "UserAlias": "S5Ch3",
                 "OutputMode": {"default": config_data["S5Ch3_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S5Ch3_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S5Ch3_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S5Ch3_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S5Ch3_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S5Ch4_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT5/CH3",
+                "Alias": self.sensor_rename["S5Ch4"],
                 "UserAlias": "S5Ch4",
                 "OutputMode": {"default": config_data["S5Ch4_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S5Ch4_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S5Ch4_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S5Ch4_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S5Ch4_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S6Ch1_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT6/CH0",
+                "Alias": self.sensor_rename["S6Ch1"],
                 "UserAlias": "S6Ch1",
                 "OutputMode": {"default": config_data["S6Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S6Ch1_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S6Ch1_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S6Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S6Ch1_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S6Ch2_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT6/CH1",
+                "Alias": self.sensor_rename["S6Ch2"],
                 "UserAlias": "S6Ch2",
                 "OutputMode": {"default": config_data["S6Ch2_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S6Ch2_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S6Ch2_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S6Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S6Ch2_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S6Ch3_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT6/CH2",
+                "Alias": self.sensor_rename["S6Ch3"],
                 "UserAlias": "S6Ch3",
                 "OutputMode": {"default": config_data["S6Ch3_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S6Ch3_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S6Ch3_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S6Ch3_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S6Ch3_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S6Ch4_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT6/CH3",
+                "Alias": self.sensor_rename["S6Ch4"],
                 "UserAlias": "S6Ch4",
                 "OutputMode": {"default": config_data["S6Ch4_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S6Ch4_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S6Ch4_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S6Ch4_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S6Ch4_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S7Ch1_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT7/CH0",
+                "Alias": self.sensor_rename["S7Ch1"],
                 "UserAlias": "S7Ch1",
                 "OutputMode": {"default": config_data["S7Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S7Ch1_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S7Ch1_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S7Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S7Ch1_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S7Ch2_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT7/CH1",
+                "Alias": self.sensor_rename["S7Ch2"],
                 "UserAlias": "S7Ch2",
                 "OutputMode": {"default": config_data["S7Ch2_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S7Ch2_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S7Ch2_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S7Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S7Ch2_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S7Ch3_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT7/CH2",
+                "Alias": self.sensor_rename["S7Ch3"],
                 "UserAlias": "S7Ch3",
                 "OutputMode": {"default": config_data["S7Ch3_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S7Ch3_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S7Ch3_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S7Ch3_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S7Ch3_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S7Ch4_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT7/CH3",
+                "Alias": self.sensor_rename["S7Ch4"],
                 "UserAlias": "S7Ch4",
                 "OutputMode": {"default": config_data["S7Ch4_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S7Ch4_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S7Ch4_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S7Ch4_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S7Ch4_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S8Ch1_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT8/CH0",
+                "Alias": self.sensor_rename["S8Ch1"],
                 "UserAlias": "S8Ch1",
                 "OutputMode": {"default": config_data["S8Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S8Ch1_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S8Ch1_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S8Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S8Ch1_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S8Ch2_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT8/CH1",
+                "Alias": self.sensor_rename["S8Ch2"],
                 "UserAlias": "S8Ch2",
                 "OutputMode": {"default": config_data["S8Ch2_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S8Ch2_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S8Ch2_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S8Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S8Ch2_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S8Ch3_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT8/CH2",
+                "Alias": self.sensor_rename["S8Ch3"],
                 "UserAlias": "S8Ch3",
                 "OutputMode": {"default": config_data["S8Ch3_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S8Ch3_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S8Ch3_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S8Ch3_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S8Ch3_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S8Ch4_Current_source" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT8/CH3",
+                "Alias": self.sensor_rename["S8Ch4"],
                 "UserAlias": "S8Ch4",
                 "OutputMode": {"default": config_data["S8Ch4_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S8Ch4_Current_source"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S8Ch4_Current_source"]["Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S8Ch4_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S8Ch4_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S5Ch1_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT5/CH0",
+                "Alias": self.sensor_rename["S5Ch1"],
                 "UserAlias": "S5Ch1",
                 "OutputMode": {"default": config_data["S5Ch1_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S5Ch1_Both"]["Current [A]"]), "locked": False},
-                "VoltageCorner": {"default": float(config_data["S5Ch1_Both"]["Current_source_Range"]), "locked": False}
+                "SetCurrent": {"default": float(config_data["S5Ch1_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S5Ch1_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S5Ch2_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT5/CH1",
+                "Alias": self.sensor_rename["S5Ch2"],
                 "UserAlias": "S5Ch2",
                 "OutputMode": {"default": config_data["S5Ch2_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S5Ch2_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S5Ch2_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S5Ch2_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S5Ch2_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S5Ch3_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT5/CH2",
+                "Alias": self.sensor_rename["S5Ch3"],
                 "UserAlias": "S5Ch3",
                 "OutputMode": {"default": config_data["S5Ch3_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S5Ch3_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S5Ch3_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S5Ch3_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S5Ch3_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S5Ch4_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT5/CH3",
+                "Alias": self.sensor_rename["S5Ch4"],
                 "UserAlias": "S5Ch4",
                 "OutputMode": {"default": config_data["S5Ch4_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S5Ch4_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S5Ch4_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S5Ch4_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S5Ch4_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S6Ch1_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT6/CH0",
+                "Alias": self.sensor_rename["S6Ch1"],
                 "UserAlias": "S6Ch1",
                 "OutputMode": {"default": config_data["S6Ch1_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S6Ch1_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S6Ch1_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S6Ch1_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S6Ch1_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S6Ch2_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT6/CH1",
+                "Alias": self.sensor_rename["S6Ch2"],
                 "UserAlias": "S6Ch2",
                 "OutputMode": {"default": config_data["S6Ch2_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S6Ch2_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S6Ch2_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S6Ch2_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S6Ch2_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S6Ch3_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT6/CH2",
+                "Alias": self.sensor_rename["S6Ch3"],
                 "UserAlias": "S6Ch3",
                 "OutputMode": {"default": config_data["S6Ch3_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S6Ch3_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S6Ch3_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S6Ch3_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S6Ch3_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S6Ch4_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT6/CH3",
+                "Alias": self.sensor_rename["S6Ch4"],
                 "UserAlias": "S6Ch4",
                 "OutputMode": {"default": config_data["S6Ch4_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S6Ch4_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S6Ch4_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S6Ch4_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S6Ch4_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S7Ch1_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT7/CH0",
+                "Alias": self.sensor_rename["S7Ch1"],
                 "UserAlias": "S7Ch1",
                 "OutputMode": {"default": config_data["S7Ch1_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S7Ch1_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S7Ch1_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S7Ch1_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S7Ch1_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S7Ch2_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT7/CH1",
+                "Alias": self.sensor_rename["S7Ch2"],
                 "UserAlias": "S7Ch2",
                 "OutputMode": {"default": config_data["S7Ch2_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S7Ch2_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S7Ch2_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S7Ch2_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S7Ch2_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S7Ch3_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT7/CH2",
+                "Alias": self.sensor_rename["S7Ch3"],
                 "UserAlias": "S7Ch3",
                 "OutputMode": {"default": config_data["S7Ch3_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S7Ch3_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S7Ch3_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S7Ch3_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S7Ch3_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S7Ch4_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT7/CH3",
+                "Alias": self.sensor_rename["S7Ch4"],
                 "UserAlias": "S7Ch4",
                 "OutputMode": {"default": config_data["S7Ch4_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S7Ch4_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S7Ch4_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S7Ch4_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S7Ch4_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S8Ch1_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT8/CH0",
+                "Alias": self.sensor_rename["S8Ch1"],
                 "UserAlias": "S8Ch1",
                 "OutputMode": {"default": config_data["S8Ch1_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S8Ch1_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S8Ch1_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S8Ch1_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S8Ch1_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S8Ch2_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT8/CH1",
+                "Alias": self.sensor_rename["S8Ch2"],
                 "UserAlias": "S8Ch2",
                 "OutputMode": {"default": config_data["S8Ch2_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S8Ch2_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S8Ch2_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S8Ch2_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S8Ch2_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S8Ch3_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT8/CH2",
+                "Alias": self.sensor_rename["S8Ch3"],
                 "UserAlias": "S8Ch3",
                 "OutputMode": {"default": config_data["S8Ch3_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S8Ch3_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S8Ch3_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S8Ch3_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S8Ch3_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S8Ch4_Both" in config_data:
             current_source_params.append({
-                "Alias": "/T3STER/0/LP220/SLOT8/CH3",
+                "Alias": self.sensor_rename["S8Ch4"],
                 "UserAlias": "S8Ch4",
                 "OutputMode": {"default": config_data["S8Ch4_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": config_data["S8Ch4_Both"]["Current [A]"], "locked": False},
-                "VoltageCorner": {"default": config_data["S8Ch4_Both"]["Current_source_Range"], "locked": False}
+                "SetCurrent": {"default": float(config_data["S8Ch4_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                "VoltageCorner": {"default": float(config_data["S8Ch4_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
             })
 
         return current_source_params
@@ -2598,29 +2675,61 @@ class ParameterApp(tk.Tk):
 
     def page2_export_to_json(self):
         # 定義 JSON 檔案路徑
-        file_path = 'saved_parameters.json'
+        file_path = "saved_parameters.json"
 
 
         # 確保控件的值是最新的
-        self.page2_parameters['Config_Name'] = self.config_entry.get()
-        self.page2_parameters['storage_path'] = self.path_display.cget("text")
-        self.page2_parameters['Heating_time'] = float(self.heating_entry.get())
-        self.page2_parameters['Cooling_time'] = float(self.cooling_entry.get())
-        self.page2_parameters['Delay_time'] = float(self.delay_entry.get())
-        self.page2_parameters['Repeat'] = self.repeat_var.get()
-        self.page2_parameters['Repeat_times'] = self.repeat_entry.get()
-        self.page2_parameters['Pulse Cycling On [s]'] = self.pulse_cycling_on_entry.get()
-        self.page2_parameters['Pulse Cycling Off [s]'] = self.pulse_cycling_off_entry.get()
-        self.page2_parameters['Pulse Cycling Repeat'] =  self.pulse_cycling_repeat_entry.get()
-        self.page2_parameters['Rth Measurement Heating Times'] = self.rth_measurement_heating_times_entry.get()
-        self.page2_parameters['Rth Measurement Cooling Times'] = self.rth_measurement_cooling_times_entry.get()
-        self.page2_parameters['Rth Measurement Cycling Repeat'] =  self.rth_measurement_cycling_repeat_entry.get()
-        self.page2_parameters['Connect_to_Thermostat'] = self.connect_thermostat_var.get()
-        self.page2_parameters['Temperature'] = self.temperature_entry.get()
-        self.page2_parameters['TSP'] = self.tsp_var.get()
-        self.page2_parameters['Tmin'] = self.tmin_entry.get()
-        self.page2_parameters['Tmax'] = self.tmax_entry.get()
-        self.page2_parameters['Tstep'] = self.tstep_entry.get()
+        self.page2_parameters["Config_Name"] = self.config_entry.get()
+        self.page2_parameters["storage_path"] = self.path_display.cget("text")
+
+        # 判斷是否有輸入參數，若無，則預設為 0
+        try:
+            self.page2_parameters["Heating_time"] = int(self.heating_entry.get()) if self.heating_entry.get() else 0.0
+        except ValueError:
+            self.page2_parameters["Heating_time"] = 0.0  # 或其他預設值
+        try:
+            self.page2_parameters["Cooling_time"] = int(self.cooling_entry.get()) if self.cooling_entry.get() else 0.0
+        except ValueError:
+            self.page2_parameters["Cooling_time"] = 0.0  # 或其他預設值
+        try:
+            self.page2_parameters["Delay_time"] = int(self.delay_entry.get()) if self.delay_entry.get() else 0.0
+        except ValueError:
+            self.page2_parameters["Delay_time"] = 0.0  # 或其他預設值
+
+        # self.page2_parameters["Repeat"] = self.repeat_var.get()
+        # self.page2_parameters["Repeat_times"] = float(self.repeat_entry.get())
+
+        try:
+            self.page2_parameters["Pulse Cycling On [s]"] = int(self.pulse_cycling_on_entry.get()) if self.pulse_cycling_on_entry.get() else 0.0
+        except ValueError:
+            self.page2_parameters["Pulse Cycling On [s]"] = 0.0  # 或其他預設值
+        try:
+            self.page2_parameters["Pulse Cycling Off [s]"] = int(self.pulse_cycling_off_entry.get()) if self.pulse_cycling_off_entry.get() else 0.0
+        except ValueError:
+            self.page2_parameters["Pulse Cycling Off [s]"] = 0.0  # 或其他預設值
+        try:
+            self.page2_parameters["Pulse Cycling Repeat"] = int(self.pulse_cycling_repeat_entry.get()) if self.pulse_cycling_repeat_entry.get() else 0
+        except ValueError:
+            self.page2_parameters["Pulse Cycling Repeat"] = 0  # 或其他預設值
+        try:
+            self.page2_parameters["Rth Measurement Heating Times"] = int(self.rth_measurement_heating_times_entry.get()) if self.rth_measurement_heating_times_entry.get() else 0.0
+        except ValueError:
+            self.page2_parameters["Rth Measurement Heating Times"] = 0.0  # 或其他預設值
+        try:
+            self.page2_parameters["Rth Measurement Cooling Times"] = int(self.rth_measurement_cooling_times_entry.get()) if self.rth_measurement_cooling_times_entry.get() else 0.0
+        except ValueError:
+            self.page2_parameters["Rth Measurement Cooling Times"] = 0.0  # 或其他預設值
+        try:
+            self.page2_parameters["Rth Measurement Cycling Repeat"] = int(self.rth_measurement_cycling_repeat_entry.get()) if self.rth_measurement_cycling_repeat_entry.get() else 0
+        except ValueError:
+            self.page2_parameters["Rth Measurement Cycling Repeat"] = 0  # 或其他預設值
+
+        self.page2_parameters["Connect_to_Thermostat"] = self.connect_thermostat_var.get()
+        self.page2_parameters["Temperature"] = self.temperature_entry.get()
+        self.page2_parameters["TSP"] = self.tsp_var.get()
+        self.page2_parameters["Tmin"] = self.tmin_entry.get()
+        self.page2_parameters["Tmax"] = self.tmax_entry.get()
+        self.page2_parameters["Tstep"] = self.tstep_entry.get()
 
         # 初始化 Sensors 列表
         sensors_data = []
@@ -2628,21 +2737,21 @@ class ParameterApp(tk.Tk):
         # 將每一行的 `ms_401_label`、`combo_s5_s8`、`combo_s1_s3` 的值儲存到列表中
         for i in range(len(self.ms_401_labels)):
             sensor_info = {
-                'MS_401': self.ms_401_labels[i].cget("text"),  # 传感器标签
-                'Isense': self.combo_s5_s8s[i].get(),  # 用户选择的 Isense 值
-                'Idrive': self.combo_s1_s3s[i].get()   # 用户选择的 Idrive 值
+                "MS_401": self.ms_401_labels[i].cget("text"),  # 传感器标签
+                "Isense": self.combo_s5_s8s[i].get(),  # 用户选择的 Isense 值
+                "Idrive": self.combo_s1_s3s[i].get()   # 用户选择的 Idrive 值
             }
             sensors_data.append(sensor_info)
 
         # 將 Sensors 列表保存到 page2_parameters
-        self.page2_parameters['Measurement_channel'] = sensors_data
+        self.page2_parameters["Measurement_channel"] = sensors_data
         
 
 
         # 檢查檔案是否存在
         if os.path.exists(file_path):
             # 如果存在，打開檔案並讀取現有內容
-            with open(file_path, 'r') as file:
+            with open(file_path, "r") as file:
                 try:
                     # 讀取已存在的資料
                     saved_data = json.load(file)
@@ -2672,11 +2781,13 @@ class ParameterApp(tk.Tk):
 
 
         # 將更新後的資料寫回到 JSON 文件中
-        with open(file_path, 'w') as file:
+        with open(file_path, "w") as file:
             json.dump(saved_data, file, indent=4)
 
         print("參數已成功儲存至 saved_parameters.json")
 
+        from Variable import websocket_test
+        from CyclingTest import Cycling_Test
 
         # 啟用進度提示框
         self.progress_text.config(state="normal")
@@ -2689,15 +2800,16 @@ class ParameterApp(tk.Tk):
         # 重定向標準輸出到文本框
         sys.stdout = StringIO()
         
-        with open('saved_parameters.json', 'r') as file:
+        
+        with open("saved_parameters.json", "r") as file:
             config_data = json.load(file)
 
         try:
-        #     # 執行 WebSocket 測試，並顯示進度
-        #     # if config_data["Cycling_Test"] == "false":           
-            websocket_test()
-        #     # else:
-        #     #     None
+            # 執行 WebSocket 測試，並顯示進度
+            if config_data["Cycling_Test"] == False:           
+                websocket_test()
+            else:
+                Cycling_Test()
 
         except Exception as e:
             print(f"Error: {str(e)}")
@@ -2711,6 +2823,6 @@ class ParameterApp(tk.Tk):
         sys.stdout = original_stdout
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = ParameterApp()
     app.mainloop()

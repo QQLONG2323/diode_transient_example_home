@@ -25,9 +25,9 @@ def websocket_test():
     command_save_config = {
         "Command": "SAVE_CONFIG",
         "Type": "TransientModel",
-        "ConfigName": config_data['Config_Name'],
+        "ConfigName": "diode_config",
         "ConfigParams": {
-            "Description": "Test configuration"
+            "Description": "Test"
         },
         "Resources": {
             "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
@@ -42,18 +42,18 @@ def websocket_test():
             #     }
             # ],
 
-            "CurrentSourceWithActiveloadParams": [
+            # "CurrentSourceWithActiveloadParams": [
 
-            ],
-            "DividerParams": [
+            # ],
+            # "DividerParams": [
 
-            ],
-            "VoltageSourceParams": [
+            # ],
+            # "VoltageSourceParams": [
 
-            ],
+            # ],
             
 
-            "ThermometerCardChParams": [
+            # "ThermometerCardChParams": [
                 # {
                 #     "Alias": Unique_system_selected_alias,
                 #     "UserAlias": User_defined_alias,
@@ -71,81 +71,59 @@ def websocket_test():
                 #         "locked": False
                 #     }
                 # }
-            ],
+            # ],
             # THERMOSTAT_CONFIG
-            "ThermostatParams": [
-                # {
-                #     "Alias": "/THERMOSTAT/0",
-                #     "UserAlias": "Th0",
-                #     "SetTemperature": 25,
-                #     "StabilityCriteria":{
-                #         "DtMinMax": 0.1,
-                #         "DtTarget": 0.25,
-                #         "TimeWindow": 60,
-                #         "Timeout": 1800
-                #     },
-                #     "WaitForStabilityBeforeMeas": True
-                # }
-                {
-                    "Alias": "/THERMOSTAT/0",
-                    "UserAlias": "Th0",
-                    "SetTemperature": {
-                        "default": 25,
-                        "locked": False,
-                        "max": 100,
-                        "min": 0
-                    },
-                    "StabilityCriteria": {
-                        "DtMinMax": {
-                            "default": 0.1,
-                            "locked": False,
-                            "max": 1,
-                            "min": 0
-                            },
-                        "DtTarget": {
-                            "default": 0.25,
-                            "locked": False,
-                            "max": 0.5,
-                            "min": 0
-                            },
-                        "TimeWindow": {
-                            "default": 60,
-                            "locked": False,
-                            "max": 100,
-                            "min": 1
-                            },
-                        "Timeout": {
-                            "default": 1800,
-                            "locked": False,
-                            "max": 4000,
-                            "min": 1
-                            }
-                    },
-                    "WaitForStabilityBeforeMeas": {
-                    "default": True,
-                    "locked": False
-                    }
-                }
-            ],
+            # "ThermostatParams": [
+            #     {
+            #         "Alias": "/THERMOSTAT/0",
+            #         "UserAlias": "Th0",
+            #         "SetTemperature": {
+            #             "default": 25,
+            #             "locked": False,
+            #             "max": 100,
+            #             "min": 0
+            #         },
+            #         "StabilityCriteria": {
+            #             "DtMinMax": {
+            #                 "default": 0.1,
+            #                 "locked": False,
+            #                 "max": 1,
+            #                 "min": 0
+            #                 },
+            #             "DtTarget": {
+            #                 "default": 0.25,
+            #                 "locked": False,
+            #                 "max": 0.5,
+            #                 "min": 0
+            #                 },
+            #             "TimeWindow": {
+            #                 "default": 60,
+            #                 "locked": False,
+            #                 "max": 100,
+            #                 "min": 1
+            #                 },
+            #             "Timeout": {
+            #                 "default": 1800,
+            #                 "locked": False,
+            #                 "max": 4000,
+            #                 "min": 1
+            #                 }
+            #         },
+            #         "WaitForStabilityBeforeMeas": {
+            #         "default": True,
+            #         "locked": False
+            #         }
+            #     }
+            # ],
             "TriggerOutputParams": [
 
             ]
-
-
-
-
-
-
-
-
-
-
         },
         "TimingParams": {
-            "HeatingTime": {"default": config_data["Heating_time"], "locked": False},
-            "CoolingTime": {"default": config_data["Cooling_time"], "locked": False},
-            "DelayTime": {"default": config_data["Delay_time"], "locked": False},
-            "Repeat": {"default": config_data["Repeat_times"], "locked": False},
+            "HeatingTime": {"default": config_data["Heating_time"], "locked": False, "min": 0, "max": 4000},
+            "CoolingTime": {"default": config_data["Cooling_time"], "locked": False, "min": 0, "max": 4000},
+            "DelayTime": {"default": config_data["Delay_time"], "locked": False, "min": 0, "max": 4000},
+            "Repeat": {"default": 1, "locked": False, "min": 1, "max": 100},
             "TransientMode": {
                 "locked": False,
                 "default": "Cooling"
@@ -225,7 +203,7 @@ def websocket_test():
     command_do_resource_alloc = {
         "Command": "START_TASK",
         "TaskMode": "MONITORING_RESOURCE_ALLOCATION",
-        "ConfigName": config_data['Config_Name'],
+        "ConfigName": "diode_config",
         "TaskAlias": "diode_config",
         "LoadConfig": True,
         # It is recommended to maintain websocket connection (and not use this optional parameter)
@@ -235,7 +213,7 @@ def websocket_test():
     command_start_transient = {
         "Command": "START_TASK",
         "TaskMode": "TRANSIENT",
-        "ConfigName": config_data['Config_Name'],
+        "ConfigName": "diode_config",
         "TaskAlias": "diode_config_transient",
         "LoadConfig": True
     }
@@ -306,12 +284,6 @@ def websocket_test():
     websocket_transport = WebSocket()
 
     try:
-
-
-        # print(command_save_config)
-
-
-
 
         # ---- Initialize and open websocket
         websocket_transport.connect(websocket_url)

@@ -11,6 +11,9 @@ import os
 import itertools
 from io import StringIO
 import sys
+import threading
+import time
+
 
 
 
@@ -2668,11 +2671,6 @@ class ParameterApp(tk.Tk):
 
 
 
-
-
-
-
-
     def page2_export_to_json(self):
         # 定義 JSON 檔案路徑
         file_path = "saved_parameters.json"
@@ -2725,11 +2723,28 @@ class ParameterApp(tk.Tk):
             self.page2_parameters["Rth Measurement Cycling Repeat"] = 0  # 或其他預設值
 
         self.page2_parameters["Connect_to_Thermostat"] = self.connect_thermostat_var.get()
-        self.page2_parameters["Temperature"] = self.temperature_entry.get()
+
+        try:
+            self.page2_parameters["Temperature"] = int(self.temperature_entry.get()) if self.temperature_entry.get() else 0
+        except ValueError:
+            self.page2_parameters["Temperature"] = 0  # 或其他預設值
+
         self.page2_parameters["TSP"] = self.tsp_var.get()
-        self.page2_parameters["Tmin"] = self.tmin_entry.get()
-        self.page2_parameters["Tmax"] = self.tmax_entry.get()
-        self.page2_parameters["Tstep"] = self.tstep_entry.get()
+
+        try:
+            self.page2_parameters["Tmin"] = int(self.tmin_entry.get()) if self.tmin_entry.get() else 0
+        except ValueError:
+            self.page2_parameters["Tmin"] = 0  # 或其他預設值
+        try:
+            self.page2_parameters["Tmax"] = int(self.tmax_entry.get()) if self.tmax_entry.get() else 0
+        except ValueError:
+            self.page2_parameters["Tmax"] = 0  # 或其他預設值
+        try:
+            self.page2_parameters["Tstep"] = int(self.tstep_entry.get()) if self.tstep_entry.get() else 0
+        except ValueError:
+            self.page2_parameters["Tstep"] = 0  # 或其他預設值
+
+
 
         # 初始化 Sensors 列表
         sensors_data = []
@@ -2772,11 +2787,14 @@ class ParameterApp(tk.Tk):
         measurement_channel_data = []
         measurement_channel_data.extend(self.fill_measurement_params(config_data))
 
+        
+
         # 如果有數據，將其放入 saved_data 中
         if "Resources" not in saved_data:
             saved_data["Resources"] = {}
         saved_data["Resources"]["CurrentSourceParams"] = current_source_data
         saved_data["Resources"]["MeasCardChParams"] = measurement_channel_data
+        
         
 
 
@@ -2784,43 +2802,205 @@ class ParameterApp(tk.Tk):
         with open(file_path, "w") as file:
             json.dump(saved_data, file, indent=4)
 
+        
+
+
+        with open(file_path, "r") as file:
+            config_data = json.load(file)
+
+        thermostatParams_data = [{
+                    "Alias": "/THERMOSTAT/0",
+                    "UserAlias": "Th0",
+                    "SetTemperature": {
+                        "default": config_data["Temperature"],
+                        "locked": False,
+                        "max": 50,
+                        "min": 0
+                    },
+                    "StabilityCriteria": {
+                        "DtMinMax": {
+                            "default": 0.1,
+                            "locked": False,
+                            "max": 1,
+                            "min": 0
+                            },
+                        "DtTarget": {
+                            "default": 0.25,
+                            "locked": False,
+                            "max": 0.5,
+                            "min": 0
+                            },
+                        "TimeWindow": {
+                            "default": 60,
+                            "locked": False,
+                            "max": 100,
+                            "min": 1
+                            },
+                        "Timeout": {
+                            "default": 1800,
+                            "locked": False,
+                            "max": 4000,
+                            "min": 1
+                            }
+                    },
+                    "WaitForStabilityBeforeMeas": {
+                    "default": True,
+                    "locked": False
+                    }                   
+                }]
+        if config_data["Temperature"] != 0:
+            config_data["Resources"]["ThermostatParams"] = thermostatParams_data
+        else:
+            config_data["Resources"]["ThermostatParams"] = []
+
+        tspCalibParams = {
+            "CustomTemperature": {
+                "default": config_data["Temperature"],
+                "locked": False,
+                "max": 50,
+                "min": 0
+            },
+            "DutStability": {
+                "default": False,
+                "locked": False,
+            },
+            "EndAction": {
+                "default": "CustomTemp",
+                "locked": False,
+            },
+            "Mode": {
+                "default": "Downwards",
+                "locked": False,
+            },
+            "ThtIntSensor": {
+                "default": True,
+                "locked": False,
+            },
+            "Tmax": {
+                "default": config_data["Tmax"],
+                "locked": False,
+                "max": 100,
+                "min": 0
+            },
+            "Tmin": {
+                "default": config_data["Tmin"],
+                "locked": False,
+                "max": 100,
+                "min": 0
+            },
+            "Tstep": {
+                "default": config_data["Tstep"],
+                "locked": False,
+                "max": 100, 
+                "min": 1
+            }
+        }
+
+        if config_data["Tmax"] != 0:
+            config_data["TspCalibParams"] = tspCalibParams
+        else:
+            config_data["TspCalibParams"] = []
+
+        with open(file_path, "w") as file:
+            json.dump(config_data, file, indent=4)
+
         print("參數已成功儲存至 saved_parameters.json")
+
+
+
+
 
         from Variable import websocket_test
         from CyclingTest import Cycling_Test
+
+        # # 啟用進度提示框
+        # self.progress_text.config(state="normal")
+        # self.progress_text.delete(1.0, tk.END)  # 清空現有內容
+
+
+        # # 保存標準輸出
+        # original_stdout = sys.stdout
+
+        # # 重定向標準輸出到文本框
+        # sys.stdout = StringIO()
+        
+        
+        # with open("saved_parameters.json", "r") as file:
+        #     config_data = json.load(file)
+
+        # try:
+        #     # 執行 WebSocket 測試，並顯示進度
+        #     if config_data["Cycling_Test"] == False:           
+        #         websocket_test()
+        #     else:
+        #         Cycling_Test()
+
+        # except Exception as e:
+        #     print(f"Error: {str(e)}")
+
+        # # 將重定向的內容顯示在進度框中
+        # progress_output = sys.stdout.getvalue()
+        # self.progress_text.insert(tk.END, progress_output)
+        # self.progress_text.config(state="disabled")  # 禁用編輯
+
+        # # 將標準輸出還原
+        # sys.stdout = original_stdout
+
+        
 
         # 啟用進度提示框
         self.progress_text.config(state="normal")
         self.progress_text.delete(1.0, tk.END)  # 清空現有內容
 
+        # 重定向标准输出
+        self.progress_output = StringIO()
+        sys.stdout = self.progress_output
 
-        # 保存標準輸出
-        original_stdout = sys.stdout
+        # 启动一个线程来执行长时间任务
+        threading.Thread(target=self.run_tests_in_thread).start()
 
-        # 重定向標準輸出到文本框
-        sys.stdout = StringIO()
-        
-        
+        # 通过 after 定期更新进度
+        self.update_progress_text()
+
+    def run_tests_in_thread(self):
+        # 从文件读取配置
         with open("saved_parameters.json", "r") as file:
             config_data = json.load(file)
 
+        from Variable import websocket_test
+        from CyclingTest import Cycling_Test
+
         try:
-            # 執行 WebSocket 測試，並顯示進度
-            if config_data["Cycling_Test"] == False:           
+            # 根据配置执行不同的测试
+            if config_data.get("Cycling_Test") == False:           
                 websocket_test()
             else:
                 Cycling_Test()
-
         except Exception as e:
             print(f"Error: {str(e)}")
 
-        # 將重定向的內容顯示在進度框中
-        progress_output = sys.stdout.getvalue()
-        self.progress_text.insert(tk.END, progress_output)
-        self.progress_text.config(state="disabled")  # 禁用編輯
+        # 任务完成后，恢复标准输出
+        sys.stdout = sys.__stdout__
 
-        # 將標準輸出還原
-        sys.stdout = original_stdout
+    def update_progress_text(self):
+        # 获取重定向的输出
+        output = self.progress_output.getvalue()
+
+        # 将新的输出添加到 Text 小部件中
+        if output:
+            self.progress_text.insert(tk.END, output)
+            self.progress_output.truncate(0)
+            self.progress_output.seek(0)
+
+            # 自动滚动到最后一行
+            self.progress_text.see(tk.END)
+
+        # 继续定期调用这个函数
+        if threading.active_count() > 1:  # 检查是否有线程仍在运行
+            self.progress_text.after(100, self.update_progress_text)
+        else:
+            self.progress_text.config(state="disabled")  # 禁用编辑    
+            self.progress_text.see(tk.END)  # 确保在任务完成时也能滚动到底部
 
 
 if __name__ == "__main__":

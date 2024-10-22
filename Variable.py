@@ -33,14 +33,7 @@ def websocket_test():
             "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
             
             "MeasCardChParams": config_data["Resources"]["MeasCardChParams"],
-            
-            # "ThermostatParams": [
-            #     {
-            #         "Alias": "/THERMOSTAT/0",
-            #         "UserAlias": "Th0",
-            #         "SetTemperature": {"default": config_data["Temperature"], "locked": False}
-            #     }
-            # ],
+    
 
             # "CurrentSourceWithActiveloadParams": [
 
@@ -73,48 +66,7 @@ def websocket_test():
                 # }
             # ],
             # THERMOSTAT_CONFIG
-            # "ThermostatParams": [
-            #     {
-            #         "Alias": "/THERMOSTAT/0",
-            #         "UserAlias": "Th0",
-            #         "SetTemperature": {
-            #             "default": 25,
-            #             "locked": False,
-            #             "max": 100,
-            #             "min": 0
-            #         },
-            #         "StabilityCriteria": {
-            #             "DtMinMax": {
-            #                 "default": 0.1,
-            #                 "locked": False,
-            #                 "max": 1,
-            #                 "min": 0
-            #                 },
-            #             "DtTarget": {
-            #                 "default": 0.25,
-            #                 "locked": False,
-            #                 "max": 0.5,
-            #                 "min": 0
-            #                 },
-            #             "TimeWindow": {
-            #                 "default": 60,
-            #                 "locked": False,
-            #                 "max": 100,
-            #                 "min": 1
-            #                 },
-            #             "Timeout": {
-            #                 "default": 1800,
-            #                 "locked": False,
-            #                 "max": 4000,
-            #                 "min": 1
-            #                 }
-            #         },
-            #         "WaitForStabilityBeforeMeas": {
-            #         "default": True,
-            #         "locked": False
-            #         }
-            #     }
-            # ],
+            "ThermostatParams": config_data["Resources"]["ThermostatParams"],
             "TriggerOutputParams": [
 
             ]
@@ -141,49 +93,8 @@ def websocket_test():
 
 
 
-        # # TSP is Optional
-        # "TspCalibParams": {
-        #     "CustomTemperature": {
-        #         "default": 25,
-        #         "locked": False,
-        #         "max": 160,
-        #         "min": -45
-        #     },
-        #     "DutStability": {
-        #         "default": False,
-        #         "locked": False,
-        #     },
-        #     "EndAction": {
-        #         "default": "CustomTemp",
-        #         "locked": False,
-        #     },
-        #     "Mode": {
-        #         "default": "Upwards",
-        #         "locked": False,
-        #     },
-        #     "ThtIntSensor": {
-        #         "default": True,
-        #         "locked": False,
-        #     },
-        #     "Tmax": {
-        #         "default": 85,
-        #         "locked": False,
-        #         "max": 160,
-        #         "min": -45
-        #     },
-        #     "Tmin": {
-        #         "default": 25,
-        #         "locked": False,
-        #         "max": 160,
-        #         "min": -45
-        #     },
-        #     "Tstep": {
-        #         "default": 15,
-        #         "locked": False,
-        #         "max": 205, 
-        #         "min": 1
-        #     }
-        #     },
+        # TSP is Optional
+        "TspCalibParams": config_data["TspCalibParams"],
 
         # SourceTimingControl is Optional
         "SourceTimingControl": {
@@ -285,6 +196,8 @@ def websocket_test():
 
     try:
 
+        print(command_save_config)
+
         # ---- Initialize and open websocket
         websocket_transport.connect(websocket_url)
         websocket_transport.settimeout(10)
@@ -303,9 +216,9 @@ def websocket_test():
         if api_version_str != "2":
             raise Exception("Not supported major api version")              
 
-        # # ---- Enable Thermostat
-        # if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
-        #     raise Exception("Cannot Enable Thermostat")
+        # ---- Enable Thermostat
+        if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
+                raise Exception("Cannot Enable Thermostat")
 
         # ---- Save config
         if not do_web_socket_bool_query(websocket_transport, command_save_config):

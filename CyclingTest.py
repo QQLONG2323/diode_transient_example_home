@@ -17,6 +17,7 @@ with open('saved_parameters.json', 'r') as file:
 measurement_count = config_data["Pulse Cycling Repeat"]
 cycle_count = config_data["Rth Measurement Cycling Repeat"]
 
+
 # 創建新資料夾的函數
 def create_new_folder():
     current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -46,7 +47,7 @@ command_save_config = {
         "VoltageSourceParams": [ ],
         "MeasCardChParams":config_data["Resources"]["MeasCardChParams"],
         "ThermometerCardChParams": [ ],
-        "ThermostatParams": [ ],
+        "ThermostatParams": config_data["Resources"]["ThermostatParams"],
         "TriggerOutputParams": [ ]
     },
     "TimingParams": {
@@ -65,6 +66,7 @@ command_save_config = {
             "DelayTime": {"default": 0, "locked": False},
             "Repeat": {"default": 1, "locked": False}
     },
+    "TspCalibParams": config_data["TspCalibParams"],
     "SourceTimingControl": {
         "locked": False,
         "Enabled": False,
@@ -407,6 +409,10 @@ def execute_measurements(folder_name):
 # 主程序
 # if __name__ == "__main__":
 def Cycling_Test():
+
+    print(command_save_config)
+
+
     # 創建新資料夾
     folder_name = create_new_folder()
     print(f"創建新資料夾: {folder_name}")

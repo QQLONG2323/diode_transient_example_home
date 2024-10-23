@@ -2020,14 +2020,17 @@ class ParameterApp(tk.Tk):
         self.rth_measurement_cooling_times_entry.grid(row=6, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters["Rth Measurement Cooling Times"] = self.rth_measurement_cooling_times_entry.get()
 
-        rth_measurement_cycling_repeat_label = ttk.Label(
-            cycling_test_frame, text="Rth Measurement Cycling Repeat: ")
-        rth_measurement_cycling_repeat_label.grid(row=7, column=0, padx=10, pady=10, sticky="W")
+        total_cycling_test_label = ttk.Label(cycling_test_frame, text="Total Cycling Test")
+        total_cycling_test_label.grid(row=7, column=0, padx=10, pady=10, columnspan=2)
 
-        self.rth_measurement_cycling_repeat_entry = ttk.Entry(
+        total_measurement_cycling_repeat_label = ttk.Label(
+            cycling_test_frame, text="Total Measurement Cycling Repeat: ")
+        total_measurement_cycling_repeat_label.grid(row=8, column=0, padx=10, pady=10, sticky="W")
+
+        self.total_measurement_cycling_repeat_entry = ttk.Entry(
             cycling_test_frame, state="disabled")
-        self.rth_measurement_cycling_repeat_entry.grid(row=7, column=1, padx=10, pady=10, sticky="W")
-        self.page2_parameters["Rth Measurement Cycling Repeat"] =  self.rth_measurement_cycling_repeat_entry.get()
+        self.total_measurement_cycling_repeat_entry.grid(row=8, column=1, padx=10, pady=10, sticky="W")
+        self.page2_parameters["total Measurement Cycling Repeat"] =  self.total_measurement_cycling_repeat_entry.get()
 
         # Temperature [°C]
         temperature_label = ttk.Label(
@@ -2124,7 +2127,7 @@ class ParameterApp(tk.Tk):
             self.pulse_cycling_repeat_entry.config(state="normal")  # 啟用 pulse cycling repeat 輸入框
             self.rth_measurement_heating_times_entry.config(state="normal")  # 啟用 rth measurement heating times 輸入框
             self.rth_measurement_cooling_times_entry.config(state="normal")  # 啟用 rth measurement cooling times 輸入框
-            self.rth_measurement_cycling_repeat_entry.config(state="normal")  # 啟用 rth measurement cycling repeat 輸入框
+            self.total_measurement_cycling_repeat_entry.config(state="normal")  # 啟用 total measurement cycling repeat 輸入框
             self.heating_entry.delete(0, tk.END)   # 清空 heating 輸入框的內容
             self.heating_entry.config(state="disabled")   #禁用 heating 輸入框
             self.cooling_entry.delete(0, tk.END)   # 清空 cooling 輸入框的內容
@@ -2142,8 +2145,8 @@ class ParameterApp(tk.Tk):
             self.rth_measurement_heating_times_entry.config(state="disabled")  # 禁用 rth measurement heating times 輸入框
             self.rth_measurement_cooling_times_entry.delete(0, tk.END)  # 清空 rth measurement cooling times 輸入框的內容
             self.rth_measurement_cooling_times_entry.config(state="disabled")  # 禁用 rth measurement cooling times 輸入框
-            self.rth_measurement_cycling_repeat_entry.delete(0, tk.END)  # 清空 rth measurement cycling repeat 輸入框的內容
-            self.rth_measurement_cycling_repeat_entry.config(state="disabled")  # 禁用 rth measurement cycling repeat 輸入框
+            self.total_measurement_cycling_repeat_entry.delete(0, tk.END)  # 清空 total measurement cycling repeat 輸入框的內容
+            self.total_measurement_cycling_repeat_entry.config(state="disabled")  # 禁用 total measurement cycling repeat 輸入框
             self.heating_entry.config(state="normal")
             self.cooling_entry.config(state="normal")
             self.delay_entry.config(state="normal")
@@ -2696,6 +2699,7 @@ class ParameterApp(tk.Tk):
 
         # self.page2_parameters["Repeat"] = self.repeat_var.get()
         # self.page2_parameters["Repeat_times"] = float(self.repeat_entry.get())
+        self.page2_parameters["Cycling_Test"] = self.cycling_test_var.get()
 
         try:
             self.page2_parameters["Pulse Cycling On [s]"] = int(self.pulse_cycling_on_entry.get()) if self.pulse_cycling_on_entry.get() else 0.0
@@ -2718,9 +2722,9 @@ class ParameterApp(tk.Tk):
         except ValueError:
             self.page2_parameters["Rth Measurement Cooling Times"] = 0.0  # 或其他預設值
         try:
-            self.page2_parameters["Rth Measurement Cycling Repeat"] = int(self.rth_measurement_cycling_repeat_entry.get()) if self.rth_measurement_cycling_repeat_entry.get() else 0
+            self.page2_parameters["total Measurement Cycling Repeat"] = int(self.total_measurement_cycling_repeat_entry.get()) if self.total_measurement_cycling_repeat_entry.get() else 0
         except ValueError:
-            self.page2_parameters["Rth Measurement Cycling Repeat"] = 0  # 或其他預設值
+            self.page2_parameters["total Measurement Cycling Repeat"] = 0  # 或其他預設值
 
         self.page2_parameters["Connect_to_Thermostat"] = self.connect_thermostat_var.get()
 
@@ -2908,46 +2912,6 @@ class ParameterApp(tk.Tk):
 
 
 
-
-
-        from Variable import websocket_test
-        from CyclingTest import Cycling_Test
-
-        # # 啟用進度提示框
-        # self.progress_text.config(state="normal")
-        # self.progress_text.delete(1.0, tk.END)  # 清空現有內容
-
-
-        # # 保存標準輸出
-        # original_stdout = sys.stdout
-
-        # # 重定向標準輸出到文本框
-        # sys.stdout = StringIO()
-        
-        
-        # with open("saved_parameters.json", "r") as file:
-        #     config_data = json.load(file)
-
-        # try:
-        #     # 執行 WebSocket 測試，並顯示進度
-        #     if config_data["Cycling_Test"] == False:           
-        #         websocket_test()
-        #     else:
-        #         Cycling_Test()
-
-        # except Exception as e:
-        #     print(f"Error: {str(e)}")
-
-        # # 將重定向的內容顯示在進度框中
-        # progress_output = sys.stdout.getvalue()
-        # self.progress_text.insert(tk.END, progress_output)
-        # self.progress_text.config(state="disabled")  # 禁用編輯
-
-        # # 將標準輸出還原
-        # sys.stdout = original_stdout
-
-        
-
         # 啟用進度提示框
         self.progress_text.config(state="normal")
         self.progress_text.delete(1.0, tk.END)  # 清空現有內容
@@ -2963,18 +2927,21 @@ class ParameterApp(tk.Tk):
         self.update_progress_text()
 
     def run_tests_in_thread(self):
-        # 从文件读取配置
+        # 從文件讀取配置
         with open("saved_parameters.json", "r") as file:
             config_data = json.load(file)
 
-        from Variable import websocket_test
-        from CyclingTest import Cycling_Test
+            
+            
+
 
         try:
             # 根据配置执行不同的测试
-            if config_data.get("Cycling_Test") == False:           
+            if config_data["Cycling_Test"] == False:    
+                from Variable import websocket_test       
                 websocket_test()
             else:
+                from CyclingTest import Cycling_Test
                 Cycling_Test()
         except Exception as e:
             print(f"Error: {str(e)}")

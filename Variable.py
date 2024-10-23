@@ -196,7 +196,12 @@ def websocket_test():
 
     try:
 
-        print(command_save_config)
+        print("我是VARI")
+        print(config_data["Heating_time"])
+        print(config_data["Cooling_time"])
+        print(config_data["Pulse Cycling Repeat"])
+        print(config_data["total Measurement Cycling Repeat"])
+        print(config_data["Config_Name"])
 
         # ---- Initialize and open websocket
         websocket_transport.connect(websocket_url)

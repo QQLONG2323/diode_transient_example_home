@@ -6,16 +6,22 @@ import os
 import subprocess
 import platform
 from datetime import datetime
+import time
+import threading
 
 IP_ADDRESS = "192.168.20.99"
 
-# 從 saved_parameters.json 中讀取變數
-with open('saved_parameters.json', 'r') as file:
-    config_data = json.load(file)
+def load_saved_parameters_json():
+    # 從 saved_parameters.json 中讀取變數
+    with open('saved_parameters.json', 'r') as file:
+        return json.load(file)
+    
 
-# 測量次數設定
-measurement_count = config_data["Pulse Cycling Repeat"]
-cycle_count = config_data["Rth Measurement Cycling Repeat"]
+config_data = load_saved_parameters_json()
+
+
+
+
 
 
 # 創建新資料夾的函數
@@ -90,7 +96,7 @@ command_save_config_b = {
         "VoltageSourceParams": [ ],
         "MeasCardChParams":config_data["Resources"]["MeasCardChParams"],
         "ThermometerCardChParams": [ ],
-        "ThermostatParams": [ ],
+        "ThermostatParams": config_data["Resources"]["ThermostatParams"],
         "TriggerOutputParams": [ ]
     },
     "TimingParams": {
@@ -109,6 +115,7 @@ command_save_config_b = {
             "DelayTime": {"default": 0, "locked": False},
             "Repeat": {"default": 1, "locked": False}
     },
+    "TspCalibParams": config_data["TspCalibParams"],
     "SourceTimingControl": {
         "locked": False,
         "Enabled": False,
@@ -239,6 +246,9 @@ def open_folder(folder_path):
 
 # ------ 執行測量 -----
 def execute_measurements(folder_name):
+    # 測量次數設定
+    measurement_count = config_data["Pulse Cycling Repeat"]
+    cycle_count = config_data["total Measurement Cycling Repeat"]
     print("測量開始")
     websocket_url = "ws://" + IP_ADDRESS + ":8085"
     websocket_transport = WebSocket()
@@ -409,9 +419,17 @@ def execute_measurements(folder_name):
 # 主程序
 # if __name__ == "__main__":
 def Cycling_Test():
+    global config_data
+    config_data = load_saved_parameters_json()
 
-    print(command_save_config)
+    print("我是CYCLING")
+    print(config_data["Pulse Cycling Repeat"])
+    print(config_data["total Measurement Cycling Repeat"])
+    print(config_data["Heating_time"])
+    print(config_data["Cooling_time"])
+    print(config_data["Config_Name"])
 
+    
 
     # 創建新資料夾
     folder_name = create_new_folder()

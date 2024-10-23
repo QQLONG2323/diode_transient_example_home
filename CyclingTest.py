@@ -6,8 +6,7 @@ import os
 import subprocess
 import platform
 from datetime import datetime
-import time
-import threading
+
 
 IP_ADDRESS = "192.168.20.99"
 

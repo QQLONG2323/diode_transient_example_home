@@ -3,25 +3,17 @@ from time import sleep
 from websocket import WebSocket
 import urllib.request
 import os
-import subprocess
-import platform
 from datetime import datetime
-
 
 IP_ADDRESS = "192.168.20.99"
 
-def load_saved_parameters_json():
-    # 從 saved_parameters.json 中讀取變數
-    with open('saved_parameters.json', 'r') as file:
-        return json.load(file)
-    
+# 從 saved_parameters.json 中讀取變數
+# with open('saved_parameters.json', 'r') as file:
+#     config_data = json.load(file)
 
-config_data = load_saved_parameters_json()
-
-
-
-
-
+# 測量次數設定
+measurement_count = 10
+cycle_count = 2
 
 # 創建新資料夾的函數
 def create_new_folder():
@@ -33,6 +25,7 @@ def create_new_folder():
 # ---- 常用命令
 command_system_ready = {"Command": "QUERY_SYSTEM_INTEGRITY"}
 command_query_api_version = {"Command": "GET_API_VERSION"}
+# command_enable_thermostat = {"Command": "ENABLE_THERMOSTAT","Alias": "/THERMOSTAT/0"}
 command_query_alloc_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": "diode_config"}
 command_query_measurement_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": "diode_config_transient"}
 command_get_file_list = {"Command": "QUERY_TASK_RESULT_FILE_LIST", "TaskAlias": "diode_config_transient"}
@@ -46,13 +39,140 @@ command_save_config = {
     "ConfigName": "diode_config",
     "ConfigParams": {"Description": "Test"},
     "Resources": {
-        "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
+        "CurrentSourceParams": [
+            {
+                "Alias": "/T3STER/0/MS401/SLOT5/CH0",
+                "UserAlias": "S5CH1",
+                "OutputMode": {
+                    "default": "ON",
+                    "locked": False
+                },
+                "SetCurrent": {
+                    "default": 0.02,  # 初始電流
+                    "locked": False,
+                    "min": -0.2,
+                    "max": 0.2
+                },
+                "VoltageCorner": {
+                    "default": 10,  # 初始電壓限制
+                    "locked": False,
+                    "min": -40,
+                    "max": 40
+                }
+            },
+            {
+                "Alias": "/T3STER/0/LP220/SLOT1/CH0",
+                "UserAlias": "S1CH1",
+                # "Delay" is optional
+                "Delay": {
+                    "DelayFallingUs": {
+                        "default": 0,
+                        "locked": False,
+                        "min": -16383,
+                        "max": 5000
+                    },
+                    "DelayRisingUs": {
+                        "default": 0,
+                        "locked": False,
+                        "min": -16383,
+                        "max": 16383
+                    }
+                },          
+                "OutputMode": {
+                    "default": "PC",
+                    "locked": False
+                },
+                "SetCurrent": {
+                    "default": 2,
+                    "locked": False,
+                    "min": -2,
+                    "max": 2
+                },
+                "VoltageCorner": {
+                    "default": 10,
+                    "locked": False,
+                    "min": -10,
+                    "max": 10
+                }
+            }
+        ],
         "CurrentSourceWithActiveloadParams": [ ],
         "DividerParams": [ ],
         "VoltageSourceParams": [ ],
-        "MeasCardChParams":config_data["Resources"]["MeasCardChParams"],
+        "MeasCardChParams": [
+            {
+                "Alias": "/T3STER/0/MS401/SLOT5/CH0",
+                "UserAlias": "S5CH1",
+                "Sensitivity": {
+                    "locked": False,
+                    "default": [ 0.002 ]
+                },
+                "PowerStep":"@POWERSTEP_DIODE;/T3STER/0/MS401/SLOT5/CH0;/T3STER/0/LP220/SLOT1/CH0",
+                "RangeIdx": {
+                    "locked": False,
+                    "default": 9
+                },
+                "AutoRange": {
+                    "locked": False,
+                    "default": False
+                },
+                "Uref": {
+                    "locked": False,
+                    "default": 0.0
+                },
+                "UrefSwitching": {
+                    "locked": False,
+                    "default": False
+                },
+                "UrefHeating": {
+                    "locked": False,
+                    "default": 0
+                }
+            }
+        ],
         "ThermometerCardChParams": [ ],
-        "ThermostatParams": config_data["Resources"]["ThermostatParams"],
+        "ThermostatParams": [
+            {
+                "Alias": "/THERMOSTAT/0",
+                "UserAlias": "Th0",
+                "SetTemperature": {
+                    "default": 30,
+                    "locked": False,
+                    "max": 160,
+                    "min": -45
+                },
+                "StabilityCriteria": {
+                    "DtMinMax": {
+                        "default": 0.1,
+                        "locked": False,
+                        "max": 5,
+                        "min": 0.0001
+                        },
+                    "DtTarget": {
+                        "default": 0.25,
+                        "locked": False,
+                        "max": 10,
+                        "min": 0.0001
+                        },
+                    "TimeWindow": {
+                        "default": 60,
+                        "locked": False,
+                        "max": 4000,
+                        "min": 15
+                        },
+                    "Timeout": {
+                        "default": 1800,
+                        "locked": False,
+                        "max": 8000,
+                        "min": 30
+                        }
+                },
+                "WaitForStabilityBeforeMeas": {
+                "default": True,
+                "locked": False
+                }
+            }
+        ],
         "TriggerOutputParams": [ ]
     },
     "TimingParams": {
@@ -60,16 +180,36 @@ command_save_config = {
             "locked": False,
             "default": "Cooling"
         },
+        "HeatingTime": {
+            "default": 1,
+            "locked": False,
+            "min": 0,
+            "max": 4000
+        },
+        "CoolingTime": {
+            "default": 1,
+            "locked": False,
+            "min": 0,
+            "max": 4000
+        },
+        "DelayTime": {
+            "default": 0,
+            "locked": False,
+            "min": 0,
+            "max": 4000
+        },
         "SamplePerOctave": {
             "default": 1000,
             "locked": False,
             "min": 1000,
             "max": 1000
         },
-           "HeatingTime": {"default": config_data["Pulse Cycling On [s]"], "locked": False},
-            "CoolingTime": {"default": config_data["Pulse Cycling Off [s]"], "locked": False},
-            "DelayTime": {"default": 0, "locked": False},
-            "Repeat": {"default": 1, "locked": False}
+        "Repeat": {
+            "default": 1,
+            "locked": False,
+            "min": 1,
+            "max": 100
+        }
     },
     "SourceTimingControl": {
         "locked": False,
@@ -79,7 +219,48 @@ command_save_config = {
         "PowerOn": [ ],
         "PowerOff": [ ]
     },
-    "TspCalibParams": config_data["TspCalibParams"]
+    "TspCalibParams": {
+        "CustomTemperature": {
+            "default": 25,
+            "locked": False,
+            "max": 50,
+            "min": 0
+        },
+        "DutStability": {
+            "default": False,
+            "locked": False,
+        },
+        "EndAction": {
+            "default": "CustomTemp",
+            "locked": False,
+        },
+        "Mode": {
+            "default": "Downwards",
+            "locked": False,
+        },
+        "ThtIntSensor": {
+            "default": True,
+            "locked": False,
+        },
+        "Tmax": {
+            "default": 50,
+            "locked": False,
+            "max": 100,
+            "min": 0
+        },
+        "Tmin": {
+            "default": 20,
+            "locked": False,
+            "max": 100,
+            "min": 0
+        },
+        "Tstep": {
+            "default": 10,
+            "locked": False,
+            "max": 100, 
+            "min": 1
+        }
+    }
 }
 
 # 修改後的配置（B組）
@@ -87,15 +268,100 @@ command_save_config_b = {
     "Command": "SAVE_CONFIG",
     "Type": "Config",
     "ConfigName": "diode_config",
-    "ConfigParams": {"Description": "Test"},
+    "ConfigParams": {"Description": "Test B"},
     "Resources": {
-        "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
+        "CurrentSourceParams": [
+            {
+                "Alias": "/T3STER/0/MS401/SLOT5/CH0",
+                "UserAlias": "S5CH1",
+                "OutputMode": {
+                    "default": "ON",
+                    "locked": False
+                },
+                "SetCurrent": {
+                    "default": 0.02,
+                    "locked": False,
+                    "min": -0.2,
+                    "max": 0.2
+                },
+                "VoltageCorner": {
+                    "default": 10, 
+                    "locked": False,
+                    "min": -40,
+                    "max": 40
+                }
+            },
+            {
+                "Alias": "/T3STER/0/LP220/SLOT1/CH0",
+                "UserAlias": "S1CH1",
+                "Delay": {
+                    "DelayFallingUs": {
+                        "default": 0,
+                        "locked": False,
+                        "min": -16383,
+                        "max": 5000
+                    },
+                    "DelayRisingUs": {
+                        "default": 0,
+                        "locked": False,
+                        "min": -16383,
+                        "max": 16383
+                    }
+                },          
+                "OutputMode": {
+                    "default": "PC",
+                    "locked": False
+                },
+                "SetCurrent": {
+                    "default": 2,
+                    "locked": False,
+                    "min": -2,
+                    "max": 2
+                },
+                "VoltageCorner": {
+                    "default": 10,
+                    "locked": False,
+                    "min": -10,
+                    "max": 10
+                }
+            }
+        ],
         "CurrentSourceWithActiveloadParams": [ ],
         "DividerParams": [ ],
         "VoltageSourceParams": [ ],
-        "MeasCardChParams":config_data["Resources"]["MeasCardChParams"],
+        "MeasCardChParams": [
+            {
+                "Alias": "/T3STER/0/MS401/SLOT5/CH0",
+                "UserAlias": "S5CH1",
+                "Sensitivity": {
+                    "locked": False,
+                    "default": [ 0.002 ]
+                },
+                "PowerStep":"@POWERSTEP_DIODE;/T3STER/0/MS401/SLOT5/CH0;/T3STER/0/LP220/SLOT1/CH0",
+                "RangeIdx": {
+                    "locked": False,
+                    "default": 9
+                },
+                "AutoRange": {
+                    "locked": False,
+                    "default": False
+                },
+                "Uref": {
+                    "locked": False,
+                    "default": 0
+                },
+                "UrefSwitching": {
+                    "locked": False,
+                    "default": False
+                },
+                "UrefHeating": {
+                    "locked": False,
+                    "default": 0
+                }
+            }
+        ],
         "ThermometerCardChParams": [ ],
-        "ThermostatParams": config_data["Resources"]["ThermostatParams"],
+        "ThermostatParams": [ ],
         "TriggerOutputParams": [ ]
     },
     "TimingParams": {
@@ -103,16 +369,36 @@ command_save_config_b = {
             "locked": False,
             "default": "Cooling"
         },
+        "HeatingTime": {
+            "default": 30,
+            "locked": False,
+            "min": 0,
+            "max": 4000
+        },
+        "CoolingTime": {
+            "default": 30,
+            "locked": False,
+            "min": 0,
+            "max": 4000
+        },
+        "DelayTime": {
+            "default": 0,
+            "locked": False,
+            "min": 0,
+            "max": 4000
+        },
         "SamplePerOctave": {
             "default": 1000,
             "locked": False,
             "min": 1000,
             "max": 1000
         },
-           "HeatingTime": {"default": config_data["Rth Measurement Heating Times"], "locked": False},
-            "CoolingTime": {"default": config_data["Rth Measurement Cooling Times"], "locked": False},
-            "DelayTime": {"default": 0, "locked": False},
-            "Repeat": {"default": 1, "locked": False}
+        "Repeat": {
+            "default": 1,
+            "locked": False,
+            "min": 1,
+            "max": 100
+        }
     },
     "SourceTimingControl": {
         "locked": False,
@@ -121,8 +407,7 @@ command_save_config_b = {
         "WaitForInstrumentDelay": True,
         "PowerOn": [ ],
         "PowerOff": [ ]
-    },
-    "TspCalibParams": config_data["TspCalibParams"],
+    }
 }
 
 command_do_resource_alloc = {
@@ -237,25 +522,9 @@ def rename_first_par_file(first_par_file, new_raw_file_path):
             print(f"發生錯誤: {e}")
     else:
         print("未找到第一個 .par 檔案，無法進行重命名")
-    
-# 根據作業系統自動打開資料夾
-def open_folder(folder_path):
-    try:
-        if platform.system() == "Windows":
-            os.startfile(folder_path)
-        elif platform.system() == "Darwin":  # macOS
-            subprocess.Popen(["open", folder_path])
-        else:  # Linux / Unix
-            subprocess.Popen(["xdg-open", folder_path])
-        print(f"已自動打開資料夾: {folder_path}")
-    except Exception as e:
-        print(f"無法打開資料夾: {folder_path}，發生錯誤: {e}")
 
 # ------ 執行測量 -----
 def execute_measurements(folder_name):
-    # 測量次數設定
-    measurement_count = config_data["Pulse Cycling Repeat"]
-    cycle_count = config_data["total Measurement Cycling Repeat"]
     print("測量開始")
     websocket_url = "ws://" + IP_ADDRESS + ":8085"
     websocket_transport = WebSocket()
@@ -275,7 +544,10 @@ def execute_measurements(folder_name):
         api_version = do_web_socket_string_query(websocket_transport, command_query_api_version)
         print(f"API 版本: {api_version['Answer']}")
 
-        
+        # ---- Enable Thermostat
+        # if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
+        #     raise Exception("Cannot Enable Thermostat")
+
         # TSP 設定
         if not do_web_socket_bool_query(websocket_transport, command_save_config):
             raise Exception("無法保存配置")     
@@ -314,9 +586,8 @@ def execute_measurements(folder_name):
         # 刪除資源和瞬態任務
         do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
         do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
-        
-        
-        
+
+
         # 開始迴圈測量
         for j in range(1, cycle_count + 1):
             if not do_web_socket_bool_query(websocket_transport, command_save_config):
@@ -460,32 +731,11 @@ def execute_measurements(folder_name):
         print(f"發生錯誤: {e}")
     finally:
         websocket_transport.close()
-    
-    # 程式執行完畢後，打開存檔資料夾
-    open_folder(folder_name)
 
     return downloaded_files
 
 # 主程序
-# if __name__ == "__main__":
-def Cycling_Test():
-    global config_data
-    config_data = load_saved_parameters_json()
-
-    print("我是CYCLING")
-    print(config_data["Pulse Cycling Repeat"])
-    print(config_data["total Measurement Cycling Repeat"])
-    print(config_data["Heating_time"])
-    print(config_data["Cooling_time"])
-    print(config_data["Config_Name"])
-    print(config_data["Tmin"])
-    print(config_data["Tmax"])
-    print(config_data["Tstep"])
-    print(config_data["TspCalibParams"])
-
-
-    
-
+if __name__ == "__main__":
     # 創建新資料夾
     folder_name = create_new_folder()
     print(f"創建新資料夾: {folder_name}")

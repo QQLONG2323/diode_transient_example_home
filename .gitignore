@@ -2,3 +2,6 @@ venv
 __pycache__
 form_data.json
 saved_parameters.json
+dist
+build
+AngelGUI.spec

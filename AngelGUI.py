@@ -2849,6 +2849,7 @@ class ParameterApp(tk.Tk):
                     "locked": False
                     }                   
                 }]
+        
         if config_data["Temperature"] != 0:
             config_data["Resources"]["ThermostatParams"] = thermostatParams_data
         else:

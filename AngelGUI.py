@@ -124,7 +124,7 @@ class ParameterApp(tk.Tk):
             "S5Ch1": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -178,7 +178,7 @@ class ParameterApp(tk.Tk):
             "S5Ch2": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -232,7 +232,7 @@ class ParameterApp(tk.Tk):
             "S5Ch3": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -286,7 +286,7 @@ class ParameterApp(tk.Tk):
             "S5Ch4": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -340,7 +340,7 @@ class ParameterApp(tk.Tk):
             "S6Ch1": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -394,7 +394,7 @@ class ParameterApp(tk.Tk):
             "S6Ch2": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -448,7 +448,7 @@ class ParameterApp(tk.Tk):
             "S6Ch3": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -502,7 +502,7 @@ class ParameterApp(tk.Tk):
             "S6Ch4": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -556,7 +556,7 @@ class ParameterApp(tk.Tk):
             "S7Ch1": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -610,7 +610,7 @@ class ParameterApp(tk.Tk):
             "S7Ch2": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -664,7 +664,7 @@ class ParameterApp(tk.Tk):
             "S7Ch3": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -718,7 +718,7 @@ class ParameterApp(tk.Tk):
             "S7Ch4": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -772,7 +772,7 @@ class ParameterApp(tk.Tk):
             "S8Ch1": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -826,7 +826,7 @@ class ParameterApp(tk.Tk):
             "S8Ch2": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -880,7 +880,7 @@ class ParameterApp(tk.Tk):
             "S8Ch3": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -934,7 +934,7 @@ class ParameterApp(tk.Tk):
             "S8Ch4": {
                 "Current_source": {
                     "Output mode": ["Off", "ON"],
-                    "Range": ["10", "20", "40"],
+                    "Range [V]": ["10", "20", "40"],
                     "Current [A]": "entry"
                 },
                 "Measurement_channel": {
@@ -2332,7 +2332,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S5Ch1",
                 "OutputMode": {"default": config_data["S5Ch1_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S5Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S5Ch1_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S5Ch1_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S5Ch2_Current_source" in config_data:
@@ -2341,7 +2341,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S5Ch2",
                 "OutputMode": {"default": config_data["S5Ch2_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S5Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S5Ch2_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S5Ch2_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S5Ch3_Current_source" in config_data:
@@ -2350,7 +2350,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S5Ch3",
                 "OutputMode": {"default": config_data["S5Ch3_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S5Ch3_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S5Ch3_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S5Ch3_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S5Ch4_Current_source" in config_data:
@@ -2359,7 +2359,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S5Ch4",
                 "OutputMode": {"default": config_data["S5Ch4_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S5Ch4_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S5Ch4_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S5Ch4_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S6Ch1_Current_source" in config_data:
@@ -2368,7 +2368,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S6Ch1",
                 "OutputMode": {"default": config_data["S6Ch1_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S6Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S6Ch1_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S6Ch1_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S6Ch2_Current_source" in config_data:
@@ -2377,7 +2377,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S6Ch2",
                 "OutputMode": {"default": config_data["S6Ch2_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S6Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S6Ch2_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S6Ch2_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S6Ch3_Current_source" in config_data:
@@ -2386,7 +2386,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S6Ch3",
                 "OutputMode": {"default": config_data["S6Ch3_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S6Ch3_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S6Ch3_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S6Ch3_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S6Ch4_Current_source" in config_data:
@@ -2395,7 +2395,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S6Ch4",
                 "OutputMode": {"default": config_data["S6Ch4_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S6Ch4_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S6Ch4_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S6Ch4_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S7Ch1_Current_source" in config_data:
@@ -2404,7 +2404,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S7Ch1",
                 "OutputMode": {"default": config_data["S7Ch1_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S7Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S7Ch1_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S7Ch1_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S7Ch2_Current_source" in config_data:
@@ -2413,7 +2413,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S7Ch2",
                 "OutputMode": {"default": config_data["S7Ch2_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S7Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S7Ch2_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S7Ch2_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S7Ch3_Current_source" in config_data:
@@ -2422,7 +2422,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S7Ch3",
                 "OutputMode": {"default": config_data["S7Ch3_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S7Ch3_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S7Ch3_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S7Ch3_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S7Ch4_Current_source" in config_data:
@@ -2431,7 +2431,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S7Ch4",
                 "OutputMode": {"default": config_data["S7Ch4_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S7Ch4_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S7Ch4_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S7Ch4_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S8Ch1_Current_source" in config_data:
@@ -2440,7 +2440,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S8Ch1",
                 "OutputMode": {"default": config_data["S8Ch1_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S8Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S8Ch1_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S8Ch1_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S8Ch2_Current_source" in config_data:
@@ -2449,7 +2449,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S8Ch2",
                 "OutputMode": {"default": config_data["S8Ch2_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S8Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S8Ch2_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S8Ch2_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S8Ch3_Current_source" in config_data:
@@ -2458,7 +2458,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S8Ch3",
                 "OutputMode": {"default": config_data["S8Ch3_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S8Ch3_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S8Ch3_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S8Ch3_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S8Ch4_Current_source" in config_data:
@@ -2467,7 +2467,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S8Ch4",
                 "OutputMode": {"default": config_data["S8Ch4_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S8Ch4_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S8Ch4_Current_source"]["Range"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S8Ch4_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
             })
 
         if "S5Ch1_Both" in config_data:
@@ -2854,6 +2854,52 @@ class ParameterApp(tk.Tk):
             config_data["Resources"]["ThermostatParams"] = thermostatParams_data
         else:
             config_data["Resources"]["ThermostatParams"] = []
+
+        thermostatParams_data_no_wait = [{
+                    "Alias": "/THERMOSTAT/0",
+                    "UserAlias": "Th0",
+                    "SetTemperature": {
+                        "default": config_data["Temperature"],
+                        "locked": False,
+                        "max": 50,
+                        "min": 0
+                    },
+                    "StabilityCriteria": {
+                        "DtMinMax": {
+                            "default": 0.1,
+                            "locked": False,
+                            "max": 1,
+                            "min": 0
+                            },
+                        "DtTarget": {
+                            "default": 0.25,
+                            "locked": False,
+                            "max": 0.5,
+                            "min": 0
+                            },
+                        "TimeWindow": {
+                            "default": 60,
+                            "locked": False,
+                            "max": 100,
+                            "min": 1
+                            },
+                        "Timeout": {
+                            "default": 1800,
+                            "locked": False,
+                            "max": 4000,
+                            "min": 1
+                            }
+                    },
+                    "WaitForStabilityBeforeMeas": {
+                    "default": False,
+                    "locked": False
+                    }                   
+                }]
+        
+        if config_data["Temperature"] != 0:
+            config_data["Resources"]["ThermostatParams_no_wait"] = thermostatParams_data_no_wait
+        else:
+            config_data["Resources"]["ThermostatParams_no_wait"] = []
 
         tspCalibParams = {
             "CustomTemperature": {

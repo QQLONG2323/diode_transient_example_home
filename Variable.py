@@ -19,7 +19,7 @@ def websocket_test():
     # 定義命令
     command_system_ready = {"Command": "QUERY_SYSTEM_INTEGRITY"}
     command_query_api_version = {"Command": "GET_API_VERSION"}
-    command_enable_thermostat = {"Command": "ENABLE_THERMOSTAT", "Alias": "/THERMOSTAT/0"}
+    # command_enable_thermostat = {"Command": "ENABLE_THERMOSTAT", "Alias": "/THERMOSTAT/0"}
 
     # 使用從 JSON 文件中導入的數據
     command_save_config = {
@@ -221,9 +221,9 @@ def websocket_test():
         if api_version_str != "2":
             raise Exception("Not supported major api version")              
 
-        # ---- Enable Thermostat
-        if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
-                raise Exception("Cannot Enable Thermostat")
+        # # ---- Enable Thermostat
+        # if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
+        #         raise Exception("Cannot Enable Thermostat")
 
         # ---- Save config
         if not do_web_socket_bool_query(websocket_transport, command_save_config):

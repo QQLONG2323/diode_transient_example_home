@@ -58,7 +58,7 @@ command_save_config = {
     "TimingParams": {
         "TransientMode": {
             "locked": False,
-            "default": "Cooling"
+            "default": "REPEATED_COOLING"
         },
         "SamplePerOctave": {
             "default": 1000,
@@ -69,7 +69,7 @@ command_save_config = {
            "HeatingTime": {"default": config_data["Pulse Cycling On [s]"], "locked": False},
             "CoolingTime": {"default": config_data["Pulse Cycling Off [s]"], "locked": False},
             "DelayTime": {"default": 0, "locked": False},
-            "Repeat": {"default": 1, "locked": False}
+            "Repeat": {"default": config_data["Pulse Cycling Repeat"], "locked": False}
     },
     "SourceTimingControl": {
         "locked": False,
@@ -82,47 +82,47 @@ command_save_config = {
     "TspCalibParams": config_data["TspCalibParams"]
 }
 
-command_save_config_no_wait = {
-    "Command": "SAVE_CONFIG",
-    "Type": "Config",
-    "ConfigName": "diode_config",
-    "ConfigParams": {"Description": "Test"},
-    "Resources": {
-        "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
-        "CurrentSourceWithActiveloadParams": [ ],
-        "DividerParams": [ ],
-        "VoltageSourceParams": [ ],
-        "MeasCardChParams":config_data["Resources"]["MeasCardChParams"],
-        "ThermometerCardChParams": [ ],
-        "ThermostatParams": config_data["Resources"]["ThermostatParams_no_wait"],
-        "TriggerOutputParams": [ ]
-    },
-    "TimingParams": {
-        "TransientMode": {
-            "locked": False,
-            "default": "Cooling"
-        },
-        "SamplePerOctave": {
-            "default": 1000,
-            "locked": False,
-            "min": 1000,
-            "max": 1000
-        },
-           "HeatingTime": {"default": config_data["Pulse Cycling On [s]"], "locked": False},
-            "CoolingTime": {"default": config_data["Pulse Cycling Off [s]"], "locked": False},
-            "DelayTime": {"default": 0, "locked": False},
-            "Repeat": {"default": 1, "locked": False}
-    },
-    "SourceTimingControl": {
-        "locked": False,
-        "Enabled": False,
-        "ReversePowerOff": True,
-        "WaitForInstrumentDelay": True,
-        "PowerOn": [ ],
-        "PowerOff": [ ]
-    },
-    "TspCalibParams": config_data["TspCalibParams"]
-}
+# command_save_config_no_wait = {
+#     "Command": "SAVE_CONFIG",
+#     "Type": "Config",
+#     "ConfigName": "diode_config",
+#     "ConfigParams": {"Description": "Test"},
+#     "Resources": {
+#         "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
+#         "CurrentSourceWithActiveloadParams": [ ],
+#         "DividerParams": [ ],
+#         "VoltageSourceParams": [ ],
+#         "MeasCardChParams":config_data["Resources"]["MeasCardChParams"],
+#         "ThermometerCardChParams": [ ],
+#         "ThermostatParams": config_data["Resources"]["ThermostatParams_no_wait"],
+#         "TriggerOutputParams": [ ]
+#     },
+#     "TimingParams": {
+#         "TransientMode": {
+#             "locked": False,
+#             "default": "Cooling"
+#         },
+#         "SamplePerOctave": {
+#             "default": 1000,
+#             "locked": False,
+#             "min": 1000,
+#             "max": 1000
+#         },
+#            "HeatingTime": {"default": config_data["Pulse Cycling On [s]"], "locked": False},
+#             "CoolingTime": {"default": config_data["Pulse Cycling Off [s]"], "locked": False},
+#             "DelayTime": {"default": 0, "locked": False},
+#             "Repeat": {"default": 1, "locked": False}
+#     },
+#     "SourceTimingControl": {
+#         "locked": False,
+#         "Enabled": False,
+#         "ReversePowerOff": True,
+#         "WaitForInstrumentDelay": True,
+#         "PowerOn": [ ],
+#         "PowerOff": [ ]
+#     },
+#     "TspCalibParams": config_data["TspCalibParams"]
+# }
 
 # 修改後的配置（B組）
 command_save_config_b_no_wait = {
@@ -143,7 +143,7 @@ command_save_config_b_no_wait = {
     "TimingParams": {
         "TransientMode": {
             "locked": False,
-            "default": "Cooling"
+            "default": "REPEATED_COOLING"
         },
         "SamplePerOctave": {
             "default": 1000,
@@ -296,7 +296,7 @@ def open_folder(folder_path):
 # ------ 執行測量 -----
 def execute_measurements(folder_name):
     # 測量次數設定
-    measurement_count = config_data["Pulse Cycling Repeat"]
+    # measurement_count = config_data["Pulse Cycling Repeat"]
     cycle_count = config_data["total Measurement Cycling Repeat"]
     print("測量開始")
     websocket_url = "ws://" + IP_ADDRESS + ":8085"
@@ -318,44 +318,44 @@ def execute_measurements(folder_name):
         print(f"API 版本: {api_version['Answer']}")
 
         
-        # TSP 設定
-        if not do_web_socket_bool_query(websocket_transport, command_save_config):
-            raise Exception("無法保存配置")     
+        # # TSP 設定
+        # if not do_web_socket_bool_query(websocket_transport, command_save_config):
+        #     raise Exception("無法保存配置")     
         
-        if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
-            raise Exception("資源分配失敗")
-        while True:
-            sleep(1)
-            task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
-            if task_status["Answer"] == "RUN":
-                print("TSP 測量資源分配完成")
-                break          
+        # if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
+        #     raise Exception("資源分配失敗")
+        # while True:
+        #     sleep(1)
+        #     task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
+        #     if task_status["Answer"] == "RUN":
+        #         print("TSP 測量資源分配完成")
+        #         break          
 
-        # 啟動 TSP
-        if not do_web_socket_string_query(websocket_transport, command_start_tspcalib):
-            raise Exception("TSP 測量啟動失敗")
-        else:
-            print("TSP 開始測量")
+        # # 啟動 TSP
+        # if not do_web_socket_string_query(websocket_transport, command_start_tspcalib):
+        #     raise Exception("TSP 測量啟動失敗")
+        # else:
+        #     print("TSP 開始測量")
 
-        busy = True
-        while busy:
-            sleep(1)
-            task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
-            print(f"測量中，請稍候... {task_status['Percentage']}%")
-            if task_status["Answer"] != "RUN":
-                busy = False
-                print(f"TSP 測量完成")
+        # busy = True
+        # while busy:
+        #     sleep(1)
+        #     task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
+        #     print(f"測量中，請稍候... {task_status['Percentage']}%")
+        #     if task_status["Answer"] != "RUN":
+        #         busy = False
+        #         print(f"TSP 測量完成")
 
-        # 取得並下載 TSP 檔案
-        file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
+        # # 取得並下載 TSP 檔案
+        # file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
 
-        for file in file_list["Result"]:
-            if "Filename" in file:
-                downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], 1, 1, "TSP", folder_name)
+        # for file in file_list["Result"]:
+        #     if "Filename" in file:
+        #         downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], 1, 1, "TSP", folder_name)
 
-        # 刪除資源和瞬態任務
-        do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
-        do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
+        # # 刪除資源和瞬態任務
+        # do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
+        # do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
         
         
         
@@ -364,57 +364,53 @@ def execute_measurements(folder_name):
             # 進行 A 組測量  
             first_a_par_file = None # 每個循環都重置 first_a_par_file
             cycle_a_files = []  # 追蹤此循環中的 A 組檔案
-            
-            for i in range(1, measurement_count + 1):
-                print(f"進行第 {j} 組，第 {i} 次測量 (A組)")
 
-                if j == 1 and i == 1:
-                    if not do_web_socket_bool_query(websocket_transport, command_save_config):
-                        raise Exception("無法保存配置")
-                else:
-                    if not do_web_socket_bool_query(websocket_transport, command_save_config_no_wait):
-                        raise Exception("無法保存配置")
+            i = 0
+            i += 1
+
+            if not do_web_socket_bool_query(websocket_transport, command_save_config):
+                raise Exception("無法保存配置")
                     
-                # 啟動資源分配並開始測量
-                if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
-                    raise Exception("資源分配失敗")
+            # 啟動資源分配並開始測量
+            if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
+                raise Exception("資源分配失敗")
 
-                while True:
-                    sleep(1)
-                    task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
-                    if task_status["Answer"] == "RUN":
-                        print(f"測量資源分配完成 (A組，第 {j} 組，第 {i} 次)")
-                        break
+            while True:
+                sleep(1)
+                task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
+                if task_status["Answer"] == "RUN":
+                    print(f"測量資源分配完成")
+                    break
 
-                # 啟動瞬態測量
-                if not do_web_socket_bool_query(websocket_transport, command_start_transient):
-                    raise Exception("瞬態測量啟動失敗")
+            # 啟動瞬態測量
+            if not do_web_socket_bool_query(websocket_transport, command_start_transient):
+                raise Exception("瞬態測量啟動失敗")
 
-                busy = True
-                while busy:
-                    sleep(1)
-                    task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
-                    print(f"測量中，請稍候... {task_status['Percentage']}%")
-                    if task_status["Answer"] != "RUN":
-                        busy = False
-                        print(f"瞬態測量完成 (A組，第 {j} 組，第 {i} 次)")
+            busy = True
+            while busy:
+                sleep(1)
+                task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
+                print(f"測量中，請稍候... {task_status['Percentage']}%")
+                if task_status["Answer"] != "RUN":
+                    busy = False
+                    print(f"瞬態測量完成")
+                        
+            # 取得並下載檔案 (A組)
+            file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
 
-                # 取得並下載檔案 (A組)
-                file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
+            for file in file_list["Result"]:
+                if "Filename" in file:
+                    downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, i, "A", folder_name)
+                    downloaded_files.append(downloaded_file)
+                    cycle_a_files.append(downloaded_file)  # 將 A 組檔案加到追蹤列表
 
-                for file in file_list["Result"]:
-                    if "Filename" in file:
-                        downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, i, "A", folder_name)
-                        downloaded_files.append(downloaded_file)
-                        cycle_a_files.append(downloaded_file)  # 將 A 組檔案加到追蹤列表
-
-                    # 找到第一個 .par 檔案
-                    if "Filename" in file and file["Filename"].endswith(".par") and first_a_par_file is None:
-                        first_a_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, i, "A", folder_name)
+                # 找到第一個 .par 檔案
+                if "Filename" in file and file["Filename"].endswith(".par") and first_a_par_file is None:
+                    first_a_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, i, "A", folder_name)
                 
-                # 刪除資源和瞬態任務
-                do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
-                do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
+            # 刪除資源和瞬態任務
+            do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
+            do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
 
             # 合併當前循環的 A 組文件
             if cycle_a_files:
@@ -433,6 +429,7 @@ def execute_measurements(folder_name):
                 # 嘗試將每個循環的第一個 .par 檔案改名為合併檔名
                 rename_first_par_file(first_a_par_file, output_file_path)
 
+
             # 進行 B 組測量
             if not do_web_socket_bool_query(websocket_transport, command_save_config_b_no_wait):
                 raise Exception("無法保存 B 組配置")
@@ -440,49 +437,46 @@ def execute_measurements(folder_name):
             first_b_par_file = None  # 每個循環重置 first_b_par_file
             cycle_b_files = []  # 追蹤此循環中的 B 組檔案
 
-            for i in range(1, 2):
-                print(f"進行第 {j} 組，第 {i} 次測量 (B組)")
+            # 啟動資源分配並開始測量 (B組)
+            if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
+                raise Exception("B組資源分配失敗")
 
-                # 啟動資源分配並開始測量 (B組)
-                if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
-                    raise Exception("B組資源分配失敗")
+            while True:
+                sleep(1)
+                task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
+                if task_status["Answer"] == "RUN":
+                    print(f"測量資源分配完成")
+                    break
 
-                while True:
-                    sleep(1)
-                    task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
-                    if task_status["Answer"] == "RUN":
-                        print(f"測量資源分配完成 (B組，第 {j} 組，第 {i} 次)")
-                        break
+            # 啟動瞬態測量 (B組)
+            if not do_web_socket_bool_query(websocket_transport, command_start_transient):
+                raise Exception("瞬態測量啟動失敗 (B組)")
 
-                # 啟動瞬態測量 (B組)
-                if not do_web_socket_bool_query(websocket_transport, command_start_transient):
-                    raise Exception("瞬態測量啟動失敗 (B組)")
-
-                busy = True
-                while busy:
-                    sleep(1)
-                    task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
-                    print(f"測量中，請稍候... {task_status['Percentage']}%")
-                    if task_status["Answer"] != "RUN":
-                        busy = False
-                        print(f"瞬態測量完成 (B組，第 {j} 組，第 {i} 次)")
+            busy = True
+            while busy:
+                sleep(1)
+                task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
+                print(f"測量中，請稍候... {task_status['Percentage']}%")
+                if task_status["Answer"] != "RUN":
+                    busy = False
+                    print(f"瞬態測量完成")
 
 
-                # 取得並下載檔案 (B組)
-                file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
+            # 取得並下載檔案 (B組)
+            file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
 
-                for file in file_list["Result"]:
-                    if "Filename" in file:
-                        downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, i, "B", folder_name)
-                        downloaded_files.append(downloaded_file)
-                        cycle_b_files.append(downloaded_file)  # 將 B 組檔案加到追蹤列表
-                    # 找到第一個 .par 檔案
-                    if "Filename" in file and file["Filename"].endswith(".par") and first_b_par_file is None:
-                        first_b_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, i, "B", folder_name)
+            for file in file_list["Result"]:
+                if "Filename" in file:
+                    downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, i, "B", folder_name)
+                    downloaded_files.append(downloaded_file)
+                    cycle_b_files.append(downloaded_file)  # 將 B 組檔案加到追蹤列表
+                # 找到第一個 .par 檔案
+                if "Filename" in file and file["Filename"].endswith(".par") and first_b_par_file is None:
+                    first_b_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, i, "B", folder_name)
 
-                # 刪除資源和瞬態任務 (B組)
-                do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
-                do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
+            # 刪除資源和瞬態任務 (B組)
+            do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
+            do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
         
 
             # 合併當前循環的 B 組文件

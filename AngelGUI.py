@@ -1941,7 +1941,7 @@ class ParameterApp(tk.Tk):
         self.delay_entry.grid(row=2, column=3, padx=10, pady=10)
         self.page2_parameters["Delay_time"] = self.delay_entry.get()
 
-        # # Repeat
+        # Repeat
         # # 使用 tk.BooleanVar 來控制 Repeat 的選中狀態
         # self.repeat_var = tk.BooleanVar(value=False)  # 默認為未選中
 
@@ -1951,19 +1951,23 @@ class ParameterApp(tk.Tk):
         # self.repeat_checkbutton.grid(row=4, column=0, padx=10, pady=10)
         # self.page2_parameters["Repeat"] = self.repeat_var.get()
 
-        # repeat_range_label = ttk.Label(
-        #     measurement_settings_frame, text="範圍: 1 ~ 100")
-        # repeat_range_label.grid(row=4, column=1, padx=10, pady=10)
+        repeat_label = ttk.Label(
+            measurement_settings_frame, text="Repeat times")
+        repeat_label.grid(row=3, column=0, padx=10, pady=10)
 
-        # repeat_setpoint_label = ttk.Label(
-        #     measurement_settings_frame, text="Setpoint: ")
-        # repeat_setpoint_label.grid(row=4, column=2, padx=10, pady=10)
+        repeat_range_label = ttk.Label(
+            measurement_settings_frame, text="範圍: 1 ~ 100")
+        repeat_range_label.grid(row=3, column=1, padx=10, pady=10)
 
-        # # Repeat 的 Entry
-        # self.repeat_entry = ttk.Entry(
-        #     measurement_settings_frame, state="disabled")  # 初始狀態為禁用
-        # self.repeat_entry.grid(row=4, column=3, padx=10, pady=10)
-        # self.page2_parameters["Repeat_times"] = self.repeat_entry.get()
+        repeat_setpoint_label = ttk.Label(
+            measurement_settings_frame, text="Setpoint: ")
+        repeat_setpoint_label.grid(row=3, column=2, padx=10, pady=10)
+
+        # Repeat 的 Entry
+        self.repeat_entry = ttk.Entry(measurement_settings_frame)
+        self.repeat_entry.grid(row=3, column=3, padx=10, pady=10)
+        self.repeat_entry.insert(0, "1")   # 插入數字 1
+        self.page2_parameters["Repeat_times"] = self.repeat_entry.get()
 
         # Cycling Test
         multi_pulse_cycling_label = ttk.Label(cycling_test_frame, text="Multi Pulse Cycling")
@@ -2131,6 +2135,8 @@ class ParameterApp(tk.Tk):
             self.cooling_entry.config(state="disabled")   #禁用 cooling 輸入框
             self.delay_entry.delete(0, tk.END)   # 清空 delay 輸入框的內容
             self.delay_entry.config(state="disabled")   #禁用 delay 輸入框
+            self.repeat_entry.delete(0, tk.END)   # 清空 repeat 輸入框的內容
+            self.repeat_entry.config(state="disabled")   #禁用 repeat 輸入框
         else:
             self.pulse_cycling_on_entry.delete(0, tk.END)  # 清空 pulse cycling on 輸入框的內容
             self.pulse_cycling_on_entry.config(state="disabled")  # 禁用 pulse cycling on 輸入框
@@ -2147,6 +2153,9 @@ class ParameterApp(tk.Tk):
             self.heating_entry.config(state="normal")
             self.cooling_entry.config(state="normal")
             self.delay_entry.config(state="normal")
+            self.repeat_entry.config(state="normal")
+            self.repeat_entry.delete(0, tk.END)   # 清空當前的內容
+            self.repeat_entry.insert(0, "1")   # 插入數字 1
     
     
     def toggle_tspCheckbutton_temperature(self):
@@ -2253,8 +2262,8 @@ class ParameterApp(tk.Tk):
                     }
                 },
                 "OutputMode": {"default": config_data["S1Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S1Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -2, "max": 2},
-                "VoltageCorner": {"default": float(config_data["S1Ch1_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10}
+                "SetCurrent": {"default": float(config_data["S1Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -1, "max": 1},
+                "VoltageCorner": {"default": float(config_data["S1Ch1_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10},
             })
         
         if "S1Ch2_Current_source" in config_data:
@@ -2332,7 +2341,7 @@ class ParameterApp(tk.Tk):
                 "UserAlias": "S5Ch1",
                 "OutputMode": {"default": config_data["S5Ch1_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S5Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S5Ch1_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
+                "VoltageCorner": {"default": float(config_data["S5Ch1_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40},
             })
 
         if "S5Ch2_Current_source" in config_data:
@@ -2647,7 +2656,7 @@ class ParameterApp(tk.Tk):
                     "AutoRange": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Auto range"], "locked": False},
                     "Uref": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Vref [V]"], "locked": False},
                     "UrefSwitching": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Separate Vref for heating"], "locked": False},
-                    "UrefHeating": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Vref,heating [V]"], "locked": False}                   
+                    "UrefHeating": {"default": config_data[f"{ms_401_value}_Measurement_channel"]["Vref,heating [V]"], "locked": False},                
                 })
 
             if f"{ms_401_value}_Both" in config_data:
@@ -2664,7 +2673,7 @@ class ParameterApp(tk.Tk):
                     "AutoRange": {"default": config_data[f"{ms_401_value}_Both"]["Auto range"], "locked": False},
                     "Uref": {"default": config_data[f"{ms_401_value}_Both"]["Vref [V]"], "locked": False},
                     "UrefSwitching": {"default": config_data[f"{ms_401_value}_Both"]["Separate Vref for heating"], "locked": False},
-                    "UrefHeating": {"default": config_data[f"{ms_401_value}_Both"]["Vref,heating [V]"], "locked": False}
+                    "UrefHeating": {"default": config_data[f"{ms_401_value}_Both"]["Vref,heating [V]"], "locked": False},
                 })
 
         return measurement_params
@@ -2682,28 +2691,32 @@ class ParameterApp(tk.Tk):
 
         # 判斷是否有輸入參數，若無，則預設為 0
         try:
-            self.page2_parameters["Heating_time"] = int(self.heating_entry.get()) if self.heating_entry.get() else 0.0
+            self.page2_parameters["Heating_time"] = float(self.heating_entry.get()) if self.heating_entry.get() else 0.0
         except ValueError:
             self.page2_parameters["Heating_time"] = 0.0  # 或其他預設值
         try:
-            self.page2_parameters["Cooling_time"] = int(self.cooling_entry.get()) if self.cooling_entry.get() else 0.0
+            self.page2_parameters["Cooling_time"] = float(self.cooling_entry.get()) if self.cooling_entry.get() else 0.0
         except ValueError:
             self.page2_parameters["Cooling_time"] = 0.0  # 或其他預設值
         try:
-            self.page2_parameters["Delay_time"] = int(self.delay_entry.get()) if self.delay_entry.get() else 0.0
+            self.page2_parameters["Delay_time"] = float(self.delay_entry.get()) if self.delay_entry.get() else 0.0
         except ValueError:
             self.page2_parameters["Delay_time"] = 0.0  # 或其他預設值
 
         # self.page2_parameters["Repeat"] = self.repeat_var.get()
-        # self.page2_parameters["Repeat_times"] = float(self.repeat_entry.get())
+        try:
+            self.page2_parameters["Repeat_times"] = int(self.repeat_entry.get()) if self.repeat_entry.get() else 0
+        except ValueError:
+            self.page2_parameters["Repeat_times"] = 0  # 或其他預設值
+
         self.page2_parameters["Cycling_Test"] = self.cycling_test_var.get()
 
         try:
-            self.page2_parameters["Pulse Cycling On [s]"] = int(self.pulse_cycling_on_entry.get()) if self.pulse_cycling_on_entry.get() else 0.0
+            self.page2_parameters["Pulse Cycling On [s]"] = float(self.pulse_cycling_on_entry.get()) if self.pulse_cycling_on_entry.get() else 0.0
         except ValueError:
             self.page2_parameters["Pulse Cycling On [s]"] = 0.0  # 或其他預設值
         try:
-            self.page2_parameters["Pulse Cycling Off [s]"] = int(self.pulse_cycling_off_entry.get()) if self.pulse_cycling_off_entry.get() else 0.0
+            self.page2_parameters["Pulse Cycling Off [s]"] = float(self.pulse_cycling_off_entry.get()) if self.pulse_cycling_off_entry.get() else 0.0
         except ValueError:
             self.page2_parameters["Pulse Cycling Off [s]"] = 0.0  # 或其他預設值
         try:
@@ -2711,11 +2724,11 @@ class ParameterApp(tk.Tk):
         except ValueError:
             self.page2_parameters["Pulse Cycling Repeat"] = 0  # 或其他預設值
         try:
-            self.page2_parameters["Rth Measurement Heating Times"] = int(self.rth_measurement_heating_times_entry.get()) if self.rth_measurement_heating_times_entry.get() else 0.0
+            self.page2_parameters["Rth Measurement Heating Times"] = float(self.rth_measurement_heating_times_entry.get()) if self.rth_measurement_heating_times_entry.get() else 0.0
         except ValueError:
             self.page2_parameters["Rth Measurement Heating Times"] = 0.0  # 或其他預設值
         try:
-            self.page2_parameters["Rth Measurement Cooling Times"] = int(self.rth_measurement_cooling_times_entry.get()) if self.rth_measurement_cooling_times_entry.get() else 0.0
+            self.page2_parameters["Rth Measurement Cooling Times"] = float(self.rth_measurement_cooling_times_entry.get()) if self.rth_measurement_cooling_times_entry.get() else 0.0
         except ValueError:
             self.page2_parameters["Rth Measurement Cooling Times"] = 0.0  # 或其他預設值
         try:
@@ -2822,26 +2835,26 @@ class ParameterApp(tk.Tk):
                         "DtMinMax": {
                             "default": 0.1,
                             "locked": False,
-                            "max": 1,
-                            "min": 0
+                            "max": 5,
+                            "min": 0.0001
                             },
                         "DtTarget": {
                             "default": 0.25,
                             "locked": False,
-                            "max": 0.5,
-                            "min": 0
+                            "max": 10,
+                            "min": 0.0001
                             },
                         "TimeWindow": {
                             "default": 60,
                             "locked": False,
                             "max": 100,
-                            "min": 1
+                            "min": 15
                             },
                         "Timeout": {
                             "default": 1800,
                             "locked": False,
                             "max": 4000,
-                            "min": 1
+                            "min": 30
                             }
                     },
                     "WaitForStabilityBeforeMeas": {
@@ -2868,14 +2881,14 @@ class ParameterApp(tk.Tk):
                         "DtMinMax": {
                             "default": 0.1,
                             "locked": False,
-                            "max": 1,
-                            "min": 0
+                            "max": 5,
+                            "min": 0.0001
                             },
                         "DtTarget": {
                             "default": 0.25,
                             "locked": False,
-                            "max": 0.5,
-                            "min": 0
+                            "max": 10,
+                            "min": 0.0001
                             },
                         "TimeWindow": {
                             "default": 60,

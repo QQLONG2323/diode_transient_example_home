@@ -75,10 +75,10 @@ def websocket_test():
             "HeatingTime": {"default": config_data["Heating_time"], "locked": False, "min": 0, "max": 4000},
             "CoolingTime": {"default": config_data["Cooling_time"], "locked": False, "min": 0, "max": 4000},
             "DelayTime": {"default": config_data["Delay_time"], "locked": False, "min": 0, "max": 4000},
-            "Repeat": {"default": 1, "locked": False, "min": 1, "max": 100},
+            "Repeat": {"default": config_data["Repeat_times"], "locked": False, "min": 1, "max": 100},
             "TransientMode": {
                 "locked": False,
-                "default": "Cooling"
+                "default": "REPEATED_COOLING"
             },
             "SamplePerOctave": {
                 "default": 1000,
@@ -221,9 +221,6 @@ def websocket_test():
         if api_version_str != "2":
             raise Exception("Not supported major api version")              
 
-        # # ---- Enable Thermostat
-        # if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
-        #         raise Exception("Cannot Enable Thermostat")
 
         # ---- Save config
         if not do_web_socket_bool_query(websocket_transport, command_save_config):

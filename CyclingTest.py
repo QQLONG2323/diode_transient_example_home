@@ -202,8 +202,8 @@ def do_web_socket_bool_query(ws: WebSocket, command: dict) -> bool:
     return answer["Answer"] == "OK"
 
 # 下載檔案並確保檔名不被覆蓋
-def download_file(file_url, original_filename, cycle_index, measurement_index, group, folder_name):
-    local_filename = f"measurement_{group}_{cycle_index}_{measurement_index}_{original_filename[(original_filename.rfind('/')+1):]}"
+def download_file(file_url, original_filename, cycle_index, group, folder_name):
+    local_filename = f"measurement_{group}_{cycle_index}_{original_filename[(original_filename.rfind('/')+1):]}"
     full_path = os.path.join(folder_name, local_filename)
     urllib.request.urlretrieve(file_url, full_path)
     print(f"文件下載完成: {full_path}")
@@ -229,7 +229,7 @@ def read_raw_file(file_path):
     return comments, data
 
 # 合併多個檔案的數據
-def merge_files(file_paths):
+# def merge_files(file_paths):
     combined_comments = []
     combined_data = []
     last_index = 0
@@ -318,183 +318,321 @@ def execute_measurements(folder_name):
         print(f"API 版本: {api_version['Answer']}")
 
         
-        # # TSP 設定
-        # if not do_web_socket_bool_query(websocket_transport, command_save_config):
-        #     raise Exception("無法保存配置")     
+        # TSP 設定
+        if not do_web_socket_bool_query(websocket_transport, command_save_config):
+            raise Exception("無法保存配置")     
         
-        # if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
-        #     raise Exception("資源分配失敗")
-        # while True:
-        #     sleep(1)
-        #     task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
-        #     if task_status["Answer"] == "RUN":
-        #         print("TSP 測量資源分配完成")
-        #         break          
+        if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
+            raise Exception("資源分配失敗")
+        while True:
+            sleep(1)
+            task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
+            if task_status["Answer"] == "RUN":
+                print("TSP 測量資源分配完成")
+                break          
 
-        # # 啟動 TSP
-        # if not do_web_socket_string_query(websocket_transport, command_start_tspcalib):
-        #     raise Exception("TSP 測量啟動失敗")
-        # else:
-        #     print("TSP 開始測量")
+        # 啟動 TSP
+        if not do_web_socket_string_query(websocket_transport, command_start_tspcalib):
+            raise Exception("TSP 測量啟動失敗")
+        else:
+            print("TSP 開始測量")
 
-        # busy = True
-        # while busy:
-        #     sleep(1)
-        #     task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
-        #     print(f"測量中，請稍候... {task_status['Percentage']}%")
-        #     if task_status["Answer"] != "RUN":
-        #         busy = False
-        #         print(f"TSP 測量完成")
+        busy = True
+        while busy:
+            sleep(1)
+            task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
+            print(f"測量中，請稍候... {task_status['Percentage']}%")
+            if task_status["Answer"] != "RUN":
+                busy = False
+                print(f"TSP 測量完成")
 
-        # # 取得並下載 TSP 檔案
-        # file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
+        # 取得並下載 TSP 檔案
+        file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
 
-        # for file in file_list["Result"]:
-        #     if "Filename" in file:
-        #         downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], 1, 1, "TSP", folder_name)
+        for file in file_list["Result"]:
+            if "Filename" in file:
+                downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], 1, "TSP", folder_name)
 
-        # # 刪除資源和瞬態任務
-        # do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
-        # do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
+        # 刪除資源和瞬態任務
+        do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
+        do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
         
         
         
         # 開始迴圈測量
         for j in range(1, cycle_count + 1):
-            # 進行 A 組測量  
-            first_a_par_file = None # 每個循環都重置 first_a_par_file
-            cycle_a_files = []  # 追蹤此循環中的 A 組檔案
+            if j == 1:
+                # 進行 A 組測量  
+                first_a_par_file = None # 每個循環都重置 first_a_par_file
+                cycle_a_files = []  # 追蹤此循環中的 A 組檔案
 
-            i = 0
-            i += 1
 
-            if not do_web_socket_bool_query(websocket_transport, command_save_config):
-                raise Exception("無法保存配置")
-                    
-            # 啟動資源分配並開始測量
-            if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
-                raise Exception("資源分配失敗")
-
-            while True:
-                sleep(1)
-                task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
-                if task_status["Answer"] == "RUN":
-                    print(f"測量資源分配完成")
-                    break
-
-            # 啟動瞬態測量
-            if not do_web_socket_bool_query(websocket_transport, command_start_transient):
-                raise Exception("瞬態測量啟動失敗")
-
-            busy = True
-            while busy:
-                sleep(1)
-                task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
-                print(f"測量中，請稍候... {task_status['Percentage']}%")
-                if task_status["Answer"] != "RUN":
-                    busy = False
-                    print(f"瞬態測量完成")
+                if not do_web_socket_bool_query(websocket_transport, command_save_config):
+                    raise Exception("無法保存配置")
                         
-            # 取得並下載檔案 (A組)
-            file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
+                # 啟動資源分配並開始測量
+                if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
+                    raise Exception("資源分配失敗")
 
-            for file in file_list["Result"]:
-                if "Filename" in file:
-                    downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, i, "A", folder_name)
-                    downloaded_files.append(downloaded_file)
-                    cycle_a_files.append(downloaded_file)  # 將 A 組檔案加到追蹤列表
+                while True:
+                    sleep(1)
+                    task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
+                    if task_status["Answer"] == "RUN":
+                        print(f"測量資源分配完成")
+                        break
 
-                # 找到第一個 .par 檔案
-                if "Filename" in file and file["Filename"].endswith(".par") and first_a_par_file is None:
-                    first_a_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, i, "A", folder_name)
+                # 啟動瞬態測量
+                if not do_web_socket_bool_query(websocket_transport, command_start_transient):
+                    raise Exception("瞬態測量啟動失敗")
+
+                busy = True
+                while busy:
+                    sleep(1)
+                    task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
+                    print(f"測量中，請稍候... {task_status['Percentage']}%")
+                    if task_status["Answer"] != "RUN":
+                        busy = False
+                        print(f"瞬態測量完成")
+                            
+                # 取得並下載檔案 (A組)
+                file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
+
+                for file in file_list["Result"]:
+                    if "Filename" in file:
+                        downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "A", folder_name)
+                        downloaded_files.append(downloaded_file)
+                        cycle_a_files.append(downloaded_file)  # 將 A 組檔案加到追蹤列表
+
+                    # 找到第一個 .par 檔案
+                    if "Filename" in file and file["Filename"].endswith(".par") and first_a_par_file is None:
+                        first_a_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "A", folder_name)
+                    
+                # 刪除資源和瞬態任務
+                do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
+                do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
+
+                # 合併當前循環的 A 組文件
+                # if cycle_a_files:
+                #     comments, combined_data = merge_files(cycle_a_files)
+                #     output_file_path = os.path.join(folder_name, f'group_A_combined_cycle_{j}.raw')
+                    
+                #     with open(output_file_path, 'w') as output_file:
+                #         for line in comments:
+                #             output_file.write(f"{line}\n")
+                #         for item in combined_data:
+                #             output_file.write(f"{item[0]} {item[1]}\n")
+
+                #     print(f"A組文件已合併並寫入: {output_file_path}")
+                #     group_a_files.append(output_file_path)
+
+                #     # 嘗試將每個循環的第一個 .par 檔案改名為合併檔名
+                #     rename_first_par_file(first_a_par_file, output_file_path)
+
+
+                # 進行 B 組測量
+                if not do_web_socket_bool_query(websocket_transport, command_save_config_b_no_wait):
+                    raise Exception("無法保存 B 組配置")
                 
-            # 刪除資源和瞬態任務
-            do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
-            do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
+                first_b_par_file = None  # 每個循環重置 first_b_par_file
+                cycle_b_files = []  # 追蹤此循環中的 B 組檔案
 
-            # 合併當前循環的 A 組文件
-            if cycle_a_files:
-                comments, combined_data = merge_files(cycle_a_files)
-                output_file_path = os.path.join(folder_name, f'group_A_combined_cycle_{j}.raw')
-                
-                with open(output_file_path, 'w') as output_file:
-                    for line in comments:
-                        output_file.write(f"{line}\n")
-                    for item in combined_data:
-                        output_file.write(f"{item[0]} {item[1]}\n")
+                # 啟動資源分配並開始測量 (B組)
+                if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
+                    raise Exception("B組資源分配失敗")
 
-                print(f"A組文件已合併並寫入: {output_file_path}")
-                group_a_files.append(output_file_path)
+                while True:
+                    sleep(1)
+                    task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
+                    if task_status["Answer"] == "RUN":
+                        print(f"測量資源分配完成")
+                        break
 
-                # 嘗試將每個循環的第一個 .par 檔案改名為合併檔名
-                rename_first_par_file(first_a_par_file, output_file_path)
+                # 啟動瞬態測量 (B組)
+                if not do_web_socket_bool_query(websocket_transport, command_start_transient):
+                    raise Exception("瞬態測量啟動失敗 (B組)")
+
+                busy = True
+                while busy:
+                    sleep(1)
+                    task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
+                    print(f"測量中，請稍候... {task_status['Percentage']}%")
+                    if task_status["Answer"] != "RUN":
+                        busy = False
+                        print(f"瞬態測量完成")
 
 
-            # 進行 B 組測量
-            if not do_web_socket_bool_query(websocket_transport, command_save_config_b_no_wait):
-                raise Exception("無法保存 B 組配置")
+                # 取得並下載檔案 (B組)
+                file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
+
+                for file in file_list["Result"]:
+                    if "Filename" in file:
+                        downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "B", folder_name)
+                        downloaded_files.append(downloaded_file)
+                        cycle_b_files.append(downloaded_file)  # 將 B 組檔案加到追蹤列表
+                    # 找到第一個 .par 檔案
+                    if "Filename" in file and file["Filename"].endswith(".par") and first_b_par_file is None:
+                        first_b_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "B", folder_name)
+
+                # 刪除資源和瞬態任務 (B組)
+                do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
+                do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
             
-            first_b_par_file = None  # 每個循環重置 first_b_par_file
-            cycle_b_files = []  # 追蹤此循環中的 B 組檔案
 
-            # 啟動資源分配並開始測量 (B組)
-            if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
-                raise Exception("B組資源分配失敗")
+                # 合併當前循環的 B 組文件
+                # if cycle_b_files:
+                #     comments, combined_data = merge_files(cycle_b_files)
+                #     output_file_path = os.path.join(folder_name, f'group_B_combined_cycle_{j}.raw')
+                    
+                #     with open(output_file_path, 'w') as output_file:
+                #         for line in comments:
+                #             output_file.write(f"{line}\n")
+                #         for item in combined_data:
+                #             output_file.write(f"{item[0]} {item[1]}\n")
 
-            while True:
-                sleep(1)
-                task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
-                if task_status["Answer"] == "RUN":
-                    print(f"測量資源分配完成")
-                    break
+                #     print(f"B組文件已合併並寫入: {output_file_path}")
+                #     group_b_files.append(output_file_path)
 
-            # 啟動瞬態測量 (B組)
-            if not do_web_socket_bool_query(websocket_transport, command_start_transient):
-                raise Exception("瞬態測量啟動失敗 (B組)")
+                #     # 嘗試將每個循環的第一個 .par 檔案改名為合併檔名
+                #     rename_first_par_file(first_b_par_file, output_file_path)
 
-            busy = True
-            while busy:
-                sleep(1)
-                task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
-                print(f"測量中，請稍候... {task_status['Percentage']}%")
-                if task_status["Answer"] != "RUN":
-                    busy = False
-                    print(f"瞬態測量完成")
-
-
-            # 取得並下載檔案 (B組)
-            file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
-
-            for file in file_list["Result"]:
-                if "Filename" in file:
-                    downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, i, "B", folder_name)
-                    downloaded_files.append(downloaded_file)
-                    cycle_b_files.append(downloaded_file)  # 將 B 組檔案加到追蹤列表
-                # 找到第一個 .par 檔案
-                if "Filename" in file and file["Filename"].endswith(".par") and first_b_par_file is None:
-                    first_b_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, i, "B", folder_name)
-
-            # 刪除資源和瞬態任務 (B組)
-            do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
-            do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
-        
-
-            # 合併當前循環的 B 組文件
-            if cycle_b_files:
-                comments, combined_data = merge_files(cycle_b_files)
-                output_file_path = os.path.join(folder_name, f'group_B_combined_cycle_{j}.raw')
+            else: 
+                other_lp220_current_list = config_data.get("Other LP220 Current list", [])
                 
-                with open(output_file_path, 'w') as output_file:
-                    for line in comments:
-                        output_file.write(f"{line}\n")
-                    for item in combined_data:
-                        output_file.write(f"{item[0]} {item[1]}\n")
+                # 檢查 "Other LP220 Current list" 是否有值，並確保不超出索引範圍
+                if other_lp220_current_list and j - 2 < len(other_lp220_current_list):
+                    # 更新 command_save_config 中 "SetCurrent" 的值
+                    current_value = other_lp220_current_list[j - 2]  # 按照迴圈次數取出對應值
+                    command_save_config["Resources"]["CurrentSourceParams"][0]["SetCurrent"]["default"] = current_value
+                    command_save_config_b_no_wait["Resources"]["CurrentSourceParams"][0]["SetCurrent"]["default"] = current_value
+                    print(f"第 {j} 次測量設置 'SetCurrent' 為: {current_value}")
 
-                print(f"B組文件已合併並寫入: {output_file_path}")
-                group_b_files.append(output_file_path)
+                if not do_web_socket_bool_query(websocket_transport, command_save_config):
+                    raise Exception("無法保存配置")
+                        
+                # 啟動資源分配並開始測量
+                if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
+                    raise Exception("資源分配失敗")
 
-                # 嘗試將每個循環的第一個 .par 檔案改名為合併檔名
-                rename_first_par_file(first_b_par_file, output_file_path)
+                while True:
+                    sleep(1)
+                    task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
+                    if task_status["Answer"] == "RUN":
+                        print(f"測量資源分配完成")
+                        break
+
+                # 啟動瞬態測量
+                if not do_web_socket_bool_query(websocket_transport, command_start_transient):
+                    raise Exception("瞬態測量啟動失敗")
+
+                busy = True
+                while busy:
+                    sleep(1)
+                    task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
+                    print(f"測量中，請稍候... {task_status['Percentage']}%")
+                    if task_status["Answer"] != "RUN":
+                        busy = False
+                        print(f"瞬態測量完成")
+                            
+                # 取得並下載檔案 (A組)
+                file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
+
+                for file in file_list["Result"]:
+                    if "Filename" in file:
+                        downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "A", folder_name)
+                        downloaded_files.append(downloaded_file)
+                        cycle_a_files.append(downloaded_file)  # 將 A 組檔案加到追蹤列表
+
+                    # 找到第一個 .par 檔案
+                    if "Filename" in file and file["Filename"].endswith(".par") and first_a_par_file is None:
+                        first_a_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "A", folder_name)
+                    
+                # 刪除資源和瞬態任務
+                do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
+                do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
+
+                # 合併當前循環的 A 組文件
+                # if cycle_a_files:
+                #     comments, combined_data = merge_files(cycle_a_files)
+                #     output_file_path = os.path.join(folder_name, f'group_A_combined_cycle_{j}.raw')
+                    
+                #     with open(output_file_path, 'w') as output_file:
+                #         for line in comments:
+                #             output_file.write(f"{line}\n")
+                #         for item in combined_data:
+                #             output_file.write(f"{item[0]} {item[1]}\n")
+
+                #     print(f"A組文件已合併並寫入: {output_file_path}")
+                #     group_a_files.append(output_file_path)
+
+                #     # 嘗試將每個循環的第一個 .par 檔案改名為合併檔名
+                #     rename_first_par_file(first_a_par_file, output_file_path)
+
+
+                # 進行 B 組測量
+                if not do_web_socket_bool_query(websocket_transport, command_save_config_b_no_wait):
+                    raise Exception("無法保存 B 組配置")
+                
+                first_b_par_file = None  # 每個循環重置 first_b_par_file
+                cycle_b_files = []  # 追蹤此循環中的 B 組檔案
+
+                # 啟動資源分配並開始測量 (B組)
+                if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
+                    raise Exception("B組資源分配失敗")
+
+                while True:
+                    sleep(1)
+                    task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
+                    if task_status["Answer"] == "RUN":
+                        print(f"測量資源分配完成")
+                        break
+
+                # 啟動瞬態測量 (B組)
+                if not do_web_socket_bool_query(websocket_transport, command_start_transient):
+                    raise Exception("瞬態測量啟動失敗 (B組)")
+
+                busy = True
+                while busy:
+                    sleep(1)
+                    task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
+                    print(f"測量中，請稍候... {task_status['Percentage']}%")
+                    if task_status["Answer"] != "RUN":
+                        busy = False
+                        print(f"瞬態測量完成")
+
+
+                # 取得並下載檔案 (B組)
+                file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
+
+                for file in file_list["Result"]:
+                    if "Filename" in file:
+                        downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "B", folder_name)
+                        downloaded_files.append(downloaded_file)
+                        cycle_b_files.append(downloaded_file)  # 將 B 組檔案加到追蹤列表
+                    # 找到第一個 .par 檔案
+                    if "Filename" in file and file["Filename"].endswith(".par") and first_b_par_file is None:
+                        first_b_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "B", folder_name)
+
+                # 刪除資源和瞬態任務 (B組)
+                do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
+                do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
+            
+
+                # 合併當前循環的 B 組文件
+                # if cycle_b_files:
+                #     comments, combined_data = merge_files(cycle_b_files)
+                #     output_file_path = os.path.join(folder_name, f'group_B_combined_cycle_{j}.raw')
+                    
+                #     with open(output_file_path, 'w') as output_file:
+                #         for line in comments:
+                #             output_file.write(f"{line}\n")
+                #         for item in combined_data:
+                #             output_file.write(f"{item[0]} {item[1]}\n")
+
+                #     print(f"B組文件已合併並寫入: {output_file_path}")
+                #     group_b_files.append(output_file_path)
+
+                #     # 嘗試將每個循環的第一個 .par 檔案改名為合併檔名
+                #     rename_first_par_file(first_b_par_file, output_file_path)
 
     except Exception as e:
         print(f"發生錯誤: {e}")
@@ -513,15 +651,6 @@ def Cycling_Test():
     config_data = load_saved_parameters_json()
 
     print("我是CYCLING")
-    print(config_data["Pulse Cycling Repeat"])
-    print(config_data["total Measurement Cycling Repeat"])
-    print(config_data["Heating_time"])
-    print(config_data["Cooling_time"])
-    print(config_data["Config_Name"])
-    print(config_data["Tmin"])
-    print(config_data["Tmax"])
-    print(config_data["Tstep"])
-    print(config_data["TspCalibParams"])
 
 
     
@@ -535,16 +664,16 @@ def Cycling_Test():
 
     if not downloaded_files:
         print("錯誤：沒有下載到任何文件")
-    else:
-        # 合併下載的文件
-        comments, combined_data = merge_files(downloaded_files)
+    # else:
+    #     # 合併下載的文件
+    #     comments, combined_data = merge_files(downloaded_files)
 
-        if not combined_data:
-            print("錯誤：合併後沒有數據")
-            # 將合併後的結果輸出到新檔案
-            output_file_path = os.path.join(folder_name, 'processed_data_with_comments_and_multiple_files.raw')
-            with open(output_file_path, 'w') as output_file:
-                for line in comments:
-                    output_file.write(f"{line}\n")
-                for item in combined_data:
-                    output_file.write(f"{item[0]} {item[1]}\n")
+    #     if not combined_data:
+    #         print("錯誤：合併後沒有數據")
+    #         # 將合併後的結果輸出到新檔案
+    #         output_file_path = os.path.join(folder_name, 'processed_data_with_comments_and_multiple_files.raw')
+    #         with open(output_file_path, 'w') as output_file:
+    #             for line in comments:
+    #                 output_file.write(f"{line}\n")
+    #             for item in combined_data:
+    #                 output_file.write(f"{item[0]} {item[1]}\n")

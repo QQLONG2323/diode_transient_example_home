@@ -2033,6 +2033,29 @@ class ParameterApp(tk.Tk):
         self.total_measurement_cycling_repeat_entry.grid(row=8, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters["total Measurement Cycling Repeat"] =  self.total_measurement_cycling_repeat_entry.get()
 
+        other_lp220_current_label = ttk.Label(
+            cycling_test_frame, text="若有其他 LP220 Current [A] 請填下面")
+        other_lp220_current_label.grid(row=9, column=0, padx=10, pady=10, columnspan=2)
+
+        other_lp220_current_01_label = ttk.Label(
+            cycling_test_frame, text="LP220 Current [A] 01: ")
+        other_lp220_current_01_label.grid(row=10, column=0, padx=10, pady=10, sticky="W")
+        
+        self.other_lp220_current_01_entry = ttk.Entry(
+            cycling_test_frame, state="disabled")
+        self.other_lp220_current_01_entry.grid(row=10, column=1, padx=10, pady=10, sticky="W")
+        self.page2_parameters["Other LP220 Current 01"] =  self.other_lp220_current_01_entry.get()
+
+        other_lp220_current_02_label = ttk.Label(
+            cycling_test_frame, text="LP220 Current [A] 02: ")
+        other_lp220_current_02_label.grid(row=11, column=0, padx=10, pady=10, sticky="W")
+
+        self.other_lp220_current_02_entry = ttk.Entry(
+            cycling_test_frame, state="disabled")
+        self.other_lp220_current_02_entry.grid(row=11, column=1, padx=10, pady=10, sticky="W")
+        self.page2_parameters["Other LP220 Current 02"] =  self.other_lp220_current_02_entry.get()
+
+
         # Temperature [°C]
         temperature_label = ttk.Label(
             thermostat_settings_for_measurement_frame, text="Temperature [°C]")
@@ -2129,6 +2152,8 @@ class ParameterApp(tk.Tk):
             self.rth_measurement_heating_times_entry.config(state="normal")  # 啟用 rth measurement heating times 輸入框
             self.rth_measurement_cooling_times_entry.config(state="normal")  # 啟用 rth measurement cooling times 輸入框
             self.total_measurement_cycling_repeat_entry.config(state="normal")  # 啟用 total measurement cycling repeat 輸入框
+            self.other_lp220_current_01_entry.config(state="normal")  # 啟用 other_lp220_current_01_entry 輸入框
+            self.other_lp220_current_02_entry.config(state="normal")  # 啟用 other_lp220_current_02_entry 輸入框
             self.heating_entry.delete(0, tk.END)   # 清空 heating 輸入框的內容
             self.heating_entry.config(state="disabled")   #禁用 heating 輸入框
             self.cooling_entry.delete(0, tk.END)   # 清空 cooling 輸入框的內容
@@ -2150,6 +2175,10 @@ class ParameterApp(tk.Tk):
             self.rth_measurement_cooling_times_entry.config(state="disabled")  # 禁用 rth measurement cooling times 輸入框
             self.total_measurement_cycling_repeat_entry.delete(0, tk.END)  # 清空 total measurement cycling repeat 輸入框的內容
             self.total_measurement_cycling_repeat_entry.config(state="disabled")  # 禁用 total measurement cycling repeat 輸入框
+            self.other_lp220_current_01_entry.delete(0, tk.END)  # 清空 other_lp220_current_01_entry 輸入框的內容
+            self.other_lp220_current_01_entry.config(state="disabled")  # 禁用 other_lp220_current_01_entry 輸入框
+            self.other_lp220_current_02_entry.delete(0, tk.END)  # 清空 other_lp220_current_02_entry 輸入框的內容
+            self.other_lp220_current_02_entry.config(state="disabled")  # 禁用 other_lp220_current_02_entry 輸入框
             self.heating_entry.config(state="normal")
             self.cooling_entry.config(state="normal")
             self.delay_entry.config(state="normal")
@@ -2735,6 +2764,14 @@ class ParameterApp(tk.Tk):
             self.page2_parameters["total Measurement Cycling Repeat"] = int(self.total_measurement_cycling_repeat_entry.get()) if self.total_measurement_cycling_repeat_entry.get() else 0
         except ValueError:
             self.page2_parameters["total Measurement Cycling Repeat"] = 0  # 或其他預設值
+        try:
+            self.page2_parameters["Other LP220 Current 01"] =  float(self.other_lp220_current_01_entry.get()) if self.other_lp220_current_01_entry.get() else 0.0
+        except ValueError:
+            self.page2_parameters["Other LP220 Current 01"] = 0.0 # 或其他預設值
+        try:
+            self.page2_parameters["Other LP220 Current 02"] =  float(self.other_lp220_current_02_entry.get()) if self.other_lp220_current_02_entry.get() else 0.0
+        except ValueError:
+            self.page2_parameters["Other LP220 Current 02"] = 0.0 # 或其他預設值
 
         self.page2_parameters["Connect_to_Thermostat"] = self.connect_thermostat_var.get()
 
@@ -2760,10 +2797,21 @@ class ParameterApp(tk.Tk):
 
 
 
-        # 初始化 Sensors 列表
-        sensors_data = []
+        # 若有其他 LP220 Current 參數
+        other_lp220_current_list = []
+        
+        if self.page2_parameters["Other LP220 Current 01"] != 0:
+            other_lp220_current_list.append(self.page2_parameters["Other LP220 Current 01"])
+        if self.page2_parameters["Other LP220 Current 02"] != 0:
+            other_lp220_current_list.append(self.page2_parameters["Other LP220 Current 02"])
+        
+        self.page2_parameters["Other LP220 Current list"] = other_lp220_current_list
+
+        
 
         # 將每一行的 `ms_401_label`、`combo_s5_s8`、`combo_s1_s3` 的值儲存到列表中
+        sensors_data = []
+
         for i in range(len(self.ms_401_labels)):
             sensor_info = {
                 "MS_401": self.ms_401_labels[i].cget("text"),  # 传感器标签
@@ -2794,6 +2842,9 @@ class ParameterApp(tk.Tk):
         # 將新參數添加進去
         saved_data.update(self.page2_parameters)
 
+        
+
+
         # 使用 fill_current_source_params 以及 fill_measurement_params 填充數據
         config_data = saved_data  # 使用已存在的 JSON 檔案數據
         current_source_data = []
@@ -2817,7 +2868,6 @@ class ParameterApp(tk.Tk):
             json.dump(saved_data, file, indent=4)
 
         
-
 
         with open(file_path, "r") as file:
             config_data = json.load(file)
@@ -2967,7 +3017,7 @@ class ParameterApp(tk.Tk):
 
         print("參數已成功儲存至 saved_parameters.json")
 
-
+        
 
         # 啟用進度提示框
         self.progress_text.config(state="normal")
@@ -2987,10 +3037,6 @@ class ParameterApp(tk.Tk):
         # 從文件讀取配置
         with open("saved_parameters.json", "r") as file:
             config_data = json.load(file)
-
-            
-            
-
 
         try:
             # 根据配置执行不同的测试

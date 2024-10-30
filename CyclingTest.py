@@ -361,7 +361,8 @@ def execute_measurements(folder_name):
         
         # 開始迴圈測量
         for j in range(1, cycle_count + 1):
-            if j == 1:
+            # 如果是第一次循環，或者 other_lp220_current_list 沒有值，或者 other_lp220_current_list 沒有足夠的值時，都執行 A 組和 B 組測量的基礎邏輯
+            if j == 1 or not config_data.get("Other LP220 Current list", []) or j - 2 >= len(config_data.get("Other LP220 Current list", [])):
                 # 進行 A 組測量  
                 first_a_par_file = None # 每個循環都重置 first_a_par_file
                 cycle_a_files = []  # 追蹤此循環中的 A 組檔案
@@ -496,6 +497,7 @@ def execute_measurements(folder_name):
                 #     rename_first_par_file(first_b_par_file, output_file_path)
 
             else: 
+                # 如果不是第一次循環，且 other_lp220_current_list 有足夠的值時，執行這部分邏輯
                 other_lp220_current_list = config_data.get("Other LP220 Current list", [])
                 
                 # 檢查 "Other LP220 Current list" 是否有值，並確保不超出索引範圍

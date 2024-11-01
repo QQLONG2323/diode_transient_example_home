@@ -6,6 +6,7 @@ import os
 import subprocess
 import platform
 from datetime import datetime
+import DataModified
 
 
 IP_ADDRESS = "192.168.20.99"
@@ -82,47 +83,6 @@ command_save_config = {
     "TspCalibParams": config_data["TspCalibParams"]
 }
 
-# command_save_config_no_wait = {
-#     "Command": "SAVE_CONFIG",
-#     "Type": "Config",
-#     "ConfigName": "diode_config",
-#     "ConfigParams": {"Description": "Test"},
-#     "Resources": {
-#         "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
-#         "CurrentSourceWithActiveloadParams": [ ],
-#         "DividerParams": [ ],
-#         "VoltageSourceParams": [ ],
-#         "MeasCardChParams":config_data["Resources"]["MeasCardChParams"],
-#         "ThermometerCardChParams": [ ],
-#         "ThermostatParams": config_data["Resources"]["ThermostatParams_no_wait"],
-#         "TriggerOutputParams": [ ]
-#     },
-#     "TimingParams": {
-#         "TransientMode": {
-#             "locked": False,
-#             "default": "Cooling"
-#         },
-#         "SamplePerOctave": {
-#             "default": 1000,
-#             "locked": False,
-#             "min": 1000,
-#             "max": 1000
-#         },
-#            "HeatingTime": {"default": config_data["Pulse Cycling On [s]"], "locked": False},
-#             "CoolingTime": {"default": config_data["Pulse Cycling Off [s]"], "locked": False},
-#             "DelayTime": {"default": 0, "locked": False},
-#             "Repeat": {"default": 1, "locked": False}
-#     },
-#     "SourceTimingControl": {
-#         "locked": False,
-#         "Enabled": False,
-#         "ReversePowerOff": True,
-#         "WaitForInstrumentDelay": True,
-#         "PowerOn": [ ],
-#         "PowerOff": [ ]
-#     },
-#     "TspCalibParams": config_data["TspCalibParams"]
-# }
 
 # 修改後的配置（B組）
 command_save_config_b_no_wait = {
@@ -228,39 +188,6 @@ def read_raw_file(file_path):
                     continue
     return comments, data
 
-# 合併多個檔案的數據
-# def merge_files(file_paths):
-    combined_comments = []
-    combined_data = []
-    last_index = 0
-
-    # Filter for raw files
-    raw_file_paths = [file for file in file_paths if file.endswith('.raw')]
-    
-    if not file_paths:
-        print("警告：沒有找到可合併的文件")
-        return combined_comments, combined_data
-
-    for idx, file_path in enumerate(raw_file_paths):
-        comments, data = read_raw_file(file_path)
-        
-        if not data:
-            print(f"警告：文件 {file_path} 不包含任何數據")
-            continue
-
-        if idx == 0:
-            combined_comments = comments
-            combined_data = data
-        else:
-            adjusted_data = [(last_index + data[i][0] + 1, value[1]) for i, value in enumerate(data)]
-            combined_data.extend(adjusted_data)
-        
-        if combined_data:
-            last_index = combined_data[-1][0]
-        else:
-            print(f"警告：合併後的數據為空")
-
-    return combined_comments, combined_data
 
 # 將第一個 .par 檔案重新命名為最後合併的檔名 (使用 .par 結尾)
 def rename_first_par_file(first_par_file, new_raw_file_path):
@@ -302,10 +229,10 @@ def execute_measurements(folder_name):
     websocket_url = "ws://" + IP_ADDRESS + ":8085"
     websocket_transport = WebSocket()
     downloaded_files = []
-    group_a_files = []
-    group_b_files = []  # 用來儲存 B 組檔案
-    # first_a_par_file = None  # 用來儲存 A 組的第一個 .par 檔案
-    # first_b_par_file = None  # 用來儲存 B 組的第一個 .par 檔案
+    first_b_par_file = None  # 每個循環重置 first_b_par_file
+    cycle_b_files = []  # 追蹤此循環中的 B 組檔案
+    tco_file = None
+
     try:
         websocket_transport.connect(websocket_url)
         websocket_transport.settimeout(10)
@@ -351,7 +278,7 @@ def execute_measurements(folder_name):
 
         for file in file_list["Result"]:
             if "Filename" in file:
-                downloaded_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], 1, "TSP", folder_name)
+                tco_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], 1, "TSP", folder_name)
 
         # 刪除資源和瞬態任務
         do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
@@ -412,30 +339,11 @@ def execute_measurements(folder_name):
                 do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
                 do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
 
-                # 合併當前循環的 A 組文件
-                # if cycle_a_files:
-                #     comments, combined_data = merge_files(cycle_a_files)
-                #     output_file_path = os.path.join(folder_name, f'group_A_combined_cycle_{j}.raw')
-                    
-                #     with open(output_file_path, 'w') as output_file:
-                #         for line in comments:
-                #             output_file.write(f"{line}\n")
-                #         for item in combined_data:
-                #             output_file.write(f"{item[0]} {item[1]}\n")
-
-                #     print(f"A組文件已合併並寫入: {output_file_path}")
-                #     group_a_files.append(output_file_path)
-
-                #     # 嘗試將每個循環的第一個 .par 檔案改名為合併檔名
-                #     rename_first_par_file(first_a_par_file, output_file_path)
-
 
                 # 進行 B 組測量
                 if not do_web_socket_bool_query(websocket_transport, command_save_config_b_no_wait):
                     raise Exception("無法保存 B 組配置")
-                
-                first_b_par_file = None  # 每個循環重置 first_b_par_file
-                cycle_b_files = []  # 追蹤此循環中的 B 組檔案
+            
 
                 # 啟動資源分配並開始測量 (B組)
                 if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
@@ -477,24 +385,6 @@ def execute_measurements(folder_name):
                 # 刪除資源和瞬態任務 (B組)
                 do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
                 do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
-            
-
-                # 合併當前循環的 B 組文件
-                # if cycle_b_files:
-                #     comments, combined_data = merge_files(cycle_b_files)
-                #     output_file_path = os.path.join(folder_name, f'group_B_combined_cycle_{j}.raw')
-                    
-                #     with open(output_file_path, 'w') as output_file:
-                #         for line in comments:
-                #             output_file.write(f"{line}\n")
-                #         for item in combined_data:
-                #             output_file.write(f"{item[0]} {item[1]}\n")
-
-                #     print(f"B組文件已合併並寫入: {output_file_path}")
-                #     group_b_files.append(output_file_path)
-
-                #     # 嘗試將每個循環的第一個 .par 檔案改名為合併檔名
-                #     rename_first_par_file(first_b_par_file, output_file_path)
 
             else: 
                 # 如果不是第一次循環，且 other_lp220_current_list 有足夠的值時，執行這部分邏輯
@@ -552,30 +442,9 @@ def execute_measurements(folder_name):
                 do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
                 do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
 
-                # 合併當前循環的 A 組文件
-                # if cycle_a_files:
-                #     comments, combined_data = merge_files(cycle_a_files)
-                #     output_file_path = os.path.join(folder_name, f'group_A_combined_cycle_{j}.raw')
-                    
-                #     with open(output_file_path, 'w') as output_file:
-                #         for line in comments:
-                #             output_file.write(f"{line}\n")
-                #         for item in combined_data:
-                #             output_file.write(f"{item[0]} {item[1]}\n")
-
-                #     print(f"A組文件已合併並寫入: {output_file_path}")
-                #     group_a_files.append(output_file_path)
-
-                #     # 嘗試將每個循環的第一個 .par 檔案改名為合併檔名
-                #     rename_first_par_file(first_a_par_file, output_file_path)
-
-
                 # 進行 B 組測量
                 if not do_web_socket_bool_query(websocket_transport, command_save_config_b_no_wait):
                     raise Exception("無法保存 B 組配置")
-                
-                first_b_par_file = None  # 每個循環重置 first_b_par_file
-                cycle_b_files = []  # 追蹤此循環中的 B 組檔案
 
                 # 啟動資源分配並開始測量 (B組)
                 if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
@@ -617,30 +486,24 @@ def execute_measurements(folder_name):
                 # 刪除資源和瞬態任務 (B組)
                 do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
                 do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
-            
-
-                # 合併當前循環的 B 組文件
-                # if cycle_b_files:
-                #     comments, combined_data = merge_files(cycle_b_files)
-                #     output_file_path = os.path.join(folder_name, f'group_B_combined_cycle_{j}.raw')
-                    
-                #     with open(output_file_path, 'w') as output_file:
-                #         for line in comments:
-                #             output_file.write(f"{line}\n")
-                #         for item in combined_data:
-                #             output_file.write(f"{item[0]} {item[1]}\n")
-
-                #     print(f"B組文件已合併並寫入: {output_file_path}")
-                #     group_b_files.append(output_file_path)
-
-                #     # 嘗試將每個循環的第一個 .par 檔案改名為合併檔名
-                #     rename_first_par_file(first_b_par_file, output_file_path)
-
     except Exception as e:
         print(f"發生錯誤: {e}")
     finally:
         websocket_transport.close()
     
+            
+    # 呼叫 DataModified 中的函數來處理下載的文件
+    par_file = None
+    raw_file = None
+    for file in cycle_b_files:
+        if "cooling" in file and file.endswith(".par"):
+            par_file = file
+        elif "cooling" in file and file.endswith(".raw"):
+            raw_file = file
+
+        if par_file and raw_file:
+            DataModified.process_files(tco_file, par_file, raw_file, folder_name)
+
     # 程式執行完畢後，打開存檔資料夾
     open_folder(folder_name)
 
@@ -652,7 +515,7 @@ def Cycling_Test():
     global config_data
     config_data = load_saved_parameters_json()
 
-    print("我是CYCLING")
+    # print("我是CYCLING")
 
 
     
@@ -666,16 +529,3 @@ def Cycling_Test():
 
     if not downloaded_files:
         print("錯誤：沒有下載到任何文件")
-    # else:
-    #     # 合併下載的文件
-    #     comments, combined_data = merge_files(downloaded_files)
-
-    #     if not combined_data:
-    #         print("錯誤：合併後沒有數據")
-    #         # 將合併後的結果輸出到新檔案
-    #         output_file_path = os.path.join(folder_name, 'processed_data_with_comments_and_multiple_files.raw')
-    #         with open(output_file_path, 'w') as output_file:
-    #             for line in comments:
-    #                 output_file.write(f"{line}\n")
-    #             for item in combined_data:
-    #                 output_file.write(f"{item[0]} {item[1]}\n")

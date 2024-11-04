@@ -386,6 +386,18 @@ def execute_measurements(folder_name):
                 do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
                 do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
 
+                # 呼叫 DataModified 中的函數來處理下載的文件
+                par_file = None
+                raw_file = None
+                for file in cycle_b_files:
+                    if "cooling" in file and file.endswith(".par"):
+                        par_file = file
+                    elif "cooling" in file and file.endswith(".raw"):
+                        raw_file = file
+
+                    if par_file and raw_file:
+                        DataModified.process_files(tco_file, par_file, raw_file, folder_name)
+
             else: 
                 # 如果不是第一次循環，且 other_lp220_current_list 有足夠的值時，執行這部分邏輯
                 other_lp220_current_list = config_data.get("Other LP220 Current list", [])
@@ -486,23 +498,39 @@ def execute_measurements(folder_name):
                 # 刪除資源和瞬態任務 (B組)
                 do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
                 do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
+
+                # 呼叫 DataModified 中的函數來處理下載的文件
+                par_file = None
+                raw_file = None
+                for file in cycle_b_files:
+                    if "cooling" in file and file.endswith(".par"):
+                        par_file = file
+                    elif "cooling" in file and file.endswith(".raw"):
+                        raw_file = file
+
+                    if par_file and raw_file:
+                        DataModified.process_files(tco_file, par_file, raw_file, folder_name)
+
+
+
+
     except Exception as e:
         print(f"發生錯誤: {e}")
     finally:
         websocket_transport.close()
     
             
-    # 呼叫 DataModified 中的函數來處理下載的文件
-    par_file = None
-    raw_file = None
-    for file in cycle_b_files:
-        if "cooling" in file and file.endswith(".par"):
-            par_file = file
-        elif "cooling" in file and file.endswith(".raw"):
-            raw_file = file
+    # # 呼叫 DataModified 中的函數來處理下載的文件
+    # par_file = None
+    # raw_file = None
+    # for file in cycle_b_files:
+    #     if "cooling" in file and file.endswith(".par"):
+    #         par_file = file
+    #     elif "cooling" in file and file.endswith(".raw"):
+    #         raw_file = file
 
-        if par_file and raw_file:
-            DataModified.process_files(tco_file, par_file, raw_file, folder_name)
+    #     if par_file and raw_file:
+    #         DataModified.process_files(tco_file, par_file, raw_file, folder_name)
 
     # 程式執行完畢後，打開存檔資料夾
     open_folder(folder_name)

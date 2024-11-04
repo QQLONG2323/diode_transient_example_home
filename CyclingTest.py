@@ -386,7 +386,7 @@ def execute_measurements(folder_name):
                 # 刪除資源和瞬態任務 (B組)
                 do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
                 do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
-                sleep(3)
+               
                 # # 呼叫 DataModified 中的函數來處理下載的文件
                 # par_file = None
                 # raw_file = None

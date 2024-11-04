@@ -229,7 +229,7 @@ def execute_measurements(folder_name):
     websocket_url = "ws://" + IP_ADDRESS + ":8085"
     websocket_transport = WebSocket()
     downloaded_files = []
-    first_b_par_file = None  # 每個循環重置 first_b_par_file
+    # first_b_par_file = None  # 每個循環重置 first_b_par_file
     cycle_b_files = []  # 追蹤此循環中的 B 組檔案
     tco_file = None
 
@@ -289,6 +289,7 @@ def execute_measurements(folder_name):
         # 開始迴圈測量
         for j in range(1, cycle_count + 1):
             # 如果是第一次循環，或者 other_lp220_current_list 沒有值，或者 other_lp220_current_list 沒有足夠的值時，都執行 A 組和 B 組測量的基礎邏輯
+            print("Start cycling test" + str(j))
             if j == 1 or not config_data.get("Other LP220 Current list", []) or j - 2 >= len(config_data.get("Other LP220 Current list", [])):
                 # 進行 A 組測量  
                 first_a_par_file = None # 每個循環都重置 first_a_par_file
@@ -332,8 +333,8 @@ def execute_measurements(folder_name):
                         cycle_a_files.append(downloaded_file)  # 將 A 組檔案加到追蹤列表
 
                     # 找到第一個 .par 檔案
-                    if "Filename" in file and file["Filename"].endswith(".par") and first_a_par_file is None:
-                        first_a_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "A", folder_name)
+                    # if "Filename" in file and file["Filename"].endswith(".par") and first_a_par_file is None:
+                    #     first_a_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "A", folder_name)
                     
                 # 刪除資源和瞬態任務
                 do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
@@ -379,24 +380,24 @@ def execute_measurements(folder_name):
                         downloaded_files.append(downloaded_file)
                         cycle_b_files.append(downloaded_file)  # 將 B 組檔案加到追蹤列表
                     # 找到第一個 .par 檔案
-                    if "Filename" in file and file["Filename"].endswith(".par") and first_b_par_file is None:
-                        first_b_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "B", folder_name)
+                    # if "Filename" in file and file["Filename"].endswith(".par") and first_b_par_file is None:
+                    #     first_b_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "B", folder_name)
 
                 # 刪除資源和瞬態任務 (B組)
                 do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
                 do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
+                sleep(3)
+                # # 呼叫 DataModified 中的函數來處理下載的文件
+                # par_file = None
+                # raw_file = None
+                # for file in cycle_b_files:
+                #     if "cooling" in file and file.endswith(".par"):
+                #         par_file = file
+                #     elif "cooling" in file and file.endswith(".raw"):
+                #         raw_file = file
 
-                # 呼叫 DataModified 中的函數來處理下載的文件
-                par_file = None
-                raw_file = None
-                for file in cycle_b_files:
-                    if "cooling" in file and file.endswith(".par"):
-                        par_file = file
-                    elif "cooling" in file and file.endswith(".raw"):
-                        raw_file = file
-
-                    if par_file and raw_file:
-                        DataModified.process_files(tco_file, par_file, raw_file, folder_name)
+                #     if par_file and raw_file:
+                #         DataModified.process_files(tco_file, par_file, raw_file, folder_name)
 
             else: 
                 # 如果不是第一次循環，且 other_lp220_current_list 有足夠的值時，執行這部分邏輯
@@ -447,8 +448,8 @@ def execute_measurements(folder_name):
                         cycle_a_files.append(downloaded_file)  # 將 A 組檔案加到追蹤列表
 
                     # 找到第一個 .par 檔案
-                    if "Filename" in file and file["Filename"].endswith(".par") and first_a_par_file is None:
-                        first_a_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "A", folder_name)
+                    # if "Filename" in file and file["Filename"].endswith(".par") and first_a_par_file is None:
+                    #     first_a_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "A", folder_name)
                     
                 # 刪除資源和瞬態任務
                 do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
@@ -492,24 +493,24 @@ def execute_measurements(folder_name):
                         downloaded_files.append(downloaded_file)
                         cycle_b_files.append(downloaded_file)  # 將 B 組檔案加到追蹤列表
                     # 找到第一個 .par 檔案
-                    if "Filename" in file and file["Filename"].endswith(".par") and first_b_par_file is None:
-                        first_b_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "B", folder_name)
+                    # if "Filename" in file and file["Filename"].endswith(".par") and first_b_par_file is None:
+                    #     first_b_par_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], j, "B", folder_name)
 
                 # 刪除資源和瞬態任務 (B組)
                 do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
                 do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
 
-                # 呼叫 DataModified 中的函數來處理下載的文件
-                par_file = None
-                raw_file = None
-                for file in cycle_b_files:
-                    if "cooling" in file and file.endswith(".par"):
-                        par_file = file
-                    elif "cooling" in file and file.endswith(".raw"):
-                        raw_file = file
+                # # 呼叫 DataModified 中的函數來處理下載的文件
+                # par_file = None
+                # raw_file = None
+                # for file in cycle_b_files:
+                #     if "cooling" in file and file.endswith(".par"):
+                #         par_file = file
+                #     elif "cooling" in file and file.endswith(".raw"):
+                #         raw_file = file
 
-                    if par_file and raw_file:
-                        DataModified.process_files(tco_file, par_file, raw_file, folder_name)
+                #     if par_file and raw_file:
+                #         DataModified.process_files(tco_file, par_file, raw_file, folder_name)
 
 
 
@@ -520,17 +521,24 @@ def execute_measurements(folder_name):
         websocket_transport.close()
     
             
-    # # 呼叫 DataModified 中的函數來處理下載的文件
-    # par_file = None
-    # raw_file = None
-    # for file in cycle_b_files:
-    #     if "cooling" in file and file.endswith(".par"):
-    #         par_file = file
-    #     elif "cooling" in file and file.endswith(".raw"):
-    #         raw_file = file
+    # 呼叫 DataModified 中的函數來處理下載的文件
+    par_file = None
+    raw_file = None
 
-    #     if par_file and raw_file:
-    #         DataModified.process_files(tco_file, par_file, raw_file, folder_name)
+    # 過濾出所有包含 "cooling" 的檔案
+    cooling_files = [file for file in cycle_b_files if "cooling" in file]
+
+    # 從 cooling_files 中過濾出 .par 檔案
+    par_files = [file for file in cooling_files if file.endswith(".par")]
+
+    print("par_files: ", par_files)
+    for par_file in par_files:
+        # 找到與 par_file 對應的 raw_file
+        base_name = par_file.rsplit('.', 1)[0]
+        raw_file = next((file for file in cooling_files if file.startswith(base_name) and file.endswith(".raw")), None)
+
+        if par_file and raw_file:
+            DataModified.process_files(tco_file, par_file, raw_file, folder_name)
 
     # 程式執行完畢後，打開存檔資料夾
     open_folder(folder_name)

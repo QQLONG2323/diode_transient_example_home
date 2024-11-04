@@ -174,21 +174,22 @@ def get_third_line_from_file(file_path):
         else:
             raise IndexError("File does not have at least 3 lines")
 
+# tco_file = "C:\\Users\\jeff.lien\\Desktop\\JEFF\\1104\\measurement_data_20241104_133938\\measurement_TSP_1_tsp_calib_diode_config_transient_T3STER_1_MS401_SLOT5_CH1.tco"
+# par_file = "C:\\Users\\jeff.lien\\Desktop\\JEFF\\1104\\measurement_data_20241104_133938\\modified_measurement_20241104_134640.par"
+# raw_file = "C:\\Users\\jeff.lien\\Desktop\\JEFF\\1104\\measurement_data_20241104_133938\\modified_measurement_20241104_134640.raw"
+# output_dir = "C:\\Users\\jeff.lien\\Desktop\\JEFF\\1104\\measurement_data_20241104_133938"
+
 # 使用示例
 # if __name__ == "__main__":
 def process_files(tco_file, par_file, raw_file, output_dir):
     # 生成唯一的時間戳
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    # tco_file = "C:\\Users\\jeff.lien\\Desktop\\JEFF\\measurement_TSP_1_tsp_calib_diode_config_transient_T3STER_1_MS401_SLOT5_CH1.tco"
-    # par_file = "C:\\Users\\jeff.lien\\Desktop\\JEFF\\measurement_B_1_heating_diode_config_transient_T3STER_1_MS401_SLOT5_CH1.par"
-    # raw_file = "C:\\Users\\jeff.lien\\Desktop\\JEFF\\measurement_B_1_heating_diode_config_transient_T3STER_1_MS401_SLOT5_CH1.raw"
-    # output_dir = "C:\\Users\\jeff.lien\\Desktop\\JEFF\\output\\"
 
     # 生成唯一的輸出檔案名稱
     output_pol_file = os.path.join(output_dir, f"modified_measurement_{timestamp}.pol")
     output_par_file = os.path.join(output_dir, f"modified_measurement_{timestamp}.par")
     output_raw_file = os.path.join(output_dir, f"modified_measurement_{timestamp}.raw")
-
+    print(f"Output Par file: {output_par_file}")
     try:
         # 從 PAR 或 RAW 文件中讀取第三行
         third_line = get_third_line_from_file(par_file)
@@ -209,19 +210,9 @@ def process_files(tco_file, par_file, raw_file, output_dir):
         print(f"Successfully created modified RAW file: {output_raw_file}")
 
         # 定义命令和参数
-        commands = [
-            [
-                'T3STERmastercmd.exe',  # 可执行文件
-                '-e --transient-correction M(0.001,0.01)',  # 参数标志
-                output_par_file  # 使用變數而不是硬編碼路徑
-            ],
-            [
-                'T3STERmastercmd.exe',  # 可执行文件
-                '-p',  # 参数标志
-                'STF',  # 参数
-                output_par_file  # 使用變數而不是硬編碼路徑
-            ]
-        ]
+        commands = ['T3STERmastercmd.exe -e --transient-correction M(0.001,0.01) ' + output_par_file,
+        'T3STERmastercmd.exe -p STF ' + output_par_file]
+        print(commands)
 
         # 运行命令并捕获输出
         for command in commands:

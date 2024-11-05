@@ -151,7 +151,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -205,7 +205,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -259,7 +259,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -313,7 +313,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -367,7 +367,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -421,7 +421,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -475,7 +475,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -529,7 +529,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -583,7 +583,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -637,7 +637,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -691,7 +691,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -745,7 +745,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -799,7 +799,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -853,7 +853,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -907,7 +907,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],
@@ -961,7 +961,7 @@ class ParameterApp(tk.Tk):
                 },
                 "Both": {
                     "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["-0.2 A ~ 0.2 A", "-0.1 A ~ 0.1 A", "-0.05 A ~ 0.05 A"],
+                    "Current_source_Range": ["10", "20", "40"],
                     "Current [A]": "entry",
                     "Sensitivity [mV/K]": "entry",
                     "Auto range": ["Off", "On"],

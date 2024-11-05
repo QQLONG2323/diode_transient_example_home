@@ -268,7 +268,7 @@ def execute_measurements(folder_name):
         while busy:
             sleep(1)
             task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
-            print(f"測量中，請稍候... {task_status['Percentage']}%")
+            print(f"TSP 測量中，請稍候... {task_status['Percentage']}%")
             if task_status["Answer"] != "RUN":
                 busy = False
                 print(f"TSP 測量完成")
@@ -307,7 +307,7 @@ def execute_measurements(folder_name):
                     sleep(1)
                     task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
                     if task_status["Answer"] == "RUN":
-                        print(f"測量資源分配完成")
+                        print(f"測量參數設定完成，開始測量")
                         break
 
                 # 啟動瞬態測量

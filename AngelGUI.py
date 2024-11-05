@@ -23,7 +23,12 @@ class ParameterApp(tk.Tk):
         self.title("T3STER SI")
         self.geometry("1280x960")
 
+
+        # self.params_file = "params.json"
+        # self.params = self.load_params()
+
         self.create_page1()
+
 
 
 
@@ -1106,71 +1111,23 @@ class ParameterApp(tk.Tk):
         self.form_widgets = {}   # 保存所有動態生成的表單控件
 
         # 排版 Sensor
-        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 2)):
-            check_sensor = tk.BooleanVar()
-            self.check_sensor[sensor] = check_sensor
-            checkbutton = ttk.Checkbutton(
-                LP220_S1_frame, text=sensor, variable=check_sensor, command=lambda t=sensor: self.handle_checkbutton(t))
-            checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
+        self.create_sensor_checkbuttons(LP220_S1_frame, 0, 2)
+        self.create_sensor_checkbuttons(LP220_S3_frame, 2, 4)
+        self.create_sensor_checkbuttons(MS401_S5_frame, 4, 8)
+        self.create_sensor_checkbuttons(MS401_S6_frame, 8, 12)
+        self.create_sensor_checkbuttons(MS401_S7_frame, 12, 16)
+        self.create_sensor_checkbuttons(MS401_S8_frame, 16, 20)
+        self.create_sensor_checkbuttons(TH800_S9_frame, 20, 28)
+        self.create_sensor_checkbuttons(TH800_S10_frame, 28, 36)
 
-        # 排版 Sensor
-        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 2, 4)):
-            check_sensor = tk.BooleanVar()
-            self.check_sensor[sensor] = check_sensor
+    def create_sensor_checkbuttons(self, frame, start, end):
+        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), start, end)):
+            self.check_sensor[sensor] = tk.BooleanVar()
             checkbutton = ttk.Checkbutton(
-                LP220_S3_frame, text=sensor, variable=check_sensor, command=lambda t=sensor: self.handle_checkbutton(t))
-            checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-        # 排版 Sensor
-        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 4, 8)):
-            check_sensor = tk.BooleanVar()
-            self.check_sensor[sensor] = check_sensor
-            checkbutton = ttk.Checkbutton(
-                MS401_S5_frame, text=sensor, variable=check_sensor, command=lambda t=sensor: self.handle_checkbutton(t))
-            checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-        # 排版 Sensor
-        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 8, 12)):
-            check_sensor = tk.BooleanVar()
-            self.check_sensor[sensor] = check_sensor
-            checkbutton = ttk.Checkbutton(
-                MS401_S6_frame, text=sensor, variable=check_sensor, command=lambda t=sensor: self.handle_checkbutton(t))
-            checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-        # 排版 Sensor
-        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 12, 16)):
-            check_sensor = tk.BooleanVar()
-            self.check_sensor[sensor] = check_sensor
-            checkbutton = ttk.Checkbutton(
-                MS401_S7_frame, text=sensor, variable=check_sensor, command=lambda t=sensor: self.handle_checkbutton(t))
-            checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-        # 排版 Sensor
-        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 16, 20)):
-            check_sensor = tk.BooleanVar()
-            self.check_sensor[sensor] = check_sensor
-            checkbutton = ttk.Checkbutton(
-                MS401_S8_frame, text=sensor, variable=check_sensor, command=lambda t=sensor: self.handle_checkbutton(t))
-            checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-        # 排版 Sensor
-        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 20, 28)):
-            check_sensor = tk.BooleanVar()
-            self.check_sensor[sensor] = check_sensor
-            checkbutton = ttk.Checkbutton(
-                TH800_S9_frame, text=sensor, variable=check_sensor, command=lambda t=sensor: self.handle_checkbutton(t))
-            checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
-        # 排版 Sensor
-        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), 28, 36)):
-            check_sensor = tk.BooleanVar()
-            self.check_sensor[sensor] = check_sensor
-            checkbutton = ttk.Checkbutton(
-                TH800_S10_frame, text=sensor, variable=check_sensor, command=lambda t=sensor: self.handle_checkbutton(t))
+                frame, text=sensor, variable=self.check_sensor[sensor], command=lambda t=sensor: self.handle_checkbutton(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
     # 只有在 Checkbutton 被勾選時才彈出視窗
-
     def handle_checkbutton(self, sensor):
         if self.check_sensor[sensor].get():
             self.open_parameter_window(sensor)

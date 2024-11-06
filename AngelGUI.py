@@ -3,7 +3,6 @@ from time import sleep
 from websocket import WebSocket
 from websocket import create_connection
 from typing import Dict
-import urllib.request
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
@@ -23,13 +22,17 @@ class ParameterApp(tk.Tk):
         self.title("T3STER SI")
         self.geometry("1280x960")
 
-
         # self.params_file = "params.json"
         # self.params = self.load_params()
 
         self.create_page1()
 
-
+    # 定義一個函數，用於創建 Sensor 框架
+    def create_sensor_frame(self, text, column):
+        frame = ttk.LabelFrame(self, text=text)
+        frame.grid(column=column, row=0, padx=10, pady=10, sticky=tk.NSEW)
+        self.page1_widgets.append(frame)
+        return frame
 
 
     def create_page1(self):
@@ -38,37 +41,14 @@ class ParameterApp(tk.Tk):
         self.page1_widgets = []
 
         # Sensor 框架
-        LP220_S1_frame = ttk.LabelFrame(self, text="LP220")
-        LP220_S1_frame.grid(column=0, row=0, padx=10, pady=10, sticky=tk.NSEW)
-        self.page1_widgets.append(LP220_S1_frame)
-
-        LP220_S3_frame = ttk.LabelFrame(self, text="LP220")
-        LP220_S3_frame.grid(column=1, row=0, padx=10, pady=10, sticky=tk.NSEW)
-        self.page1_widgets.append(LP220_S3_frame)
-
-        MS401_S5_frame = ttk.LabelFrame(self, text="MS401")
-        MS401_S5_frame.grid(column=2, row=0, padx=10, pady=10, sticky=tk.NSEW)
-        self.page1_widgets.append(MS401_S5_frame)
-
-        MS401_S6_frame = ttk.LabelFrame(self, text="MS401")
-        MS401_S6_frame.grid(column=3, row=0, padx=10, pady=10, sticky=tk.NSEW)
-        self.page1_widgets.append(MS401_S6_frame)
-
-        MS401_S7_frame = ttk.LabelFrame(self, text="MS401")
-        MS401_S7_frame.grid(column=4, row=0, padx=10, pady=10, sticky=tk.NSEW)
-        self.page1_widgets.append(MS401_S7_frame)
-
-        MS401_S8_frame = ttk.LabelFrame(self, text="MS401")
-        MS401_S8_frame.grid(column=5, row=0, padx=10, pady=10, sticky=tk.NSEW)
-        self.page1_widgets.append(MS401_S8_frame)
-
-        TH800_S9_frame = ttk.LabelFrame(self, text="TH800")
-        TH800_S9_frame.grid(column=6, row=0, padx=10, pady=10, sticky=tk.NSEW)
-        self.page1_widgets.append(TH800_S9_frame)
-
-        TH800_S10_frame = ttk.LabelFrame(self, text="TH800")
-        TH800_S10_frame.grid(column=7, row=0, padx=10, pady=10, sticky=tk.NSEW)
-        self.page1_widgets.append(TH800_S10_frame)
+        LP220_S1_frame = self.create_sensor_frame("LP220", 0)
+        LP220_S3_frame = self.create_sensor_frame("LP220", 1)
+        MS401_S5_frame = self.create_sensor_frame("MS401", 2)
+        MS401_S6_frame = self.create_sensor_frame("MS401", 3)
+        MS401_S7_frame = self.create_sensor_frame("MS401", 4)
+        MS401_S8_frame = self.create_sensor_frame("MS401", 5)
+        TH800_S9_frame = self.create_sensor_frame("TH800", 6)
+        TH800_S10_frame = self.create_sensor_frame("TH800", 7)
 
         # Next 按鈕，按下後隱藏當前頁面並進入下一步的頁面
         next_button = ttk.Button(
@@ -77,7 +57,7 @@ class ParameterApp(tk.Tk):
         self.page1_widgets.append(next_button)
 
         # 定義每個感測器的選項
-        self.SCh_radio = {
+        self.sensor_option_parameters = {
             "S1Ch1": {
                 "Current_source": {
                     "Output mode": ["Off", "On", "Switching"],
@@ -1104,13 +1084,13 @@ class ParameterApp(tk.Tk):
             },
         }
 
-        # 創建 Checkbutton 和 RadioButton 的框架
-        self.check_sensor = {}   # 儲存 Sensor
-        self.check_option = {}  # 儲存 Option
-        self.saved_parameters = {}  # 儲存 Option 的參數
-        self.form_widgets = {}   # 保存所有動態生成的表單控件
+        # 初始化用於保存 Sensor 、 Option 、 Parameters 和表單控件的字典
+        self.sensor = {}   # 儲存 Sensor
+        self.option = {}  # 儲存 Option
+        self.saved_parameters = {}  # 儲存 Parameters
+        self.form_widgets = {}   # 儲存所有動態生成的表單控件
 
-        # 排版 Sensor
+        # 創建 & 排版 Sensor
         self.create_sensor_checkbuttons(LP220_S1_frame, 0, 2)
         self.create_sensor_checkbuttons(LP220_S3_frame, 2, 4)
         self.create_sensor_checkbuttons(MS401_S5_frame, 4, 8)
@@ -1120,20 +1100,21 @@ class ParameterApp(tk.Tk):
         self.create_sensor_checkbuttons(TH800_S9_frame, 20, 28)
         self.create_sensor_checkbuttons(TH800_S10_frame, 28, 36)
 
+    # 創建 Sensor 的 Checkbutton
     def create_sensor_checkbuttons(self, frame, start, end):
-        for i, sensor in enumerate(itertools.islice(self.SCh_radio.keys(), start, end)):
-            self.check_sensor[sensor] = tk.BooleanVar()
+        for i, sensor in enumerate(itertools.islice(self.sensor_option_parameters.keys(), start, end)):
+            self.sensor[sensor] = tk.BooleanVar()
             checkbutton = ttk.Checkbutton(
-                frame, text=sensor, variable=self.check_sensor[sensor], command=lambda t=sensor: self.handle_checkbutton(t))
+                frame, text=sensor, variable=self.sensor[sensor], command=lambda t=sensor: self.handle_checkbutton(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
     # 只有在 Checkbutton 被勾選時才彈出視窗
     def handle_checkbutton(self, sensor):
-        if self.check_sensor[sensor].get():
+        if self.sensor[sensor].get():
             self.open_parameter_window(sensor)
         else:
-            self.check_option[sensor].set("")
-            self.update_form(sensor, disable=True)
+            self.option[sensor].set("")
+            self.update_form(sensor)
 
     # 彈出一個填寫參數的表單視窗
     def open_parameter_window(self, sensor):
@@ -1185,7 +1166,7 @@ class ParameterApp(tk.Tk):
         button_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
 
         # 取得對應的 RadioButton 選項
-        radio_options = list(self.SCh_radio[sensor].keys())
+        radio_options = list(self.sensor_option_parameters[sensor].keys())
 
         # 檢查是否有保存的 RadioButton 選項
         default_radio_option = None
@@ -1195,13 +1176,12 @@ class ParameterApp(tk.Tk):
                 break
 
         # 如果已經有保存的選項，將其作為預設選項，否則使用第一個選項
-        check_option = tk.StringVar(
-            value=default_radio_option or radio_options[0])
-        self.check_option[sensor] = check_option  # 保存這個 sensor 的選擇變量
+        self.option[sensor] = tk.StringVar(
+            value=default_radio_option or radio_options[0]) # 保存這個 sensor 的選擇變量
 
         # Radio 排版
         for i, option in enumerate(radio_options):
-            tk.Radiobutton(radio_frame, text=option, variable=check_option, value=option, font=(
+            tk.Radiobutton(radio_frame, text=option, variable=self.option[sensor], value=option, font=(
                 "System", 16, "bold"), command=lambda: self.update_form(sensor)).grid(row=0, column=i+1, padx=20, pady=5)
 
         # 建立每個 Sensor 中的參數表單
@@ -1261,7 +1241,7 @@ class ParameterApp(tk.Tk):
 
         if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
             # 填充 S1_S3_Current_source 表單
-            for i, (label_text, field_type) in enumerate(self.SCh_radio[sensor]["Current_source"].items()):
+            for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Current_source"].items()):
                 ttk.Label(S1_S3_Current_source_frame,
                           text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
@@ -1288,7 +1268,7 @@ class ParameterApp(tk.Tk):
             self.form_widgets[sensor]["Current_source"] = form_widgets_for_option_S1_S3_current_source
 
             # 填充 Voltage_source 表單
-            for i, (label_text, field_type) in enumerate(self.SCh_radio[sensor]["Voltage_source"].items()):
+            for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Voltage_source"].items()):
                 ttk.Label(S1_S3_Voltage_source_frame,
                           text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
@@ -1316,7 +1296,7 @@ class ParameterApp(tk.Tk):
 
         elif sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:
             # 填充 S5_S8_Current_source 表單
-            for i, (label_text, field_type) in enumerate(self.SCh_radio[sensor]["Current_source"].items()):
+            for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Current_source"].items()):
                 ttk.Label(S5_S8_Current_source_frame,
                           text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
@@ -1344,7 +1324,7 @@ class ParameterApp(tk.Tk):
             self.form_widgets[sensor]["Current_source"] = form_widgets_for_option_S5_S8_current_source
 
             # 填充 S5_S8_Measurement_channel 表單
-            for i, (label_text, field_type) in enumerate(self.SCh_radio[sensor]["Measurement_channel"].items()):
+            for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Measurement_channel"].items()):
                 ttk.Label(S5_S8_Measurement_channel_frame,
                           text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
@@ -1377,7 +1357,7 @@ class ParameterApp(tk.Tk):
 
         else:
             # 填充 S9_S10_Thermometer 表單
-            for i, (label_text, field_type) in enumerate(self.SCh_radio[sensor]["Thermometer"].items()):
+            for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Thermometer"].items()):
                 ttk.Label(S9_S10_Thermometer_frame,
                           text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
@@ -1404,17 +1384,15 @@ class ParameterApp(tk.Tk):
 
         # 儲存、取消按鈕排版
         ttk.Button(button_frame, text="儲存", command=lambda: self.save_parameters(
-            sensor, check_option.get(), param_window)).pack(side=tk.LEFT, padx=5)
+            sensor, self.option[sensor].get(), param_window)).pack(side=tk.LEFT, padx=5)
         ttk.Button(button_frame, text="取消", command=param_window.destroy).pack(
             side=tk.LEFT, padx=5)
 
     def update_form(self, sensor):
-        # 根據選中的 RadioButton 選項更新表單的狀態
-        selected_radio = self.check_option[sensor].get()
 
         if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
             for option, widgets in self.form_widgets[sensor].items():
-                if selected_radio == option:
+                if self.option[sensor].get() == option:
                     for widget in widgets:
                         widget.configure(state="normal")
                 else:
@@ -1423,7 +1401,7 @@ class ParameterApp(tk.Tk):
 
         elif sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:
             # 當選擇 "Both" 時，先禁用所有小部件，再逐一啟用
-            if selected_radio == "Both":
+            if self.option[sensor].get() == "Both":
                 for widgets in self.form_widgets[sensor].values():
                     for widget in widgets:
                         widget.configure(state="normal")
@@ -1435,22 +1413,22 @@ class ParameterApp(tk.Tk):
 
                 # 啟用選中的選項對應的小部件
                 for option, widgets in self.form_widgets[sensor].items():
-                    if selected_radio == option:
+                    if self.option[sensor].get() == option:
                         for widget in widgets:
                             widget.configure(state="normal")
 
-    def save_parameters(self, sensor, check_option, window):
+    def save_parameters(self, sensor, option, window):
         """Handle form submission and save parameters"""
 
         # Collect the parameters from the form (now using a dictionary to store keys and values)
         params = {}
 
-        # check_option 可以是 "Current_source" 或 "Voltage_source" 或 "Measurement_channel" 或 "Both"
+        # option 可以是 "Current_source" 或 "Voltage_source" 或 "Measurement_channel" 或 "Both"
         # Get the field names
-        form_fields = self.SCh_radio[sensor][check_option].keys()
+        form_fields = self.sensor_option_parameters[sensor][option].keys()
 
         # Iterate over the widgets and save both the field names and their values
-        for field_name, widget in zip(form_fields, self.form_widgets[sensor][check_option]):
+        for field_name, widget in zip(form_fields, self.form_widgets[sensor][option]):
             if isinstance(widget, ttk.Combobox):
                 # Get the selected value in Combobox
                 params[field_name] = widget.get()
@@ -1459,21 +1437,21 @@ class ParameterApp(tk.Tk):
 
         # Delete previously saved parameters for this sensor-option pair
         for key in list(self.saved_parameters):
-            if key == (sensor, check_option):  # 僅刪除與當前 sensor 和 check_option 配對的參數
+            if key == (sensor, option):  # 僅刪除與當前 sensor 和 option 配對的參數
                 del self.saved_parameters[key]
 
         # Save current parameters
-        self.saved_parameters[(sensor, check_option)] = params
+        self.saved_parameters[(sensor, option)] = params
 
         # Print the saved parameters with keys and values
-        print(f"提交的參數 ({sensor} - {check_option}): ")
+        print(f"提交的參數 ({sensor} - {option}): ")
         for field, value in params.items():
             print(f"{field}: {value}")
 
         print(self.saved_parameters)
 
         # 針對 S1_S3 清除另一個選項的內容
-        if check_option == "Current_source":
+        if option == "Current_source":
             # 清除 Voltage_source 的內容
             if (sensor, "Voltage_source") in self.saved_parameters:
                 del self.saved_parameters[(sensor, "Voltage_source")]
@@ -1483,7 +1461,7 @@ class ParameterApp(tk.Tk):
                         widget.set("")  # 清空 combobox
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
-        elif check_option == "Voltage_source":
+        elif option == "Voltage_source":
             # 清除 Current_source 的內容
             if (sensor, "Current_source") in self.saved_parameters:
                 del self.saved_parameters[(sensor, "Current_source")]
@@ -1495,10 +1473,10 @@ class ParameterApp(tk.Tk):
                         widget.delete(0, tk.END)  # 清空 entry
 
         # 針對 S5_S8 清除另一個選項的內容或是選擇 Both 的話兩個選項參數都保留
-        if check_option == "Current_source":
+        if option == "Current_source":
             # 清除 Measurement_channel 的內容
             if (sensor, "Measurement_channel") in self.saved_parameters:
-                print(sensor, check_option)
+                print(sensor, option)
                 del self.saved_parameters[(sensor, "Measurement_channel")]
                 for widget in self.form_widgets[sensor]["Measurement_channel"]:
                     if isinstance(widget, ttk.Combobox):
@@ -1506,7 +1484,7 @@ class ParameterApp(tk.Tk):
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
             if (sensor, "Both") in self.saved_parameters:
-                print(sensor, check_option)
+                print(sensor, option)
                 del self.saved_parameters[(sensor, "Both")]
                 for widget in self.form_widgets[sensor]["Both"]:
                     if isinstance(widget, ttk.Combobox):
@@ -1514,10 +1492,10 @@ class ParameterApp(tk.Tk):
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
 
-        elif check_option == "Measurement_channel":
+        elif option == "Measurement_channel":
             # 清除 Current_source 的內容
             if (sensor, "Current_source") in self.saved_parameters:
-                print(sensor, check_option)
+                print(sensor, option)
                 del self.saved_parameters[(sensor, "Current_source")]
                 for widget in self.form_widgets[sensor]["Current_source"]:
                     if isinstance(widget, ttk.Combobox):
@@ -1525,7 +1503,7 @@ class ParameterApp(tk.Tk):
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
             if (sensor, "Both") in self.saved_parameters:
-                print(sensor, check_option)
+                print(sensor, option)
                 del self.saved_parameters[(sensor, "Both")]
                 for widget in self.form_widgets[sensor]["Both"]:
                     if isinstance(widget, ttk.Combobox):
@@ -1533,7 +1511,7 @@ class ParameterApp(tk.Tk):
                     else:
                         widget.delete(0, tk.END)  # 清空 entry
 
-        elif check_option == "Both":
+        elif option == "Both":
             # 刪除 Current_source 和 Measurement_channel 的 key (不清空表單)
             if (sensor, "Current_source") in self.saved_parameters:
                 del self.saved_parameters[(sensor, "Current_source")]
@@ -1541,7 +1519,7 @@ class ParameterApp(tk.Tk):
             if (sensor, "Measurement_channel") in self.saved_parameters:
                 del self.saved_parameters[(sensor, "Measurement_channel")]
 
-            both_params = self.saved_parameters[(sensor, check_option)]
+            both_params = self.saved_parameters[(sensor, option)]
             current_source_params = {}
             measurement_channel_params = {}
 
@@ -1570,9 +1548,9 @@ class ParameterApp(tk.Tk):
         json_data = {}
 
         # Iterate over saved parameters and prepare them for JSON output
-        for (sensor, check_option), params in self.saved_parameters.items():
+        for (sensor, option), params in self.saved_parameters.items():
             # Create the "sensor_option" key to structure the output
-            sensor_check_option = f"{sensor}_{check_option}"
+            sensor_option = f"{sensor}_{option}"
 
             modified_params = {}
             for key, value in params.items():
@@ -1592,7 +1570,7 @@ class ParameterApp(tk.Tk):
                     modified_params[key] = value
 
             # Store parameters as a dictionary for each sensor-option pair
-            json_data[sensor_check_option] = modified_params
+            json_data[sensor_option] = modified_params
 
         # Write the json_data to a JSON file
         with open("saved_parameters.json", "w", encoding="utf-8") as json_file:
@@ -1785,11 +1763,11 @@ class ParameterApp(tk.Tk):
 
         # 根據 saved_parameters 中的數據動態生成表格
         measurement_channels = [
-            sensor for sensor, check_option in self.saved_parameters if "Measurement_channel" in check_option or "Both" in check_option]
-        current_sources_s5_s8 = [sensor for sensor, check_option in self.saved_parameters if ("Current_source" in check_option and sensor.startswith(
-            ("S5", "S6", "S7", "S8"))) or ("Both" in check_option and sensor.startswith(("S5", "S6", "S7", "S8")))]
+            sensor for sensor, option in self.saved_parameters if "Measurement_channel" in option or "Both" in option]
+        current_sources_s5_s8 = [sensor for sensor, option in self.saved_parameters if ("Current_source" in option and sensor.startswith(
+            ("S5", "S6", "S7", "S8"))) or ("Both" in option and sensor.startswith(("S5", "S6", "S7", "S8")))]
         current_sources_s1_s3 = [
-            sensor for sensor, check_option in self.saved_parameters if "Current_source" in check_option and sensor.startswith(("S1", "S3"))]
+            sensor for sensor, option in self.saved_parameters if "Current_source" in option and sensor.startswith(("S1", "S3"))]
 
         # 顯示 "Calculation Method" 字
         method_label = ttk.Label(power_steps_frame, text="Calculation Method")

@@ -20,10 +20,25 @@ class ParameterApp(tk.Tk):
         self.title("T3STER SI")
         self.geometry("1280x960")
 
-        # self.params_file = "params.json"
-        # self.params = self.load_params()
+        self.params_file = "params.json"
+        self.saved_parameters = self.load_params()
 
         self.create_page1()
+
+
+    def load_params(self):
+        if os.path.exists(self.params_file):
+            with open(self.params_file, 'r') as file:
+                str_keys_saved_parameters = json.load(file)
+                # 將字典的鍵從 str 轉換回 tuple
+                return {eval(key): value for key, value in str_keys_saved_parameters.items()}
+        return {}
+    
+    
+    def save_params(self):
+        str_keys_saved_parameters = {str(key): value for key, value in self.saved_parameters.items()}
+        with open(self.params_file, 'w') as file:
+            json.dump(str_keys_saved_parameters, file, ensure_ascii=False, indent=4)
 
 
     # 定義一個函數，用於創建 Sensor 框架
@@ -1086,7 +1101,6 @@ class ParameterApp(tk.Tk):
         # 初始化用於保存 Sensor 、 Option 、 Parameters 和表單控件的字典
         self.sensor = {}   # 儲存 Sensor
         self.option = {}  # 儲存 Option
-        self.saved_parameters = {}  # 儲存 Parameters
         self.form_widgets = {}   # 儲存所有動態生成的表單控件
 
         # 創建 & 排版 Sensor
@@ -1258,35 +1272,32 @@ class ParameterApp(tk.Tk):
                     combobox.pack(anchor=tk.W, pady=5)
                     # 回填 saved_parameters_for_S1_S3_current_source 中的值
                     if i < len(saved_parameters_for_S1_S3_current_source):
-                        combobox.set(
-                            saved_parameters_for_S1_S3_current_source[i])
-                    form_widgets_for_option_S1_S3_current_source.append(
-                        combobox)
+                        combobox.set(saved_parameters_for_S1_S3_current_source[i])
+                    form_widgets_for_option_S1_S3_current_source.append(combobox)
+                    
                 else:
                     entry = ttk.Entry(
                         S1_S3_Current_source_frame, state=S1_S3_current_source_state, width=40)  # 根據條件禁用或啟用
                     entry.pack(anchor=tk.W, pady=5)
                     # 回填 saved_parameters_for_S1_S3_current_source 中的值
                     if i < len(saved_parameters_for_S1_S3_current_source):
-                        entry.insert(
-                            0, saved_parameters_for_S1_S3_current_source[i])
+                        entry.insert(0, saved_parameters_for_S1_S3_current_source[i])
                     form_widgets_for_option_S1_S3_current_source.append(entry)
+            
 
             # 保存填充的 Current_source
             self.form_widgets[sensor]["Current_source"] = form_widgets_for_option_S1_S3_current_source
 
             # 填充 Voltage_source 表單
             for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Voltage_source"].items()):
-                ttk.Label(S1_S3_Voltage_source_frame,
-                          text=label_text).pack(anchor=tk.W)
+                ttk.Label(S1_S3_Voltage_source_frame, text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
                     combobox = ttk.Combobox(
                         S1_S3_Voltage_source_frame, values=field_type, state=voltage_source_state, width=40)  # 根據條件禁用或啟用
                     combobox.pack(anchor=tk.W, pady=5)
                     # 回填 saved_parameters_for_S1_S3_voltage_source 中的值
                     if i < len(saved_parameters_for_S1_S3_voltage_source):
-                        combobox.set(
-                            saved_parameters_for_S1_S3_voltage_source[i])
+                        combobox.set(saved_parameters_for_S1_S3_voltage_source[i])
                     form_widgets_for_option_voltage_source.append(combobox)
 
                 else:
@@ -1295,8 +1306,7 @@ class ParameterApp(tk.Tk):
                     entry.pack(anchor=tk.W, pady=5)
                     # 回填 saved_parameters_for_S1_S3_voltage_source 中的值
                     if i < len(saved_parameters_for_S1_S3_voltage_source):
-                        entry.insert(
-                            0, saved_parameters_for_S1_S3_voltage_source[i])
+                        entry.insert(0, saved_parameters_for_S1_S3_voltage_source[i])
                     form_widgets_for_option_voltage_source.append(entry)
 
             # 保存填充的 Voltage_source
@@ -1454,6 +1464,10 @@ class ParameterApp(tk.Tk):
         # Save current parameters
         self.saved_parameters[(sensor, option)] = params
 
+        
+
+        
+
         # Print the saved parameters with keys and values
         print(f"提交的參數 ({sensor} - {option}): ")
         for field, value in params.items():
@@ -1549,6 +1563,9 @@ class ParameterApp(tk.Tk):
             for field, value in last_5_items:
                 measurement_channel_params[field] = value
 
+        # Save parameters to JSON file
+        self.save_params()
+
         # Close the window
         window.destroy()
 
@@ -1602,7 +1619,7 @@ class ParameterApp(tk.Tk):
         # 顯示第一頁面的控件
         self.create_page1()
 
-        for (sensor, option), params in self.saved_parameters:
+        for (sensor, option), params in self.saved_parameters.items():
             if sensor in self.form_widgets and option in self.form_widgets[sensor]:
                 # 填充表單控件
                 for idx, widget in enumerate(self.form_widgets[sensor][option]):

@@ -1118,18 +1118,29 @@ class ParameterApp(tk.Tk):
     def create_sensor_checkbuttons(self, frame, start, end):
         for i, sensor in enumerate(itertools.islice(self.sensor_option_parameters.keys(), start, end)):
             self.sensor[sensor] = tk.BooleanVar()
+            # 檢查是否有保存的 sensor 值，並設置勾選狀態
+            if any(saved_sensor == sensor for saved_sensor, _ in self.saved_parameters.keys()):
+                self.sensor[sensor].set(True)
             checkbutton = ttk.Checkbutton(
                 frame, text=sensor, variable=self.sensor[sensor], command=lambda t=sensor: self.handle_checkbutton(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
+            
 
     # 只有在 Checkbutton 被勾選時才彈出視窗
     def handle_checkbutton(self, sensor):
         if self.sensor[sensor].get():
             self.open_parameter_window(sensor)
         else:
-            self.option[sensor].set("")
-            self.update_form(sensor)
+            # 刪除 params.json 中對應的 option 以及各個控件的參數
+            keys_to_delete = [key for key in self.saved_parameters if key[0] == sensor]
+            for key in keys_to_delete:
+                del self.saved_parameters[key]
+            self.save_params()
+            
+            if sensor in self.option:
+                self.option[sensor].set("")
+            if sensor in self.form_widgets:
+                self.update_form(sensor)
 
 
     # 彈出一個填寫參數的表單視窗
@@ -1180,6 +1191,12 @@ class ParameterApp(tk.Tk):
         # 建立儲存、取消按鈕框架
         button_frame = ttk.Frame(param_window)
         button_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
+
+        # 初始化 self.option 和 self.form_widgets
+        if sensor not in self.option:
+            self.option[sensor] = tk.StringVar()
+        if sensor not in self.form_widgets:
+            self.form_widgets[sensor] = {}
 
         # 取得對應的 Option 選項以及其參數
         # 檢查是否有保存的 Option 選項
@@ -1404,37 +1421,38 @@ class ParameterApp(tk.Tk):
 
     def update_form(self, sensor):
 
-        if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
-            for option, widgets in self.form_widgets[sensor].items():
-                if self.option[sensor].get() == option:
-                    for widget in widgets:
-                        if widget.winfo_exists():  # 檢查控件是否存在
-                            widget.configure(state="normal")
-                else:
-                    for widget in widgets:
-                        if widget.winfo_exists():  # 檢查控件是否存在
-                            widget.configure(state="disabled")
-
-        elif sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:
-            # 當選擇 "Both" 時，先禁用所有小部件，再逐一啟用
-            if self.option[sensor].get() == "Both":
-                for widgets in self.form_widgets[sensor].values():
-                    for widget in widgets:
-                        if widget.winfo_exists():  # 檢查控件是否存在
-                            widget.configure(state="normal")
-            else:
-                # 將所有小部件設置為禁用狀態
-                for widgets in self.form_widgets[sensor].values():
-                    for widget in widgets:
-                        if widget.winfo_exists():  # 檢查控件是否存在
-                            widget.configure(state="disabled")
-
-                # 啟用選中的選項對應的小部件
+        if sensor in self.form_widgets:
+            if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
                 for option, widgets in self.form_widgets[sensor].items():
                     if self.option[sensor].get() == option:
                         for widget in widgets:
                             if widget.winfo_exists():  # 檢查控件是否存在
                                 widget.configure(state="normal")
+                    else:
+                        for widget in widgets:
+                            if widget.winfo_exists():  # 檢查控件是否存在
+                                widget.configure(state="disabled")
+
+            elif sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:
+                # 當選擇 "Both" 時，先禁用所有小部件，再逐一啟用
+                if self.option[sensor].get() == "Both":
+                    for widgets in self.form_widgets[sensor].values():
+                        for widget in widgets:
+                            if widget.winfo_exists():  # 檢查控件是否存在
+                                widget.configure(state="normal")
+                else:
+                    # 將所有小部件設置為禁用狀態
+                    for widgets in self.form_widgets[sensor].values():
+                        for widget in widgets:
+                            if widget.winfo_exists():  # 檢查控件是否存在
+                                widget.configure(state="disabled")
+
+                    # 啟用選中的選項對應的小部件
+                    for option, widgets in self.form_widgets[sensor].items():
+                        if self.option[sensor].get() == option:
+                            for widget in widgets:
+                                if widget.winfo_exists():  # 檢查控件是否存在
+                                    widget.configure(state="normal")
 
 
     def save_parameters(self, sensor, option, window):
@@ -3003,5 +3021,13 @@ class ParameterApp(tk.Tk):
 
 
 if __name__ == "__main__":
+
+    if os.path.exists("params.json"):
+        # 刪除檔案
+        os.remove("params.json")
+        print("params.json 已被刪除")
+    else:
+        print("params.json 不存在")
+
     app = ParameterApp()
     app.mainloop()

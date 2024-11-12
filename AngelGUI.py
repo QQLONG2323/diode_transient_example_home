@@ -1181,10 +1181,6 @@ class ParameterApp(tk.Tk):
         button_frame = ttk.Frame(param_window)
         button_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
 
-
-
-
-
         # 取得對應的 Option 選項以及其參數
         # 檢查是否有保存的 Option 選項
         default_option = None
@@ -1202,10 +1198,6 @@ class ParameterApp(tk.Tk):
             tk.Radiobutton(option_frame, text=option, variable=self.option[sensor], value=option, font=(
                 "System", 16, "bold"), command=lambda: self.update_form(sensor)).grid(row=0, column=i+1, padx=20, pady=5)
         
-            
-
-
-
         # 建立每個 Sensor 中的參數表單
         self.form_widgets[sensor] = {}
 
@@ -1218,20 +1210,23 @@ class ParameterApp(tk.Tk):
         form_widgets_for_option_Thermometer = []
 
         # 檢查是否有保存的 Parameters 選項
-        saved_parameters_for_S1_S3_current_source = self.saved_parameters.get(
-            (sensor, "Current_source"), [])
-        saved_parameters_for_S1_S3_voltage_source = self.saved_parameters.get(
-            (sensor, "Voltage_source"), [])
+        # LP220
+        saved_parameters_for_S1_S3_current_source = list(self.saved_parameters.get(
+            (sensor, "Current_source"), {}).values())
+        saved_parameters_for_S1_S3_voltage_source = list(self.saved_parameters.get(
+            (sensor, "Voltage_source"), {}).values())
 
-        saved_parameters_for_S5_S8_current_source = self.saved_parameters.get(
-            (sensor, "Current_source"), [])
-        saved_parameters_for_S5_S8_Measurement_channel = self.saved_parameters.get(
-            (sensor, "Measurement_channel"), [])
-        saved_parameters_for_S5_S8_Both = self.saved_parameters.get(
-            (sensor, "Both"), [])
+        # MS401
+        saved_parameters_for_S5_S8_current_source = list(self.saved_parameters.get(
+            (sensor, "Current_source"), {}).values())
+        saved_parameters_for_S5_S8_Measurement_channel = list(self.saved_parameters.get(
+            (sensor, "Measurement_channel"), {}).values())
+        saved_parameters_for_S5_S8_Both = list(self.saved_parameters.get(
+            (sensor, "Both"), {}).values())
 
-        saved_parameters_for_S9_S10_Thermometer = self.saved_parameters.get(
-            (sensor, "Thermometer"), [])
+        # TH800
+        saved_parameters_for_S9_S10_Thermometer = list(self.saved_parameters.get(
+            (sensor, "Thermometer"), {}).values())
 
         # 檢查 S1 & S3 如果有 Voltage_source 保存的參數，那麼禁用 Current_source，反之亦然
         if saved_parameters_for_S1_S3_voltage_source:
@@ -1406,6 +1401,7 @@ class ParameterApp(tk.Tk):
         ttk.Button(button_frame, text="取消", command=param_window.destroy).pack(
             side=tk.LEFT, padx=5)
 
+
     def update_form(self, sensor):
 
         if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
@@ -1424,18 +1420,21 @@ class ParameterApp(tk.Tk):
             if self.option[sensor].get() == "Both":
                 for widgets in self.form_widgets[sensor].values():
                     for widget in widgets:
-                        widget.configure(state="normal")
+                        if widget.winfo_exists():  # 檢查控件是否存在
+                            widget.configure(state="normal")
             else:
                 # 將所有小部件設置為禁用狀態
                 for widgets in self.form_widgets[sensor].values():
                     for widget in widgets:
-                        widget.configure(state="disabled")
+                        if widget.winfo_exists():  # 檢查控件是否存在
+                            widget.configure(state="disabled")
 
                 # 啟用選中的選項對應的小部件
                 for option, widgets in self.form_widgets[sensor].items():
                     if self.option[sensor].get() == option:
                         for widget in widgets:
-                            widget.configure(state="normal")
+                            if widget.winfo_exists():  # 檢查控件是否存在
+                                widget.configure(state="normal")
 
 
     def save_parameters(self, sensor, option, window):
@@ -1463,11 +1462,7 @@ class ParameterApp(tk.Tk):
 
         # Save current parameters
         self.saved_parameters[(sensor, option)] = params
-
-        
-
-        
-
+     
         # Print the saved parameters with keys and values
         print(f"提交的參數 ({sensor} - {option}): ")
         for field, value in params.items():
@@ -1569,6 +1564,7 @@ class ParameterApp(tk.Tk):
         # Close the window
         window.destroy()
 
+
     def export_to_json(self):
         """Export saved parameters to a JSON file"""
 
@@ -1631,6 +1627,7 @@ class ParameterApp(tk.Tk):
                         widget.delete(0, tk.END)
                         widget.insert(0, params[idx])
 
+
     def go_to_page2(self):
         # 儲存參數至 JSON 檔
         self.export_to_json()
@@ -1641,6 +1638,7 @@ class ParameterApp(tk.Tk):
 
         # 顯示第二頁面的控件
         self.create_page2()
+
 
     def create_page2(self):
         """創建第二頁面"""
@@ -1907,16 +1905,6 @@ class ParameterApp(tk.Tk):
         self.delay_entry.grid(row=2, column=3, padx=10, pady=10)
         self.page2_parameters["Delay_time"] = self.delay_entry.get()
 
-        # Repeat
-        # # 使用 tk.BooleanVar 來控制 Repeat 的選中狀態
-        # self.repeat_var = tk.BooleanVar(value=False)  # 默認為未選中
-
-        # # 使用 ttk.Checkbutton 來啟用或禁用 repeat_entry
-        # self.repeat_checkbutton = ttk.Checkbutton(
-        #     measurement_settings_frame, text="Repeat [times]", variable=self.repeat_var, command=self.toggle_repeat_entry)
-        # self.repeat_checkbutton.grid(row=4, column=0, padx=10, pady=10)
-        # self.page2_parameters["Repeat"] = self.repeat_var.get()
-
         repeat_label = ttk.Label(
             measurement_settings_frame, text="Repeat times")
         repeat_label.grid(row=3, column=0, padx=10, pady=10)
@@ -2100,14 +2088,6 @@ class ParameterApp(tk.Tk):
 
         self.update()  # 強制刷新頁面
 
-    # def toggle_repeat_entry(self):
-    #     """用來啟用或禁用 repeat_entry 的回調函數"""
-    #     if self.repeat_var.get():  # 如果 Checkbutton 被選中
-    #         self.repeat_entry.config(state="normal")  # 啟用輸入框
-    #     else:
-    #         self.repeat_entry.delete(0, tk.END)  # 清空輸入框的內容
-    #         self.repeat_entry.config(state="disabled")  # 禁用輸入框
-
 
     def toggle_cycling_test_checkbutton(self):
         """用來啟用或禁用 Cycling Test 的輸入框"""
@@ -2171,6 +2151,7 @@ class ParameterApp(tk.Tk):
             self.tstep_entry.delete(0, tk.END)  # 清空 tstep 輸入框的內容
             self.tstep_entry.config(state="disabled")  # 禁用 tstep 輸入框
 
+
     def toggle_tsp_calibration_entry(self):
         """用來啟用或禁用 TSP calibration 的輸入框"""
         if self.tsp_var.get():  # 如果 tspCheckbutton 被選中
@@ -2230,14 +2211,8 @@ class ParameterApp(tk.Tk):
         }
 
        
-
-
-
-
-
         current_source_params = []    
 
-       
         if "S1Ch1_Current_source" in config_data:
             current_source_params.append({
                 "Alias": self.sensor_rename["S1Ch1"],
@@ -2620,6 +2595,7 @@ class ParameterApp(tk.Tk):
 
         return current_source_params
 
+
     # 獲取 SI 所需的 MeasCardChParams 參數值
     def fill_measurement_params(self, config_data):
 
@@ -2674,11 +2650,9 @@ class ParameterApp(tk.Tk):
         return measurement_params
 
 
-
     def page2_export_to_json(self):
         # 定義 JSON 檔案路徑
         file_path = "saved_parameters.json"
-
 
         # 確保控件的值是最新的
         self.page2_parameters["Config_Name"] = self.config_entry.get()
@@ -2762,7 +2736,6 @@ class ParameterApp(tk.Tk):
             self.page2_parameters["Tstep"] = 0  # 或其他預設值
 
 
-
         # 若有其他 LP220 Current 參數
         other_lp220_current_list = []
         
@@ -2774,7 +2747,6 @@ class ParameterApp(tk.Tk):
         self.page2_parameters["Other LP220 Current list"] = other_lp220_current_list
 
         
-
         # 將每一行的 `ms_401_label`、`combo_s5_s8`、`combo_s1_s3` 的值儲存到列表中
         sensors_data = []
 
@@ -2789,7 +2761,6 @@ class ParameterApp(tk.Tk):
         # 將 Sensors 列表保存到 page2_parameters
         self.page2_parameters["Measurement_channel"] = sensors_data
         
-
 
         # 檢查檔案是否存在
         if os.path.exists(file_path):
@@ -2809,31 +2780,23 @@ class ParameterApp(tk.Tk):
         saved_data.update(self.page2_parameters)
 
         
-
-
         # 使用 fill_current_source_params 以及 fill_measurement_params 填充數據
         config_data = saved_data  # 使用已存在的 JSON 檔案數據
         current_source_data = []
         current_source_data.extend(self.fill_current_source_params(config_data))
         measurement_channel_data = []
         measurement_channel_data.extend(self.fill_measurement_params(config_data))
-
         
-
         # 如果有數據，將其放入 saved_data 中
         if "Resources" not in saved_data:
             saved_data["Resources"] = {}
         saved_data["Resources"]["CurrentSourceParams"] = current_source_data
         saved_data["Resources"]["MeasCardChParams"] = measurement_channel_data
         
-        
-
-
+    
         # 將更新後的資料寫回到 JSON 文件中
         with open(file_path, "w") as file:
             json.dump(saved_data, file, indent=4)
-
-        
 
         with open(file_path, "r") as file:
             config_data = json.load(file)
@@ -2983,7 +2946,6 @@ class ParameterApp(tk.Tk):
 
         print("參數已成功儲存至 saved_parameters.json")
 
-        
 
         # 啟用進度提示框
         self.progress_text.config(state="normal")
@@ -2993,11 +2955,12 @@ class ParameterApp(tk.Tk):
         self.progress_output = StringIO()
         sys.stdout = self.progress_output
 
-        # 启动一个线程来执行长时间任务
+        # 啟用一個線程來執行長時間任務
         threading.Thread(target=self.run_tests_in_thread).start()
 
-        # 通过 after 定期更新进度
+        # 通過 after 定期更新進度
         self.update_progress_text()
+
 
     def run_tests_in_thread(self):
         # 從文件讀取配置
@@ -3005,7 +2968,7 @@ class ParameterApp(tk.Tk):
             config_data = json.load(file)
 
         try:
-            # 根据配置执行不同的测试
+            # 根據配置執行不同的測試
             if config_data["Cycling_Test"] == False:    
                 from Variable import websocket_test       
                 websocket_test()
@@ -3015,23 +2978,23 @@ class ParameterApp(tk.Tk):
         except Exception as e:
             print(f"Error: {str(e)}")
 
-        # 任务完成后，恢复标准输出
+        # 任務完成後，恢復標準輸出
         sys.stdout = sys.__stdout__
 
     def update_progress_text(self):
-        # 获取重定向的输出
+        # 獲取重定向的輸出
         output = self.progress_output.getvalue()
 
-        # 将新的输出添加到 Text 小部件中
+        # 將新的輸出添加到 Text 小部件中
         if output:
             self.progress_text.insert(tk.END, output)
             self.progress_output.truncate(0)
             self.progress_output.seek(0)
 
-            # 自动滚动到最后一行
+            # 自動滾動到最後一行
             self.progress_text.see(tk.END)
 
-        # 继续定期调用这个函数
+        # 繼續定期調用這個函數
         if threading.active_count() > 1:  # 检查是否有线程仍在运行
             self.progress_text.after(100, self.update_progress_text)
         else:

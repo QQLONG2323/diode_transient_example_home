@@ -1192,11 +1192,11 @@ class ParameterApp(tk.Tk):
         button_frame = ttk.Frame(param_window)
         button_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
 
-        # 初始化 self.option 和 self.form_widgets
-        if sensor not in self.option:
-            self.option[sensor] = tk.StringVar()
-        if sensor not in self.form_widgets:
-            self.form_widgets[sensor] = {}
+        # # 初始化 self.option 和 self.form_widgets
+        # if sensor not in self.option:
+        #     self.option[sensor] = tk.StringVar()
+        # if sensor not in self.form_widgets:
+        #     self.form_widgets[sensor] = {}
 
         # 取得對應的 Option 選項以及其參數
         # 檢查是否有保存的 Option 選項

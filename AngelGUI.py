@@ -1122,12 +1122,12 @@ class ParameterApp(tk.Tk):
             if any(saved_sensor == sensor for saved_sensor, _ in self.saved_parameters.keys()):
                 self.sensor[sensor].set(True)
             checkbutton = ttk.Checkbutton(
-                frame, text=sensor, variable=self.sensor[sensor], command=lambda t=sensor: self.handle_checkbutton(t))
+                frame, text=sensor, variable=self.sensor[sensor], command=lambda t=sensor: self.toggle_sensor(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
             
 
-    # 只有在 Checkbutton 被勾選時才彈出視窗
-    def handle_checkbutton(self, sensor):
+    # 只有在 Sensor 被勾選時才彈出視窗
+    def toggle_sensor(self, sensor):
         if self.sensor[sensor].get():
             self.open_parameter_window(sensor)
         else:
@@ -1737,13 +1737,13 @@ class ParameterApp(tk.Tk):
         self.tsp_var = tk.BooleanVar(value=False)  # 默認為未選中
 
         self.connect_thermostat_checkbutton = ttk.Checkbutton(
-            scrollable_frame, text="Connect to Thermostat", variable=self.connect_thermostat_var, command=self.toggle_tspCheckbutton_temperature)
+            scrollable_frame, text="Connect to Thermostat", variable=self.connect_thermostat_var, command=self.toggle_connect_thermostat_checkbutton)
         self.connect_thermostat_checkbutton.grid(
             row=5, column=0, padx=10, pady=10)
         self.page2_parameters["Connect_to_Thermostat"] = self.connect_thermostat_var.get()
 
         self.tsp_checkbutton = ttk.Checkbutton(
-            scrollable_frame, text="Calibration Set (TSP)", variable=self.tsp_var, command=self.toggle_tsp_calibration_entry, state="disabled")
+            scrollable_frame, text="Calibration Set (TSP)", variable=self.tsp_var, command=self.toggle_tsp_checkbutton, state="disabled")
         self.tsp_checkbutton.grid(
             row=7, column=0, padx=10, pady=10)
         self.page2_parameters["TSP"] = self.tsp_var.get()
@@ -2145,9 +2145,10 @@ class ParameterApp(tk.Tk):
             self.repeat_entry.insert(0, "1")   # 插入數字 1
     
     
-    def toggle_tspCheckbutton_temperature(self):
+    def toggle_connect_thermostat_checkbutton(self):
         """用來啟用或禁用 tsp 選項以及 temperature"""
         if self.connect_thermostat_var.get():  # 如果 "Connect to Thermostat" Checkbutton 被選中
+            self.open_connect_thermostat_set_up_window()  # 彈出填寫 Thermostat 設定值的視窗
             self.tsp_checkbutton.config(state="normal")  # 啟用 TSP Checkbutton
             self.temperature_entry.config(state="normal")  # 啟用 temperature 輸入框
         else:
@@ -2164,7 +2165,46 @@ class ParameterApp(tk.Tk):
             self.tstep_entry.config(state="disabled")  # 禁用 tstep 輸入框
 
 
-    def toggle_tsp_calibration_entry(self):
+
+
+
+
+
+    # 創建填寫 Thermostat 設定值的彈出視窗
+    def open_connect_thermostat_set_up_window(self):
+
+        self.connect_thermostat_set_up_parameters = {
+            "Thermostat type": ["JULABO HE", "JULABO F", "JULABO CF", "MICRED Thermostat", "ARROYO Thermostat", "Espec", "Espec (No Addressing)", "Huber PB", "PELNUS (ADR1, BCC)", "LAUDA Variocool", "LAUDA Proline RP"],
+            "Interface": ["RS232"],
+            "Baudrate": ["1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200", "230400", "460800", "500000", "576000", "921600", "1000000", "1152000", "1500000", "2000000", "2500000", "3000000", "3500000", "4000000"],
+            "Data bits": ["7", "8"],
+            "Parity": ["None", "Odd", "Even"],
+            "Stop bits": ["1", "2"],
+            "Handshake": ["None", "XON/XOFF", "Request-To-Send (RTS)", "RTS & XON/XOFF"]
+        }
+
+        # 建立彈出視窗
+        connect_thermostat_set_up_window = tk.Toplevel(self)
+        connect_thermostat_set_up_window.title("Thermostat Set Up")
+        connect_thermostat_set_up_window.geometry("")
+
+        # 設定 LabelFrame 字體大小與粗體
+        style = ttk.Style()
+        style.configure("Large_Bold.TLabelframe.Label",
+                        font=("System", 16, "bold"))
+
+        self.baudrate_combobox = ttk.Combobox(connect_thermostat_set_up_window, values=self.connect_thermostat_set_up_parameters["Baudrate"])
+        self.baudrate_combobox.pack(side=tk.LEFT, padx=5)
+        self.baudrate_combobox.set(self.connect_thermostat_set_up_parameters["Baudrate"][0])  # 設置預設值
+    
+
+
+
+
+
+
+
+    def toggle_tsp_checkbutton(self):
         """用來啟用或禁用 TSP calibration 的輸入框"""
         if self.tsp_var.get():  # 如果 tspCheckbutton 被選中
             self.tmin_entry.config(state="normal")  # 啟用 tmin 輸入框

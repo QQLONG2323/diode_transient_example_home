@@ -1192,12 +1192,6 @@ class ParameterApp(tk.Tk):
         button_frame = ttk.Frame(param_window)
         button_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
 
-        # # 初始化 self.option 和 self.form_widgets
-        # if sensor not in self.option:
-        #     self.option[sensor] = tk.StringVar()
-        # if sensor not in self.form_widgets:
-        #     self.form_widgets[sensor] = {}
-
         # 取得對應的 Option 選項以及其參數
         # 檢查是否有保存的 Option 選項
         default_option = None
@@ -2969,7 +2963,7 @@ class ParameterApp(tk.Tk):
         self.progress_text.config(state="normal")
         self.progress_text.delete(1.0, tk.END)  # 清空現有內容
 
-        # 重定向标准输出
+        # 重定向標準輸出
         self.progress_output = StringIO()
         sys.stdout = self.progress_output
 

@@ -2184,21 +2184,37 @@ class ParameterApp(tk.Tk):
         }
 
         # 建立彈出視窗
-        connect_thermostat_set_up_window = tk.Toplevel(self)
-        connect_thermostat_set_up_window.title("Thermostat Set Up")
-        connect_thermostat_set_up_window.geometry("")
+        self.connect_thermostat_set_up_window = tk.Toplevel(self)
+        self.connect_thermostat_set_up_window.title("Thermostat Set Up")
+        self.connect_thermostat_set_up_window.geometry("800x600")
 
         # 設定 LabelFrame 字體大小與粗體
         style = ttk.Style()
         style.configure("Large_Bold.TLabelframe.Label",
                         font=("System", 16, "bold"))
 
-        self.baudrate_combobox = ttk.Combobox(connect_thermostat_set_up_window, values=self.connect_thermostat_set_up_parameters["Baudrate"])
-        self.baudrate_combobox.pack(side=tk.LEFT, padx=5)
-        self.baudrate_combobox.set(self.connect_thermostat_set_up_parameters["Baudrate"][0])  # 設置預設值
+        self.create_connect_thermostat_set_up_comboboxes()
+
+
+    def create_connect_thermostat_set_up_comboboxes(self):
+        for label_text, options in self.connect_thermostat_set_up_parameters.items():
+            # 創建 Label
+            label = ttk.Label(self.connect_thermostat_set_up_window, text=label_text)
+            label.pack(anchor=tk.W, padx=5, pady=5)
+
+            # 創建 Combobox
+            combobox = ttk.Combobox(self.connect_thermostat_set_up_window, values=options)
+            combobox.pack(anchor=tk.W, padx=5, pady=5)
+            combobox.set(options[0])  # 設置預設值
+
+        # 儲存、取消按鈕
+        ttk.Button(self.connect_thermostat_set_up_window, text="儲存", command=lambda: self.save_parameters(
+            sensor, self.option[sensor].get(), param_window)).pack(side=tk.LEFT, padx=5)
+        ttk.Button(self.connect_thermostat_set_up_window, text="取消", command=self.connect_thermostat_set_up_window.destroy).pack(
+            side=tk.LEFT, padx=5)
+        
     
-
-
+ 
 
 
 

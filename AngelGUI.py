@@ -2192,9 +2192,16 @@ class ParameterApp(tk.Tk):
         style = ttk.Style()
         style.configure("Large_Bold.TLabelframe.Label",
                         font=("System", 16, "bold"))
+        
+        # 初始化用於保存選擇值的字典
+        self.save_thermostat_config = {}
 
         self.create_connect_thermostat_set_up_comboboxes()
 
+        # 儲存、取消按鈕
+        ttk.Button(self.connect_thermostat_set_up_window, text="儲存", command=self.save_thermostat_config_to_json).pack(side=tk.LEFT, padx=5)
+        ttk.Button(self.connect_thermostat_set_up_window, text="取消", command=self.connect_thermostat_set_up_window.destroy).pack(
+            side=tk.LEFT, padx=5)
 
     def create_connect_thermostat_set_up_comboboxes(self):
         for label_text, options in self.connect_thermostat_set_up_parameters.items():
@@ -2207,12 +2214,21 @@ class ParameterApp(tk.Tk):
             combobox.pack(anchor=tk.W, padx=5, pady=5)
             combobox.set(options[0])  # 設置預設值
 
-        # 儲存、取消按鈕
-        ttk.Button(self.connect_thermostat_set_up_window, text="儲存", command=lambda: self.save_parameters(
-            sensor, self.option[sensor].get(), param_window)).pack(side=tk.LEFT, padx=5)
-        ttk.Button(self.connect_thermostat_set_up_window, text="取消", command=self.connect_thermostat_set_up_window.destroy).pack(
-            side=tk.LEFT, padx=5)
-        
+            # 綁定選擇事件
+            combobox.bind("<<ComboboxSelected>>", lambda event, key=label_text: self.on_combobox_selected(event, key))
+
+            # 初始化選擇值
+            self.save_thermostat_config[label_text] = options[0]
+
+    def on_combobox_selected(self, event, key):
+        # 更新選擇值
+        self.save_thermostat_config[key] = event.widget.get()
+
+    def save_thermostat_config_to_json(self):
+        # 將選擇值寫入 JSON 檔案
+        with open('thermostat_config_data.json', 'w', encoding='utf-8') as f:
+            json.dump(self.save_thermostat_config, f, ensure_ascii=False, indent=4)
+        self.connect_thermostat_set_up_window.destroy()
     
  
 

@@ -6,3 +6,4 @@ dist
 build
 AngelGUI.spec
 params.json
+thermostat_config_data.json

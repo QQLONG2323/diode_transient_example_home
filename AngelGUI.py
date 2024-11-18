@@ -2202,7 +2202,7 @@ class ParameterApp(tk.Tk):
         ttk.Button(self.connect_thermostat_set_up_window, text="儲存", command=self.save_thermostat_config_to_json).pack(side=tk.LEFT, padx=5)
         ttk.Button(self.connect_thermostat_set_up_window, text="取消", command=self.connect_thermostat_set_up_window.destroy).pack(
             side=tk.LEFT, padx=5)
-
+    
     def create_connect_thermostat_set_up_comboboxes(self):
         for label_text, options in self.connect_thermostat_set_up_parameters.items():
             # 創建 Label

@@ -38,22 +38,22 @@ command_save_thermostat_config = {
     "Command": "SAVE_THERMOSTAT_CONFIG",
     "Alias": "/THERMOSTAT/0",
     "SerialTransport": {
-        "BaudRate": BAUDRATE,
-        "DataBits": DATABITS,
-        "Handshake": HANDSHAKE,
+        "BaudRate": thermostat_config_data["Baudrate"],
+        "DataBits": thermostat_config_data["Data bits"],
+        "Handshake": thermostat_config_data["Handshake"],
         "InterfaceID": "RS232",
-        "Parity": PARITY,
-        "StopBits": STOPBITS,
-        "Timeout": Timeout_in_msec,
-        "WriteSleep": Sleeping_time_after_every_command_in_msec
+        "Parity": thermostat_config_data["Parity"],
+        "StopBits": thermostat_config_data["Stop bits"],
+        "Timeout": 2000,
+        "WriteSleep": 100
     },
     "StabilityCriteria": {
-        "DtMinMax": Default_value_for_maximum_allowed_temperature_change_in_degrees,
-        "DtTarget": Default_value_for_DeltaT_from_target_in_degrees,
-        "TimeWindow": Default_value_for_time_window_in_sec,
-        "Timeout": Default_value_for_timeout_in_sec,
+        "DtMinMax": 0.1,
+        "DtTarget": 0.25,
+        "TimeWindow": 60,
+        "Timeout": 1800,
     },
-    "ThermostatType": THERMOSTATTYPE
+    "ThermostatType": thermostat_config_data["Thermostat type"]
 }
 
 # WebSocket 查詢
@@ -81,24 +81,24 @@ if __name__ == '__main__':
         print("API 版本: " + api_version["Answer"])
 
         # 查詢 thermostat 設定參數
-        command_get_thermostat_config = do_web_socket_string_query(websocket_transport, command_get_thermostat_config)
-        print(command_get_thermostat_config)
+        # command_get_thermostat_config = do_web_socket_string_query(websocket_transport, command_get_thermostat_config)
+        # print(command_get_thermostat_config)
 
         # 啟用 thermostat
-        # command_enable_thermostat = do_web_socket_string_query(websocket_transport, command_enable_thermostat)
+        # command_enable_thermostat = do_web_socket_bool_query(websocket_transport, command_enable_thermostat)
         # print(command_enable_thermostat)
 
         # 關閉 thermostat
-        # command_disable_thermostat = do_web_socket_string_query(websocket_transport, command_disable_thermostat)
+        # command_disable_thermostat = do_web_socket_bool_query(websocket_transport, command_disable_thermostat)
         # print(command_disable_thermostat)
 
         # 查詢 thermostat 狀態
-        # command_query_thermostat_status = do_web_socket_string_query(websocket_transport, command_query_thermostat_status)
-        # print(command_query_thermostat_status)
+        command_query_thermostat_status = do_web_socket_string_query(websocket_transport, command_query_thermostat_status)
+        print(command_query_thermostat_status)
 
         # 保存 thermostat 設定參數
-        command_save_thermostat_config = do_web_socket_string_query(websocket_transport, command_save_thermostat_config)
-        print(command_save_thermostat_config)
+        # command_save_thermostat_config = do_web_socket_bool_query(websocket_transport, command_save_thermostat_config)
+        # print(command_save_thermostat_config)
 
 
     except Exception as e:

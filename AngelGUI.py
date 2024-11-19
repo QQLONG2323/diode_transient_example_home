@@ -2165,21 +2165,16 @@ class ParameterApp(tk.Tk):
             self.tstep_entry.config(state="disabled")  # 禁用 tstep 輸入框
 
 
-
-
-
-
-
     # 創建填寫 Thermostat 設定值的彈出視窗
     def open_connect_thermostat_set_up_window(self):
 
         self.connect_thermostat_set_up_parameters = {
             "Thermostat type": ["JULABO HE", "JULABO F", "JULABO CF", "MICRED Thermostat", "ARROYO Thermostat", "Espec", "Espec (No Addressing)", "Huber PB", "PELNUS (ADR1, BCC)", "LAUDA Variocool", "LAUDA Proline RP"],
             "Interface": ["RS232"],
-            "Baudrate": ["1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200", "230400", "460800", "500000", "576000", "921600", "1000000", "1152000", "1500000", "2000000", "2500000", "3000000", "3500000", "4000000"],
-            "Data bits": ["7", "8"],
+            "Baudrate": [1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800, 500000, 576000, 921600, 1000000, 1152000, 1500000, 2000000, 2500000, 3000000, 3500000, 4000000],
+            "Data bits": [7, 8],
             "Parity": ["None", "Odd", "Even"],
-            "Stop bits": ["1", "2"],
+            "Stop bits": [1, 2],
             "Handshake": ["None", "XON/XOFF", "Request-To-Send (RTS)", "RTS & XON/XOFF"]
         }
 
@@ -2203,6 +2198,7 @@ class ParameterApp(tk.Tk):
         ttk.Button(self.connect_thermostat_set_up_window, text="取消", command=self.connect_thermostat_set_up_window.destroy).pack(
             side=tk.LEFT, padx=5)
     
+    # Thermostat 設定值彈出視窗內的表單控件
     def create_connect_thermostat_set_up_comboboxes(self):
         for label_text, options in self.connect_thermostat_set_up_parameters.items():
             # 創建 Label
@@ -2220,21 +2216,21 @@ class ParameterApp(tk.Tk):
             # 初始化選擇值
             self.save_thermostat_config[label_text] = options[0]
 
+    # Thermostat 設定值彈出視窗內的下拉式選單選擇事件
     def on_combobox_selected(self, event, key):
         # 更新選擇值
-        self.save_thermostat_config[key] = event.widget.get()
+        value = event.widget.get()
+        if key in ["Baudrate", "Data bits", "Stop bits"]:
+            value = int(value)  # 將需要轉換為整數的值進行轉換
+        self.save_thermostat_config[key] = value
 
+    # 儲存 Thermostat 設定值到 JSON 檔案
     def save_thermostat_config_to_json(self):
         # 將選擇值寫入 JSON 檔案
         with open('thermostat_config_data.json', 'w', encoding='utf-8') as f:
             json.dump(self.save_thermostat_config, f, ensure_ascii=False, indent=4)
         self.connect_thermostat_set_up_window.destroy()
     
- 
-
-
-
-
 
     def toggle_tsp_checkbutton(self):
         """用來啟用或禁用 TSP calibration 的輸入框"""

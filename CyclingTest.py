@@ -15,13 +15,29 @@ def load_saved_parameters_json():
     # 從 saved_parameters.json 中讀取變數
     with open('saved_parameters.json', 'r') as file:
         return json.load(file)
-    
 
 config_data = load_saved_parameters_json()
 
 
+def load_thermostat_config_data_json():
+    # 檢查檔案是否存在
+    if not os.path.exists('thermostat_config_data.json'):
+        print("檔案不存在，返回預設值")
+        return {}
 
+    try:
+        # 從 thermostat_config_data.json 中讀取變數
+        with open('thermostat_config_data.json', 'r') as file:
+            data = json.load(file)
+            if not data:
+                print("檔案中沒有值，返回預設值")
+                return {}
+            return data
+    except json.JSONDecodeError:
+        print("檔案格式錯誤，返回預設值")
+        return {}
 
+thermostat_config_data = load_thermostat_config_data_json()
 
 
 # 創建新資料夾的函數
@@ -151,6 +167,41 @@ command_start_tspcalib = {
     "LoadConfig": True,
 }
 
+# 啟用 thermostat
+command_enable_thermostat = {
+    "Command": "ENABLE_THERMOSTAT",
+    "Alias": "/THERMOSTAT/0"
+}
+
+# 關閉 thermostat
+command_disable_thermostat = {
+    "Command": "DISABLE_THERMOSTAT",
+    "Alias": "/THERMOSTAT/0"
+}
+
+# 保存 thermostat 設定參數
+command_save_thermostat_config = {
+    "Command": "SAVE_THERMOSTAT_CONFIG",
+    "Alias": "/THERMOSTAT/0",
+    "SerialTransport": {
+        "BaudRate": thermostat_config_data["Baudrate"],
+        "DataBits": thermostat_config_data["Data bits"],
+        "Handshake": thermostat_config_data["Handshake"],
+        "InterfaceID": "RS232",
+        "Parity": thermostat_config_data["Parity"],
+        "StopBits": thermostat_config_data["Stop bits"],
+        "Timeout": 2000,
+        "WriteSleep": 100
+    },
+    "StabilityCriteria": {
+        "DtMinMax": 0.1,
+        "DtTarget": 0.25,
+        "TimeWindow": 60,
+        "Timeout": 1800,
+    },
+    "ThermostatType": thermostat_config_data["Thermostat type"]
+}
+
 # WebSocket 查詢
 def do_web_socket_string_query(ws: WebSocket, command: dict) -> dict:
     ws.send(json.dumps(command))
@@ -244,7 +295,35 @@ def execute_measurements(folder_name):
         api_version = do_web_socket_string_query(websocket_transport, command_query_api_version)
         print(f"API 版本: {api_version['Answer']}")
 
-        
+
+        print(thermostat_config_data["Baudrate"])
+        print(thermostat_config_data["Data bits"])
+        print(thermostat_config_data["Handshake"])
+        print(thermostat_config_data["Parity"])
+        print(thermostat_config_data["Stop bits"])
+
+
+
+
+
+
+
+        # 是否連接到 thermostat
+        if config_data["Connect_to_Thermostat"] == True:
+            # 關閉 thermostat 以設定新的參數
+            if not do_web_socket_bool_query(websocket_transport, command_disable_thermostat):
+                raise Exception("無法關閉 thermostat")
+            # 保存 thermostat 設定參數
+            if not do_web_socket_bool_query(websocket_transport, command_save_thermostat_config):
+                raise Exception("無法保存 thermostat 配置")
+            # 啟用 thermostat
+            if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
+                raise Exception("無法啟用 thermostat")           
+        else:
+            # 關閉 thermostat
+            if not do_web_socket_bool_query(websocket_transport, command_disable_thermostat):
+                raise Exception("無法關閉 thermostat")
+
         # TSP 設定
         if not do_web_socket_bool_query(websocket_transport, command_save_config):
             raise Exception("無法保存配置")     

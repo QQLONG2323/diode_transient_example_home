@@ -46,8 +46,8 @@ if __name__ == '__main__':
         Command_Remove =  do_web_socket_string_query(websocket_transport, Command_Remove)
         print(Command_Remove)
         
-        Command_Reboot =  do_web_socket_string_query(websocket_transport, command_reboot)
-        print(command_reboot)
+        # Command_Reboot =  do_web_socket_string_query(websocket_transport, command_reboot)
+        # print(command_reboot)
 
 
     except Exception as e:

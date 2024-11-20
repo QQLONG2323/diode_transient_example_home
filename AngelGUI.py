@@ -2169,13 +2169,13 @@ class ParameterApp(tk.Tk):
     def open_connect_thermostat_set_up_window(self):
 
         self.connect_thermostat_set_up_parameters = {
-            "Thermostat type": ["JULABO HE", "JULABO F", "JULABO CF", "MICRED Thermostat", "ARROYO Thermostat", "Espec", "Espec (No Addressing)", "Huber PB", "PELNUS (ADR1, BCC)", "LAUDA Variocool", "LAUDA Proline RP"],
+            "Thermostat type": ["JULABO_HE", "JULABO_F", "JULABO_CF", "MICREDTHT", "ARROYO", "ESPEC", "ESPEC (No Addressing)", "HUBER_PB", "PELNUS (ADR1, BCC)", "LAUDA Variocool", "LAUDA Proline RP"],
             "Interface": ["RS232"],
             "Baudrate": [1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800, 500000, 576000, 921600, 1000000, 1152000, 1500000, 2000000, 2500000, 3000000, 3500000, 4000000],
             "Data bits": [7, 8],
-            "Parity": ["None", "Odd", "Even"],
-            "Stop bits": [1, 2],
-            "Handshake": ["None", "XON/XOFF", "Request-To-Send (RTS)", "RTS & XON/XOFF"]
+            "Parity": ["NONE", "ODD", "EVEN"],
+            "Stop bits": ["SB1", "SB2"],
+            "Handshake": ["NONE", "XON/XOFF", "REQUESTTOSEND", "REQUESTTOSENDXONXOFF"]
         }
 
         # 建立彈出視窗

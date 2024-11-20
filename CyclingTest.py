@@ -56,92 +56,6 @@ command_get_file_list = {"Command": "QUERY_TASK_RESULT_FILE_LIST", "TaskAlias": 
 command_remove_transient_task = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": "diode_config_transient"}
 command_remove_resource_alloc = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": "diode_config"}
 
-# 配置保存命令（初始配置）
-command_save_config = {
-    "Command": "SAVE_CONFIG",
-    "Type": "Config",
-    "ConfigName": "diode_config",
-    "ConfigParams": {"Description": "Test"},
-    "Resources": {
-        "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
-        "CurrentSourceWithActiveloadParams": [ ],
-        "DividerParams": [ ],
-        "VoltageSourceParams": [ ],
-        "MeasCardChParams":config_data["Resources"]["MeasCardChParams"],
-        "ThermometerCardChParams": [ ],
-        "ThermostatParams": config_data["Resources"]["ThermostatParams"],
-        "TriggerOutputParams": [ ]
-    },
-    "TimingParams": {
-        "TransientMode": {
-            "locked": False,
-            "default": "REPEATED_COOLING"
-        },
-        "SamplePerOctave": {
-            "default": 1000,
-            "locked": False,
-            "min": 1000,
-            "max": 1000
-        },
-           "HeatingTime": {"default": config_data["Pulse Cycling On [s]"], "locked": False},
-            "CoolingTime": {"default": config_data["Pulse Cycling Off [s]"], "locked": False},
-            "DelayTime": {"default": 0, "locked": False},
-            "Repeat": {"default": config_data["Pulse Cycling Repeat"], "locked": False}
-    },
-    "SourceTimingControl": {
-        "locked": False,
-        "Enabled": False,
-        "ReversePowerOff": True,
-        "WaitForInstrumentDelay": True,
-        "PowerOn": [ ],
-        "PowerOff": [ ]
-    },
-    "TspCalibParams": config_data["TspCalibParams"]
-}
-
-
-# 修改後的配置（B組）
-command_save_config_b_no_wait = {
-    "Command": "SAVE_CONFIG",
-    "Type": "Config",
-    "ConfigName": "diode_config",
-    "ConfigParams": {"Description": "Test"},
-    "Resources": {
-        "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
-        "CurrentSourceWithActiveloadParams": [ ],
-        "DividerParams": [ ],
-        "VoltageSourceParams": [ ],
-        "MeasCardChParams":config_data["Resources"]["MeasCardChParams"],
-        "ThermometerCardChParams": [ ],
-        "ThermostatParams": config_data["Resources"]["ThermostatParams_no_wait"],
-        "TriggerOutputParams": [ ]
-    },
-    "TimingParams": {
-        "TransientMode": {
-            "locked": False,
-            "default": "REPEATED_COOLING"
-        },
-        "SamplePerOctave": {
-            "default": 1000,
-            "locked": False,
-            "min": 1000,
-            "max": 1000
-        },
-           "HeatingTime": {"default": config_data["Rth Measurement Heating Times"], "locked": False},
-            "CoolingTime": {"default": config_data["Rth Measurement Cooling Times"], "locked": False},
-            "DelayTime": {"default": 0, "locked": False},
-            "Repeat": {"default": 1, "locked": False}
-    },
-    "SourceTimingControl": {
-        "locked": False,
-        "Enabled": False,
-        "ReversePowerOff": True,
-        "WaitForInstrumentDelay": True,
-        "PowerOn": [ ],
-        "PowerOff": [ ]
-    },
-    "TspCalibParams": config_data["TspCalibParams"],
-}
 
 command_do_resource_alloc = {
     "Command": "START_TASK",
@@ -179,28 +93,6 @@ command_disable_thermostat = {
     "Alias": "/THERMOSTAT/0"
 }
 
-# 保存 thermostat 設定參數
-command_save_thermostat_config = {
-    "Command": "SAVE_THERMOSTAT_CONFIG",
-    "Alias": "/THERMOSTAT/0",
-    "SerialTransport": {
-        "BaudRate": thermostat_config_data["Baudrate"],
-        "DataBits": thermostat_config_data["Data bits"],
-        "Handshake": thermostat_config_data["Handshake"],
-        "InterfaceID": "RS232",
-        "Parity": thermostat_config_data["Parity"],
-        "StopBits": thermostat_config_data["Stop bits"],
-        "Timeout": 2000,
-        "WriteSleep": 100
-    },
-    "StabilityCriteria": {
-        "DtMinMax": 0.1,
-        "DtTarget": 0.25,
-        "TimeWindow": 60,
-        "Timeout": 1800,
-    },
-    "ThermostatType": thermostat_config_data["Thermostat type"]
-}
 
 # WebSocket 查詢
 def do_web_socket_string_query(ws: WebSocket, command: dict) -> dict:
@@ -272,7 +164,7 @@ def open_folder(folder_path):
         print(f"無法打開資料夾: {folder_path}，發生錯誤: {e}")
 
 # ------ 執行測量 -----
-def execute_measurements(folder_name):
+def execute_measurements(folder_name, command_save_config, command_save_config_b_no_wait, command_save_thermostat_config):
     # 測量次數設定
     # measurement_count = config_data["Pulse Cycling Repeat"]
     cycle_count = config_data["total Measurement Cycling Repeat"]
@@ -295,19 +187,6 @@ def execute_measurements(folder_name):
         api_version = do_web_socket_string_query(websocket_transport, command_query_api_version)
         print(f"API 版本: {api_version['Answer']}")
 
-
-        print(thermostat_config_data["Baudrate"])
-        print(thermostat_config_data["Data bits"])
-        print(thermostat_config_data["Handshake"])
-        print(thermostat_config_data["Parity"])
-        print(thermostat_config_data["Stop bits"])
-
-
-
-
-
-
-
         # 是否連接到 thermostat
         if config_data["Connect_to_Thermostat"] == True:
             # 關閉 thermostat 以設定新的參數
@@ -325,43 +204,46 @@ def execute_measurements(folder_name):
                 raise Exception("無法關閉 thermostat")
 
         # TSP 設定
-        if not do_web_socket_bool_query(websocket_transport, command_save_config):
-            raise Exception("無法保存配置")     
-        
-        if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
-            raise Exception("資源分配失敗")
-        while True:
-            sleep(1)
-            task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
-            if task_status["Answer"] == "RUN":
-                print("TSP 測量資源分配完成")
-                break          
+        if config_data["TSP"] == True:
+            if not do_web_socket_bool_query(websocket_transport, command_save_config):
+                raise Exception("無法保存配置")     
+            
+            if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
+                raise Exception("資源分配失敗")
+            while True:
+                sleep(1)
+                task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
+                if task_status["Answer"] == "RUN":
+                    print("TSP 測量資源分配完成")
+                    break          
 
-        # 啟動 TSP
-        if not do_web_socket_string_query(websocket_transport, command_start_tspcalib):
-            raise Exception("TSP 測量啟動失敗")
+            # 啟動 TSP
+            if not do_web_socket_string_query(websocket_transport, command_start_tspcalib):
+                raise Exception("TSP 測量啟動失敗")
+            else:
+                print("TSP 開始測量")
+
+            busy = True
+            while busy:
+                sleep(1)
+                task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
+                print(f"TSP 測量中，請稍候... {task_status['Percentage']}%")
+                if task_status["Answer"] != "RUN":
+                    busy = False
+                    print(f"TSP 測量完成")
+
+            # 取得並下載 TSP 檔案
+            file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
+
+            for file in file_list["Result"]:
+                if "Filename" in file:
+                    tco_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], 1, "TSP", folder_name)
+
+            # 刪除資源和瞬態任務
+            do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
+            do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
         else:
-            print("TSP 開始測量")
-
-        busy = True
-        while busy:
-            sleep(1)
-            task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
-            print(f"TSP 測量中，請稍候... {task_status['Percentage']}%")
-            if task_status["Answer"] != "RUN":
-                busy = False
-                print(f"TSP 測量完成")
-
-        # 取得並下載 TSP 檔案
-        file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
-
-        for file in file_list["Result"]:
-            if "Filename" in file:
-                tco_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], 1, "TSP", folder_name)
-
-        # 刪除資源和瞬態任務
-        do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
-        do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
+            print("不執行 TSP 測量")
         
         
         
@@ -630,17 +512,125 @@ def Cycling_Test():
     global config_data
     config_data = load_saved_parameters_json()
 
-    # print("我是CYCLING")
+    global thermostat_config_data
+    thermostat_config_data = load_thermostat_config_data_json()
 
+    # 配置保存命令（初始配置）
+    command_save_config = {
+        "Command": "SAVE_CONFIG",
+        "Type": "Config",
+        "ConfigName": "diode_config",
+        "ConfigParams": {"Description": "Test"},
+        "Resources": {
+            "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
+            "CurrentSourceWithActiveloadParams": [ ],
+            "DividerParams": [ ],
+            "VoltageSourceParams": [ ],
+            "MeasCardChParams":config_data["Resources"]["MeasCardChParams"],
+            "ThermometerCardChParams": [ ],
+            "ThermostatParams": config_data["Resources"]["ThermostatParams"],
+            "TriggerOutputParams": [ ]
+        },
+        "TimingParams": {
+            "TransientMode": {
+                "locked": False,
+                "default": "REPEATED_COOLING"
+            },
+            "SamplePerOctave": {
+                "default": 1000,
+                "locked": False,
+                "min": 1000,
+                "max": 1000
+            },
+            "HeatingTime": {"default": config_data["Pulse Cycling On [s]"], "locked": False},
+            "CoolingTime": {"default": config_data["Pulse Cycling Off [s]"], "locked": False},
+            "DelayTime": {"default": 0, "locked": False},
+            "Repeat": {"default": config_data["Pulse Cycling Repeat"], "locked": False}
+        },
+        "SourceTimingControl": {
+            "locked": False,
+            "Enabled": False,
+            "ReversePowerOff": True,
+            "WaitForInstrumentDelay": True,
+            "PowerOn": [ ],
+            "PowerOff": [ ]
+        },
+        "TspCalibParams": config_data["TspCalibParams"]
+    }
 
-    
+    # 修改後的配置（B組）
+    command_save_config_b_no_wait = {
+        "Command": "SAVE_CONFIG",
+        "Type": "Config",
+        "ConfigName": "diode_config",
+        "ConfigParams": {"Description": "Test"},
+        "Resources": {
+            "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
+            "CurrentSourceWithActiveloadParams": [ ],
+            "DividerParams": [ ],
+            "VoltageSourceParams": [ ],
+            "MeasCardChParams":config_data["Resources"]["MeasCardChParams"],
+            "ThermometerCardChParams": [ ],
+            "ThermostatParams": config_data["Resources"]["ThermostatParams_no_wait"],
+            "TriggerOutputParams": [ ]
+        },
+        "TimingParams": {
+            "TransientMode": {
+                "locked": False,
+                "default": "REPEATED_COOLING"
+            },
+            "SamplePerOctave": {
+                "default": 1000,
+                "locked": False,
+                "min": 1000,
+                "max": 1000
+            },
+            "HeatingTime": {"default": config_data["Rth Measurement Heating Times"], "locked": False},
+                "CoolingTime": {"default": config_data["Rth Measurement Cooling Times"], "locked": False},
+                "DelayTime": {"default": 0, "locked": False},
+                "Repeat": {"default": 1, "locked": False}
+        },
+        "SourceTimingControl": {
+            "locked": False,
+            "Enabled": False,
+            "ReversePowerOff": True,
+            "WaitForInstrumentDelay": True,
+            "PowerOn": [ ],
+            "PowerOff": [ ]
+        },
+        "TspCalibParams": config_data["TspCalibParams"],
+    }
+
+    # 保存 thermostat 設定參數
+    command_save_thermostat_config = {
+        "Command": "SAVE_THERMOSTAT_CONFIG",
+        "Alias": "/THERMOSTAT/0",
+        "Answer": "OK",
+        "SerialTransport": {
+            "BaudRate": thermostat_config_data["Baudrate"],
+            "DataBits": thermostat_config_data["Data bits"],
+            "Handshake": thermostat_config_data["Handshake"],
+            "InterfaceID": "RS232",
+            "Parity": thermostat_config_data["Parity"],
+            "StopBits": thermostat_config_data["Stop bits"],
+            "Timeout": 2000,
+            "WriteSleep": 100
+        },
+        "StabilityCriteria": {
+            "DtMinMax": 0.1,
+            "DtTarget": 0.25,
+            "TimeWindow": 60,
+            "Timeout": 1800,
+        },
+        "ThermostatType": thermostat_config_data["Thermostat type"]
+    }
 
     # 創建新資料夾
     folder_name = create_new_folder()
     print(f"創建新資料夾: {folder_name}")
 
     # 執行測量並獲取下載的文件列表
-    downloaded_files = execute_measurements(folder_name)
+    downloaded_files = execute_measurements(folder_name, command_save_config, command_save_config_b_no_wait, command_save_thermostat_config)
 
     if not downloaded_files:
         print("錯誤：沒有下載到任何文件")

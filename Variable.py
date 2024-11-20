@@ -6,20 +6,49 @@ from websocket import WebSocket
 from websocket import create_connection
 from typing import Dict
 import urllib.request
-
+import os
 
 def websocket_test():
     # 配置 IP 地址
     IP_ADDRESS = "192.168.20.99"
 
     # 從 saved_parameters.json 中讀取變數
-    with open('saved_parameters.json', 'r') as file:
-        config_data = json.load(file)
+    def load_saved_parameters_json():
+        # 從 saved_parameters.json 中讀取變數
+        with open('saved_parameters.json', 'r') as file:
+            return json.load(file)
+
+    config_data = load_saved_parameters_json()
+
+    # 從 thermostat_config_data.json 中讀取變數
+    def load_thermostat_config_data_json():
+        # 檢查檔案是否存在
+        if not os.path.exists('thermostat_config_data.json'):
+            print("檔案不存在，返回預設值")
+            return {}
+
+        try:
+            # 從 thermostat_config_data.json 中讀取變數
+            with open('thermostat_config_data.json', 'r') as file:
+                data = json.load(file)
+                if not data:
+                    print("檔案中沒有值，返回預設值")
+                    return {}
+                return data
+        except json.JSONDecodeError:
+            print("檔案格式錯誤，返回預設值")
+            return {}
+
+    thermostat_config_data = load_thermostat_config_data_json()
 
     # 定義命令
     command_system_ready = {"Command": "QUERY_SYSTEM_INTEGRITY"}
     command_query_api_version = {"Command": "GET_API_VERSION"}
-    # command_enable_thermostat = {"Command": "ENABLE_THERMOSTAT", "Alias": "/THERMOSTAT/0"}
+    command_query_alloc_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": "diode_config"}
+    command_query_measurement_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": "diode_config_transient"}
+    command_get_file_list = {"Command": "QUERY_TASK_RESULT_FILE_LIST", "TaskAlias": "diode_config_transient"}
+    command_remove_transient_task = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": "diode_config_transient"}
+    command_remove_resource_alloc = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": "diode_config"}
 
     # 使用從 JSON 文件中導入的數據
     command_save_config = {
@@ -31,22 +60,11 @@ def websocket_test():
         },
         "Resources": {
             "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
-            
+            "CurrentSourceWithActiveloadParams": [ ],
+            "DividerParams": [ ],
+            "VoltageSourceParams": [ ],
             "MeasCardChParams": config_data["Resources"]["MeasCardChParams"],
-    
-
-            # "CurrentSourceWithActiveloadParams": [
-
-            # ],
-            # "DividerParams": [
-
-            # ],
-            # "VoltageSourceParams": [
-
-            # ],
-            
-
-            # "ThermometerCardChParams": [
+            "ThermometerCardChParams": [
                 # {
                 #     "Alias": Unique_system_selected_alias,
                 #     "UserAlias": User_defined_alias,
@@ -64,12 +82,9 @@ def websocket_test():
                 #         "locked": False
                 #     }
                 # }
-            # ],
-            # THERMOSTAT_CONFIG
+            ],
             "ThermostatParams": config_data["Resources"]["ThermostatParams"],
-            "TriggerOutputParams": [
-
-            ]
+            "TriggerOutputParams": [ ]
         },
         "TimingParams": {
             "HeatingTime": {"default": config_data["Heating_time"], "locked": False, "min": 0, "max": 4000},
@@ -87,28 +102,38 @@ def websocket_test():
                 "max": 1000
             }
         },
-
-        
-
-
-
-
-        # TSP is Optional
-        "TspCalibParams": config_data["TspCalibParams"],
-
-        # SourceTimingControl is Optional
         "SourceTimingControl": {
             "locked": False,
             "Enabled": False,
             "ReversePowerOff": True,
             "WaitForInstrumentDelay": True,
-            "PowerOn": [
+            "PowerOn": [ ],
+            "PowerOff": [ ]
+        },
+        "TspCalibParams": config_data["TspCalibParams"]
+    }
 
-            ],
-            "PowerOff": [
-
-            ]
-        }
+    command_save_thermostat_config = {
+        "Command": "SAVE_THERMOSTAT_CONFIG",
+        "Alias": "/THERMOSTAT/0",
+        "Answer": "OK",
+        "SerialTransport": {
+            "BaudRate": thermostat_config_data["Baudrate"],
+            "DataBits": thermostat_config_data["Data bits"],
+            "Handshake": thermostat_config_data["Handshake"],
+            "InterfaceID": "RS232",
+            "Parity": thermostat_config_data["Parity"],
+            "StopBits": thermostat_config_data["Stop bits"],
+            "Timeout": 2000,
+            "WriteSleep": 100
+        },
+        "StabilityCriteria": {
+            "DtMinMax": 0.1,
+            "DtTarget": 0.25,
+            "TimeWindow": 60,
+            "Timeout": 1800,
+        },
+        "ThermostatType": thermostat_config_data["Thermostat type"]
     }
 
     command_do_resource_alloc = {
@@ -129,50 +154,28 @@ def websocket_test():
         "LoadConfig": True
     }
 
-    command_query_alloc_task_status = {
-        "Command": "QUERY_TASK_STATUS",
-        "TaskAlias": "diode_config"
+    command_start_tspcalib = {
+    "Command": "START_TASK",
+    "TaskMode": "TSPCALIB",
+    "ConfigName": "diode_config",
+    "TaskAlias": "diode_config_transient",
+    "LoadConfig": True,
     }
 
-    command_query_measurement_task_status = {
-        "Command": "QUERY_TASK_STATUS",
-        "TaskAlias": "diode_config_transient"
+    # 啟用 thermostat
+    command_enable_thermostat = {
+        "Command": "ENABLE_THERMOSTAT",
+        "Alias": "/THERMOSTAT/0"
     }
 
-    command_get_file_list = {
-        "Command": "QUERY_TASK_RESULT_FILE_LIST",
-        "TaskAlias": "diode_config_transient"
+    # 關閉 thermostat
+    command_disable_thermostat = {
+        "Command": "DISABLE_THERMOSTAT",
+        "Alias": "/THERMOSTAT/0"
     }
-
-    command_query_task_list = {
-        "Command": "QUERY_TASKLIST"
-    }
-
-    command_query_transient_task_presence = {
-        "Command": "QUERY_TASK_PRESENCE",
-        "TaskAlias": "diode_config_transient"
-    }
-
-    command_remove_transient_task = {
-        "Command": "STOP_AND_REMOVE_TASK",
-        "TaskAlias": "diode_config_transient"
-    }
-
-    command_query_resource_alloc_task_presence = {
-        "Command": "QUERY_TASK_PRESENCE",
-        "TaskAlias": "diode_config"
-    }
-
-    command_remove_resource_alloc = {
-        "Command": "STOP_AND_REMOVE_TASK",
-        "TaskAlias": "diode_config"
-    }
-
-
 
 
     # WebSocket 操作的相關函數和測量流程不變
-
     def do_web_socket_string_query(ws: WebSocket, command: Dict) -> Dict:
         ws.send(json.dumps(command))
         answer_str = ws.recv()
@@ -181,18 +184,15 @@ def websocket_test():
             raise Exception("Error on command '"+ json.dumps(command) + "': " + answer["Message"])
         return answer
 
-
     def do_web_socket_bool_query(ws: WebSocket, command: Dict) -> bool:
         answer = do_web_socket_string_query(ws, command)
         return answer["Answer"] == "OK"
 
 
-
-
-
     print("Measurement started")
     websocket_url = "ws://" + IP_ADDRESS + ":8085"
     websocket_transport = WebSocket()
+
 
     try:
 
@@ -219,7 +219,23 @@ def websocket_test():
         api_version_str = api_version["Answer"]
         api_version_str = api_version_str[:api_version_str.find('.')]
         if api_version_str != "2":
-            raise Exception("Not supported major api version")              
+            raise Exception("Not supported major api version")
+
+        # 是否連接到 thermostat
+        if config_data["Connect_to_Thermostat"] == True:
+            # 關閉 thermostat 以設定新的參數
+            if not do_web_socket_bool_query(websocket_transport, command_disable_thermostat):
+                raise Exception("無法關閉 thermostat")
+            # 保存 thermostat 設定參數
+            if not do_web_socket_bool_query(websocket_transport, command_save_thermostat_config):
+                raise Exception("無法保存 thermostat 配置")
+            # 啟用 thermostat
+            if not do_web_socket_bool_query(websocket_transport, command_enable_thermostat):
+                raise Exception("無法啟用 thermostat")           
+        else:
+            # 關閉 thermostat
+            if not do_web_socket_bool_query(websocket_transport, command_disable_thermostat):
+                raise Exception("無法關閉 thermostat")              
 
 
         # ---- Save config

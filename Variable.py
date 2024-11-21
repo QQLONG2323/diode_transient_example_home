@@ -237,6 +237,47 @@ def websocket_test():
             if not do_web_socket_bool_query(websocket_transport, command_disable_thermostat):
                 raise Exception("無法關閉 thermostat")              
 
+        # TSP 設定
+        if config_data["TSP"] == True:
+            if not do_web_socket_bool_query(websocket_transport, command_save_config):
+                raise Exception("無法保存配置")     
+            
+            if not do_web_socket_bool_query(websocket_transport, command_do_resource_alloc):
+                raise Exception("資源分配失敗")
+            while True:
+                sleep(1)
+                task_status = do_web_socket_string_query(websocket_transport, command_query_alloc_task_status)
+                if task_status["Answer"] == "RUN":
+                    print("TSP 測量資源分配完成")
+                    break          
+
+            # 啟動 TSP
+            if not do_web_socket_string_query(websocket_transport, command_start_tspcalib):
+                raise Exception("TSP 測量啟動失敗")
+            else:
+                print("TSP 開始測量")
+
+            busy = True
+            while busy:
+                sleep(1)
+                task_status = do_web_socket_string_query(websocket_transport, command_query_measurement_task_status)
+                print(f"TSP 測量中，請稍候... {task_status['Percentage']}%")
+                if task_status["Answer"] != "RUN":
+                    busy = False
+                    print(f"TSP 測量完成")
+
+            # 取得並下載 TSP 檔案
+            file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
+
+            # for file in file_list["Result"]:
+            #     if "Filename" in file:
+            #         tco_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], 1, "TSP", folder_name)
+
+            # 刪除資源和瞬態任務
+            do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
+            do_web_socket_bool_query(websocket_transport, command_remove_resource_alloc)
+        else:
+            print("不執行 TSP 測量")
 
         # ---- Save config
         if not do_web_socket_bool_query(websocket_transport, command_save_config):
@@ -285,6 +326,8 @@ def websocket_test():
 
     except Exception as e:
         print("Error: " + str(e))
+    finally:
+        websocket_transport.close()
 
     # Close
     websocket_transport.close()

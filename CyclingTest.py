@@ -189,9 +189,6 @@ def execute_measurements(folder_name, command_save_config, command_save_config_b
 
         # 是否連接到 thermostat
         if config_data["Connect_to_Thermostat"] == True:
-            # 關閉 thermostat 以設定新的參數
-            if not do_web_socket_bool_query(websocket_transport, command_disable_thermostat):
-                raise Exception("無法關閉 thermostat")
             # 保存 thermostat 設定參數
             if not do_web_socket_bool_query(websocket_transport, command_save_thermostat_config):
                 raise Exception("無法保存 thermostat 配置")
@@ -603,7 +600,7 @@ def Cycling_Test():
 
     # 保存 thermostat 設定參數
     command_save_thermostat_config = {
-        "Command": "SAVE_THERMOSTAT_CONFIG",
+        "Command": "TRY_INIT_THEMOSTAT_AND_SAVE_CONFIG",
         "Alias": "/THERMOSTAT/0",
         "Answer": "OK",
         "SerialTransport": {

@@ -1,8 +1,4 @@
 import json
-from time import sleep
-from websocket import WebSocket
-from websocket import create_connection
-from typing import Dict
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
@@ -11,6 +7,7 @@ import itertools
 from io import StringIO
 import sys
 import threading
+from tkinter import font
 
 
 class ParameterApp(tk.Tk):
@@ -19,6 +16,10 @@ class ParameterApp(tk.Tk):
 
         self.title("T3STER SI")
         self.geometry("1280x960")
+
+        # 設置 Sensor 字體大小
+        large_font = font.Font(family="Helvetica", size=16, weight="bold")
+        ttk.Style().configure(f"Sensor.TCheckbutton", font=large_font)
 
         self.params_file = "params.json"
         self.saved_parameters = self.load_params()
@@ -1124,6 +1125,12 @@ class ParameterApp(tk.Tk):
             checkbutton = ttk.Checkbutton(
                 frame, text=sensor, variable=self.sensor[sensor], command=lambda t=sensor: self.toggle_sensor(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
+
+            # 設置 Checkbutton 的字體
+            checkbutton.configure(style=f"Sensor.TCheckbutton")
+            
+
+            
             
 
     # 只有在 Sensor 被勾選時才彈出視窗
@@ -2183,11 +2190,6 @@ class ParameterApp(tk.Tk):
         self.connect_thermostat_set_up_window.title("Thermostat Set Up")
         self.connect_thermostat_set_up_window.geometry("800x600")
 
-        # 設定 LabelFrame 字體大小與粗體
-        style = ttk.Style()
-        style.configure("Large_Bold.TLabelframe.Label",
-                        font=("System", 16, "bold"))
-        
         # 初始化用於保存選擇值的字典
         self.save_thermostat_config = {}
 

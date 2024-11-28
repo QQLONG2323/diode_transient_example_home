@@ -18,8 +18,9 @@ class ParameterApp(tk.Tk):
         self.geometry("1280x960")
 
         # 設置 Sensor 字體大小
-        large_font = font.Font(family="Helvetica", size=16, weight="bold")
-        ttk.Style().configure(f"Sensor.TCheckbutton", font=large_font)
+        ttk.Style().configure("Large_Bold.TCheckbutton", font=("Helvetica", 16, "bold"))
+        # 設定 LabelFrame 字體大小與粗體
+        ttk.Style().configure("Large_Bold.TLabelframe.Label", font=("System", 16, "bold"))
 
         self.params_file = "params.json"
         self.saved_parameters = self.load_params()
@@ -42,7 +43,7 @@ class ParameterApp(tk.Tk):
             json.dump(str_keys_saved_parameters, file, ensure_ascii=False, indent=4)
 
 
-    # 定義一個函數，用於創建 Sensor 框架
+    # 創建 Sensor 框架
     def create_sensor_frame(self, text, column):
         frame = ttk.LabelFrame(self, text=text)
         frame.grid(column=column, row=0, padx=10, pady=10, sticky=tk.NSEW)
@@ -1127,10 +1128,7 @@ class ParameterApp(tk.Tk):
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
 
             # 設置 Checkbutton 的字體
-            checkbutton.configure(style=f"Sensor.TCheckbutton")
-            
-
-            
+            checkbutton.configure(style="Large_Bold.TCheckbutton")
             
 
     # 只有在 Sensor 被勾選時才彈出視窗
@@ -1152,16 +1150,10 @@ class ParameterApp(tk.Tk):
 
     # 彈出一個填寫參數的表單視窗
     def open_parameter_window(self, sensor):
-
         # 建立彈出視窗
         param_window = tk.Toplevel(self)
         param_window.title(f"{sensor}")
         param_window.geometry("")
-
-        # 設定 LabelFrame 字體大小與粗體
-        style = ttk.Style()
-        style.configure("Large_Bold.TLabelframe.Label",
-                        font=("System", 16, "bold"))
 
         # 建立頂端按鈕框架
         option_frame = ttk.Frame(param_window)
@@ -1214,7 +1206,7 @@ class ParameterApp(tk.Tk):
         # Option 排版
         for i, option in enumerate(list(self.sensor_option_parameters[sensor].keys())):
             tk.Radiobutton(option_frame, text=option, variable=self.option[sensor], value=option, font=(
-                "System", 16, "bold"), command=lambda: self.update_form(sensor)).grid(row=0, column=i+1, padx=20, pady=5)
+                "Helvetica", 16, "bold"), command=lambda: self.update_form(sensor)).grid(row=0, column=i+1, padx=20, pady=5)
         
         # 建立每個 Sensor 中的參數表單
         self.form_widgets[sensor] = {}

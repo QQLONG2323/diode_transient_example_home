@@ -7,7 +7,6 @@ import itertools
 from io import StringIO
 import sys
 import threading
-from tkinter import font
 
 
 class ParameterApp(tk.Tk):

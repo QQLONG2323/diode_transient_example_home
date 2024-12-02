@@ -2306,7 +2306,7 @@ class ParameterApp(tk.Tk):
                 },
                 "OutputMode": {"default": config_data["S1Ch1_Current_source"]["Output mode"], "locked": False},
                 "SetCurrent": {"default": float(config_data["S1Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -1, "max": 1},
-                "VoltageCorner": {"default": float(config_data["S1Ch1_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10},
+                "VoltageCorner": {"default": float(config_data["S1Ch1_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10}
             })
         
         if "S1Ch2_Current_source" in config_data:

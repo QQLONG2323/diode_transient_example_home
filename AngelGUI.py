@@ -26,7 +26,7 @@ class ParameterApp(tk.Tk):
 
         self.create_page1()
 
-
+    
     def load_params(self):
         if os.path.exists(self.params_file):
             with open(self.params_file, 'r') as file:
@@ -35,7 +35,7 @@ class ParameterApp(tk.Tk):
                 return {eval(key): value for key, value in str_keys_saved_parameters.items()}
         return {}
     
-    
+    # 保存第一頁參數，以便從第二頁返回時回填
     def save_params(self):
         str_keys_saved_parameters = {str(key): value for key, value in self.saved_parameters.items()}
         with open(self.params_file, 'w') as file:
@@ -1448,7 +1448,7 @@ class ParameterApp(tk.Tk):
 
 
     def save_parameters(self, sensor, option, window):
-        """Handle form submission and save parameters"""
+        """此為保存參數的函式，將參數輸出至 params.json ， 並將參數保存到 saved_parameters 字典中以便按下 Next 之後輸出至 saved_parameters.json"""
 
         # Collect the parameters from the form (now using a dictionary to store keys and values)
         params = {}
@@ -2202,6 +2202,7 @@ class ParameterApp(tk.Tk):
             combobox = ttk.Combobox(self.connect_thermostat_set_up_window, values=options)
             combobox.pack(anchor=tk.W, padx=5, pady=5)
             combobox.set(options[0])  # 設置預設值
+            combobox.label_text = label_text  # 設置標籤屬性
 
             # 綁定選擇事件
             combobox.bind("<<ComboboxSelected>>", lambda event, key=label_text: self.on_combobox_selected(event, key))
@@ -2213,9 +2214,24 @@ class ParameterApp(tk.Tk):
     def on_combobox_selected(self, event, key):
         # 更新選擇值
         value = event.widget.get()
-        if key in ["Baudrate", "Data bits", "Stop bits"]:
+        if key in ["Baudrate", "Data bits"]:
             value = int(value)  # 將需要轉換為整數的值進行轉換
         self.save_thermostat_config[key] = value
+
+        # 根據 Thermostat type 更新 Baudrate
+        if key == "Thermostat type":
+            if value == "ARROYO":
+                self.update_baudrate(9600)
+            elif value == "MICREDTHT":
+                self.update_baudrate(1200)
+
+    def update_baudrate(self, baudrate):
+        # 更新 Baudrate 的值
+        self.save_thermostat_config["Baudrate"] = baudrate
+        # 找到 Baudrate 的 Combobox 並更新其值
+        for widget in self.connect_thermostat_set_up_window.winfo_children():
+            if isinstance(widget, ttk.Combobox) and getattr(widget, 'label_text', '') == "Baudrate":
+                widget.set(baudrate)
 
     # 儲存 Thermostat 設定值到 JSON 檔案
     def save_thermostat_config_to_json(self):

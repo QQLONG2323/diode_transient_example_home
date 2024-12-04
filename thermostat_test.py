@@ -56,6 +56,10 @@ command_save_thermostat_config = {
     # "ThermostatType": thermostat_config_data["Thermostat type"]
 }
 
+command_query_external_devices = {
+    "Command": "QUERY_EXTERNAL_DEVICES"
+}
+
 # WebSocket 查詢
 def do_web_socket_string_query(ws: WebSocket, command: dict) -> dict:
     ws.send(json.dumps(command))
@@ -81,8 +85,8 @@ if __name__ == '__main__':
         print("API 版本: " + api_version["Answer"])
 
         # 查詢 thermostat 設定參數
-        command_get_thermostat_config = do_web_socket_string_query(websocket_transport, command_get_thermostat_config)
-        print(command_get_thermostat_config)
+        # command_get_thermostat_config = do_web_socket_string_query(websocket_transport, command_get_thermostat_config)
+        # print(command_get_thermostat_config)
 
         # 啟用 thermostat
         # command_enable_thermostat = do_web_socket_bool_query(websocket_transport, command_enable_thermostat)
@@ -99,6 +103,10 @@ if __name__ == '__main__':
         # 保存 thermostat 設定參數
         # command_save_thermostat_config = do_web_socket_bool_query(websocket_transport, command_save_thermostat_config)
         # print(command_save_thermostat_config)
+
+        # 查詢 booster 外部設備
+        command_query_external_devices = do_web_socket_string_query(websocket_transport, command_query_external_devices)
+        print(command_query_external_devices)
 
 
     except Exception as e:

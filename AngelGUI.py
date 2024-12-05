@@ -19,14 +19,20 @@ class ParameterApp(tk.Tk):
         # 設置 Sensor 字體大小
         ttk.Style().configure("Large_Bold.TCheckbutton", font=("Helvetica", 16, "bold"))
         # 設定 LabelFrame 字體大小與粗體
-        ttk.Style().configure("Large_Bold.TLabelframe.Label", font=("System", 16, "bold"))
+        ttk.Style().configure("Large_Bold.TLabelframe.Label", font=("system", 12, "bold"))
 
         self.params_file = "params.json"
         self.saved_parameters = self.load_params()
 
         self.create_page1()
 
-    
+    # "保存"第一頁參數，以便從第二頁返回時回填
+    def save_params(self):
+        str_keys_saved_parameters = {str(key): value for key, value in self.saved_parameters.items()}
+        with open(self.params_file, 'w') as file:
+            json.dump(str_keys_saved_parameters, file, ensure_ascii=False, indent=4)
+
+    # "讀取"之前保存過的第一頁參數，以便從第二頁返回時回填
     def load_params(self):
         if os.path.exists(self.params_file):
             with open(self.params_file, 'r') as file:
@@ -34,22 +40,99 @@ class ParameterApp(tk.Tk):
                 # 將字典的鍵從 str 轉換回 tuple
                 return {eval(key): value for key, value in str_keys_saved_parameters.items()}
         return {}
-    
-    # 保存第一頁參數，以便從第二頁返回時回填
-    def save_params(self):
-        str_keys_saved_parameters = {str(key): value for key, value in self.saved_parameters.items()}
-        with open(self.params_file, 'w') as file:
-            json.dump(str_keys_saved_parameters, file, ensure_ascii=False, indent=4)
 
-
-    # 創建 Sensor 框架
+    # 創建 Sensor 框架的 Function
     def create_sensor_frame(self, text, column):
         frame = ttk.LabelFrame(self, text=text)
         frame.grid(column=column, row=0, padx=10, pady=10, sticky=tk.NSEW)
         self.page1_widgets.append(frame)
         return frame
 
+    # 創建 LP220 的 Sensor 、 Option 、 Parameters 的 Function
+    def create_lp220_sensor_option_parameters(self):
+        return {
+            "Current_source": {
+                "Output mode": ["Off", "On", "Switching"],
+                "Current [A]": "entry",
+                "Voltage limit [V]": "entry"
+            },
+            "Voltage_source": {
+                "Output mode": ["Off", "On", "Switching"],
+                "On-state voltage [V]": "entry",
+                "Current limit [A]": "entry"
+            }
+        }
+    
+    # 創建 MS401 的 Sensor 、 Option 、 Parameters 的 Function
+    def create_ms401_sensor_option_parameters(self):
+        return {
+            "Current_source": {
+                "Output mode": ["Off", "ON"],
+                "Range [V]": ["10", "20", "40"],
+                "Current [A]": "entry"
+            },
+            "Measurement_channel": {
+                "Sensitivity [mV/K]": "entry",
+                "Auto range": ["Off", "On"],
+                "Range": [
+                    "Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                    "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                    "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                    "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                    "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                    "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                    "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                    "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                    "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                    "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                    "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                    "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                    "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                    "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                ],
+                "Vref [V]": "entry",
+                "Separate Vref for heating": ["Off", "On"],
+                "Vref,heating [V]": "entry"
+            },
+            "Both": {
+                "Output mode": ["Off", "ON"],
+                "Current_source_Range": ["10", "20", "40"],
+                "Current [A]": "entry",
+                "Sensitivity [mV/K]": "entry",
+                "Auto range": ["Off", "On"],
+                "Measurement_channel_Range": [
+                    "Fall scale: 20 V, V(in): -10 V ~ 10 V",
+                    "Fall scale: 10 V, V(in): -10 V ~ 10 V",
+                    "Fall scale: 4 V, V(in): -10 V ~ 10 V",
+                    "Fall scale: 2 V, V(in): -10 V ~ 10 V",
+                    "Fall scale: 1 V, V(in): -10 V ~ 10 V",
+                    "Fall scale: 20 V, V(in): -20 V ~ 20 V",
+                    "Fall scale: 8 V, V(in): -20 V ~ 20 V",
+                    "Fall scale: 4 V, V(in): -20 V ~ 20 V",
+                    "Fall scale: 40 V, V(in): -40 V ~ 40 V",
+                    "Fall scale: 16 V, V(in): -40 V ~ 40 V",
+                    "Fall scale: 8 V, V(in): -40 V ~ 40 V",
+                    "Fall scale: 32 V, V(in): -80 V ~ 80 V",
+                    "Fall scale: 16 V, V(in): -80 V ~ 80 V",
+                    "Fall scale: 8 V, V(in): -80 V ~ 80 V",
+                ],
+                "Vref [V]": "entry",
+                "Separate Vref for heating": ["Off", "On"],
+                "Vref,heating [V]": "entry"
+            }
+        }
+    
+    # 創建 TH800 的 Sensor 、 Option 、 Parameters 的 Function
+    def create_th800_sensor_option_parameters(self):
+        return {
+            "Thermometer": {
+                "Type": "entry",
+                "Sensitivity": "entry",
+                "Sample per sec": "entry"
+            }
+        }
 
+    # 創建第一頁
     def create_page1(self):
 
         # 用於儲存第一個頁面上的所有控件
@@ -73,1030 +156,42 @@ class ParameterApp(tk.Tk):
 
         # 定義每個感測器的選項
         self.sensor_option_parameters = {
-            "S1Ch1": {
-                "Current_source": {
-                    "Output mode": ["Off", "On", "Switching"],
-                    "Current [A]": "entry",
-                    "Voltage limit [V]": "entry"
-                },
-                "Voltage_source": {
-                    "Output mode": ["Off", "On", "Switching"],
-                    "On-state voltage [V]": "entry",
-                    "Current limit [A]": "entry"
-                }
-            },
-            "S1Ch2": {
-                "Current_source": {
-                    "Output mode": ["Off", "On", "Switching"],
-                    "Current [A]": "entry",
-                    "Voltage limit [V]": "entry"
-                },
-                "Voltage_source": {
-                    "Output mode": ["Off", "On", "Switching"],
-                    "On-state voltage [V]": "entry",
-                    "Current limit [A]": "entry"
-                }
-            },
-            "S3Ch1": {
-                "Current_source": {
-                    "Output mode": ["Off", "On", "Switching"],
-                    "Current [A]": "entry",
-                    "Voltage limit [V]": "entry"
-                },
-                "Voltage_source": {
-                    "Output mode": ["Off", "On", "Switching"],
-                    "On-state voltage [V]": "entry",
-                    "Current limit [A]": "entry"
-                }
-            },
-            "S3Ch2": {
-                "Current_source": {
-                    "Output mode": ["Off", "On", "Switching"],
-                    "Current [A]": "entry",
-                    "Voltage limit [V]": "entry"
-                },
-                "Voltage_source": {
-                    "Output mode": ["Off", "On", "Switching"],
-                    "On-state voltage [V]": "entry",
-                    "Current limit [A]": "entry"
-                }
-            },
-            "S5Ch1": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S5Ch2": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S5Ch3": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S5Ch4": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S6Ch1": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S6Ch2": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S6Ch3": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S6Ch4": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S7Ch1": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S7Ch2": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S7Ch3": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S7Ch4": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S8Ch1": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S8Ch2": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S8Ch3": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S8Ch4": {
-                "Current_source": {
-                    "Output mode": ["Off", "ON"],
-                    "Range [V]": ["10", "20", "40"],
-                    "Current [A]": "entry"
-                },
-                "Measurement_channel": {
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                              "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                              "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                              "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                              "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                              ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                },
-                "Both": {
-                    "Output mode": ["Off", "ON"],
-                    "Current_source_Range": ["10", "20", "40"],
-                    "Current [A]": "entry",
-                    "Sensitivity [mV/K]": "entry",
-                    "Auto range": ["Off", "On"],
-                    "Measurement_channel_Range": ["Fall scale: 20 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 10 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 4 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 2 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 1 V, V(in): -10 V ~ 10 V",
-                                                  "Fall scale: 20 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 8 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 4 V, V(in): -20 V ~ 20 V",
-                                                  "Fall scale: 40 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 16 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 8 V, V(in): -40 V ~ 40 V",
-                                                  "Fall scale: 32 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 16 V, V(in): -80 V ~ 80 V",
-                                                  "Fall scale: 8 V, V(in): -80 V ~ 80 V",
-                                                  ],
-                    "Vref [V]": "entry",
-                    "Separate Vref for heating": ["Off", "On"],
-                    "Vref,heating [V]": "entry"
-                }
-            },
-            "S9Ch1": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S9Ch2": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S9Ch3": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S9Ch4": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S9Ch5": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S9Ch6": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S9Ch7": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S9Ch8": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S10Ch1": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S10Ch2": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S10Ch3": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S10Ch4": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S10Ch5": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S10Ch6": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S10Ch7": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
-            "S10Ch8": {
-                "Thermometer": {
-                    "Type": "entry",
-                    "Sensitivity": "entry",
-                    "Sample per sec": "entry"
-                }
-            },
+            "S1Ch1": self.create_lp220_sensor_option_parameters(),
+            "S1Ch2": self.create_lp220_sensor_option_parameters(),
+            "S3Ch1": self.create_lp220_sensor_option_parameters(),
+            "S3Ch2": self.create_lp220_sensor_option_parameters(),
+            "S5Ch1": self.create_ms401_sensor_option_parameters(),
+            "S5Ch2": self.create_ms401_sensor_option_parameters(),
+            "S5Ch3": self.create_ms401_sensor_option_parameters(),
+            "S5Ch4": self.create_ms401_sensor_option_parameters(),
+            "S6Ch1": self.create_ms401_sensor_option_parameters(),
+            "S6Ch2": self.create_ms401_sensor_option_parameters(),
+            "S6Ch3": self.create_ms401_sensor_option_parameters(),
+            "S6Ch4": self.create_ms401_sensor_option_parameters(),
+            "S7Ch1": self.create_ms401_sensor_option_parameters(),
+            "S7Ch2": self.create_ms401_sensor_option_parameters(),
+            "S7Ch3": self.create_ms401_sensor_option_parameters(),
+            "S7Ch4": self.create_ms401_sensor_option_parameters(),
+            "S8Ch1": self.create_ms401_sensor_option_parameters(),
+            "S8Ch2": self.create_ms401_sensor_option_parameters(),
+            "S8Ch3": self.create_ms401_sensor_option_parameters(),
+            "S8Ch4": self.create_ms401_sensor_option_parameters(),
+            "S9Ch1": self.create_th800_sensor_option_parameters(),
+            "S9Ch2": self.create_th800_sensor_option_parameters(),
+            "S9Ch3": self.create_th800_sensor_option_parameters(),
+            "S9Ch4": self.create_th800_sensor_option_parameters(),
+            "S9Ch5": self.create_th800_sensor_option_parameters(),
+            "S9Ch6": self.create_th800_sensor_option_parameters(),
+            "S9Ch7": self.create_th800_sensor_option_parameters(),
+            "S9Ch8": self.create_th800_sensor_option_parameters(),
+            "S10Ch1": self.create_th800_sensor_option_parameters(),
+            "S10Ch2": self.create_th800_sensor_option_parameters(),
+            "S10Ch3": self.create_th800_sensor_option_parameters(),
+            "S10Ch4": self.create_th800_sensor_option_parameters(),
+            "S10Ch5": self.create_th800_sensor_option_parameters(),
+            "S10Ch6": self.create_th800_sensor_option_parameters(),
+            "S10Ch7": self.create_th800_sensor_option_parameters(),
+            "S10Ch8": self.create_th800_sensor_option_parameters()
         }
 
         # 初始化用於保存 Sensor 、 Option 、 Parameters 和表單控件的字典
@@ -1114,7 +209,6 @@ class ParameterApp(tk.Tk):
         self.create_sensor_checkbuttons(TH800_S9_frame, 20, 28)
         self.create_sensor_checkbuttons(TH800_S10_frame, 28, 36)
 
-
     # 創建 Sensor 的 Checkbutton
     def create_sensor_checkbuttons(self, frame, start, end):
         for i, sensor in enumerate(itertools.islice(self.sensor_option_parameters.keys(), start, end)):
@@ -1129,7 +223,6 @@ class ParameterApp(tk.Tk):
             # 設置 Checkbutton 的字體
             checkbutton.configure(style="Large_Bold.TCheckbutton")
             
-
     # 只有在 Sensor 被勾選時才彈出視窗
     def toggle_sensor(self, sensor):
         if self.sensor[sensor].get():
@@ -1146,48 +239,32 @@ class ParameterApp(tk.Tk):
             if sensor in self.form_widgets:
                 self.update_form(sensor)
 
+    # 創建 Parameters 框架的 Function
+    def create_parameters_frame(self, parameter_window, text, row):
+        frame = ttk.LabelFrame(parameter_window, text=text, style="Large_Bold.TLabelframe")
+        frame.grid(row=row, column=0, padx=20, pady=20, sticky="ew")
+        return frame
 
     # 彈出一個填寫參數的表單視窗
     def open_parameter_window(self, sensor):
         # 建立彈出視窗
-        param_window = tk.Toplevel(self)
-        param_window.title(f"{sensor}")
-        param_window.geometry("")
+        parameter_window = tk.Toplevel(self)
+        parameter_window.title(f"{sensor}")
+        parameter_window.geometry("")
 
         # 建立頂端按鈕框架
-        option_frame = ttk.Frame(param_window)
+        option_frame = ttk.Frame(parameter_window)
         option_frame.grid(row=0, column=0, padx=20, pady=10, sticky="ew")
 
-        # 建立 LP220 所有的參數 table 框架
-        S1_S3_Current_source_frame = ttk.LabelFrame(
-            param_window, text="Current source", style="Large_Bold.TLabelframe")
-        S1_S3_Current_source_frame.grid(
-            row=1, column=0, padx=20, pady=20, sticky="ew")
-
-        S1_S3_Voltage_source_frame = ttk.LabelFrame(
-            param_window, text="Voltage source", style="Large_Bold.TLabelframe")
-        S1_S3_Voltage_source_frame.grid(
-            row=2, column=0, padx=20, pady=20, sticky="ew")
-
-        # 建立 MS401 所有的參數 table 框架
-        S5_S8_Current_source_frame = ttk.LabelFrame(
-            param_window, text="Current source", style="Large_Bold.TLabelframe")
-        S5_S8_Current_source_frame.grid(
-            row=1, column=0, padx=20, pady=20, sticky="ew")
-
-        S5_S8_Measurement_channel_frame = ttk.LabelFrame(
-            param_window, text="Measurement channel", style="Large_Bold.TLabelframe")
-        S5_S8_Measurement_channel_frame.grid(
-            row=2, column=0, padx=20, pady=20, sticky="ew")
-
-        # 建立 TH800 所有的參數 table 框架
-        S9_S10_Thermometer_frame = ttk.LabelFrame(
-            param_window, text="Thermometer", style="Large_Bold.TLabelframe")
-        S9_S10_Thermometer_frame.grid(
-            row=1, column=0, padx=20, pady=20, sticky="ew")
+        # 建立 LP220 、 MS401 、 TH800 裡面的參數表單框架
+        S1_S3_Current_source_frame = self.create_parameters_frame(parameter_window, "Current source", 1)
+        S1_S3_Voltage_source_frame = self.create_parameters_frame(parameter_window, "Voltage source", 2)
+        S5_S8_Current_source_frame = self.create_parameters_frame(parameter_window, "Current source", 1)
+        S5_S8_Measurement_channel_frame = self.create_parameters_frame(parameter_window, "Measurement channel", 2)
+        S9_S10_Thermometer_frame = self.create_parameters_frame(parameter_window, "Thermometer", 1)
 
         # 建立儲存、取消按鈕框架
-        button_frame = ttk.Frame(param_window)
+        button_frame = ttk.Frame(parameter_window)
         button_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
 
         # 取得對應的 Option 選項以及其參數
@@ -1406,11 +483,11 @@ class ParameterApp(tk.Tk):
 
         # 儲存、取消按鈕排版
         ttk.Button(button_frame, text="儲存", command=lambda: self.save_parameters(
-            sensor, self.option[sensor].get(), param_window)).pack(side=tk.LEFT, padx=5)
-        ttk.Button(button_frame, text="取消", command=param_window.destroy).pack(
+            sensor, self.option[sensor].get(), parameter_window)).pack(side=tk.LEFT, padx=5)
+        ttk.Button(button_frame, text="取消", command=parameter_window.destroy).pack(
             side=tk.LEFT, padx=5)
 
-
+    # 根據選擇的 Option 來開啟或禁用表單
     def update_form(self, sensor):
 
         if sensor in self.form_widgets:
@@ -1574,7 +651,7 @@ class ParameterApp(tk.Tk):
         # Close the window
         window.destroy()
 
-
+    # 第一頁按下 Next 按鈕後，將參數匯出至 saved_parameters.json
     def export_to_json(self):
         """Export saved parameters to a JSON file"""
 
@@ -1614,10 +691,22 @@ class ParameterApp(tk.Tk):
             json.dump(json_data, json_file, ensure_ascii=False, indent=4)
 
         print("參數已成功匯出到 saved_parameters.json")
+    
+    # 第一頁按下 Next 按鈕後，將參數匯出至 saved_parameters.json 並前往第二頁
+    def go_to_page2(self):
+        # 儲存參數至 JSON 檔
+        self.export_to_json()
+        """隱藏當前頁面，顯示下一頁面"""
+        # 隱藏第一頁面的所有控件
+        for widget in self.page1_widgets:
+            widget.grid_forget()
 
+        # 顯示第二頁面的控件
+        self.create_page2()
 
+    # 第二頁按下 Previous 按鈕後，返回第一頁
     def go_to_page1(self):
-        """隱藏當前頁面，顯示上一頁面"""
+        """隱藏當前頁面，顯示第一頁"""
         # 隱藏第二頁面的所有控件
         for widget in self.page2_widgets:
             widget.pack_forget()
@@ -1637,19 +726,7 @@ class ParameterApp(tk.Tk):
                         widget.delete(0, tk.END)
                         widget.insert(0, params[idx])
 
-
-    def go_to_page2(self):
-        # 儲存參數至 JSON 檔
-        self.export_to_json()
-        """隱藏當前頁面，顯示下一頁面"""
-        # 隱藏第一頁面的所有控件
-        for widget in self.page1_widgets:
-            widget.grid_forget()
-
-        # 顯示第二頁面的控件
-        self.create_page2()
-
-
+    # 創建第二頁
     def create_page2(self):
         """創建第二頁面"""
 
@@ -1659,7 +736,6 @@ class ParameterApp(tk.Tk):
         # 創建存儲第二頁參數的容器
         self.page2_parameters = {}
 
-        
         # 創建外框架
         container = ttk.Frame(self)
         container.pack(fill="both", expand=True)
@@ -1668,20 +744,17 @@ class ParameterApp(tk.Tk):
         # 創建Canvas來實現滾動功能
         canvas = tk.Canvas(container)
         canvas.pack(side="left", fill="both", expand=True)
-      
 
         # 添加垂直滾動條
         scrollbar = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
         scrollbar.pack(side="right", fill="y")
        
-
         # 將Canvas和滾動條進行連接
         canvas.configure(yscrollcommand=scrollbar.set)
 
         # 創建一個框架，放置於Canvas內部
         scrollable_frame = ttk.Frame(canvas)
    
-
         # 設置框架為Canvas的滾動區域
         scrollable_frame.bind(
             "<Configure>",
@@ -1694,24 +767,20 @@ class ParameterApp(tk.Tk):
         # 使得滾動輪也能工作
         canvas.bind_all("<MouseWheel>", lambda event: canvas.yview_scroll(int(-1*(event.delta/120)), "units"))
 
-
         # 創建框架
         config_details_frame = ttk.LabelFrame(scrollable_frame, text="Config details")
         config_details_frame.grid(
             column=0, row=0, padx=10, pady=10, sticky=tk.NSEW)
         
-
         power_steps_frame = ttk.LabelFrame(scrollable_frame, text="Power Steps")
         power_steps_frame.grid(column=0, row=1, padx=10,
                                pady=10, sticky=tk.NSEW)
        
-
         measurement_settings_frame = ttk.LabelFrame(
             scrollable_frame, text="Measurement settings")
         measurement_settings_frame.grid(
             column=0, row=2, padx=10, pady=10, sticky=tk.NSEW)
         
-
         # 是否使用重複測量功能
         # 使用 tk.BooleanVar 來控制 Cycling Test 的選中狀態
         self.cycling_test_var = tk.BooleanVar(value=False)  # 默認為未選中
@@ -1722,13 +791,11 @@ class ParameterApp(tk.Tk):
             row=3, column=0, padx=10, pady=10)
         self.page2_parameters["Cycling_Test"] = self.cycling_test_var.get()
 
-
         cycling_test_frame = ttk.LabelFrame(
             scrollable_frame, text="Cycling Test")
         cycling_test_frame.grid(
             column=0, row=4, padx=10, pady=10, sticky=tk.NSEW)
      
-
         # connect to THERMOSTAT 、是否使用 TSP
         # 使用 tk.BooleanVar 來控制 connect to THERMOSTAT 、 是否使用 TSP 的選中狀態
         self.connect_thermostat_var = tk.BooleanVar(value=False)  # 默認為未選中
@@ -1772,8 +839,6 @@ class ParameterApp(tk.Tk):
         self.progress_text = tk.Text(scrollable_frame, height=10, state="disabled")
         self.progress_text.grid(row=11, column=0, padx=10, pady=10, sticky=tk.NSEW)
         
-
-
         # Config Name 輸入框和標籤
         config_label = ttk.Label(config_details_frame, text="Config Name:")
         config_label.grid(column=0, row=0, padx=10, pady=10)
@@ -2019,7 +1084,6 @@ class ParameterApp(tk.Tk):
         self.other_lp220_current_02_entry.grid(row=11, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters["Other LP220 Current 02"] =  self.other_lp220_current_02_entry.get()
 
-
         # Temperature [°C]
         temperature_label = ttk.Label(
             thermostat_settings_for_measurement_frame, text="Temperature [°C]")
@@ -2096,8 +1160,8 @@ class ParameterApp(tk.Tk):
         # ΔT from target [°C]
         # Timeout [s]
 
-        self.update()  # 強制刷新頁面
 
+        self.update()  # 強制刷新頁面
 
     def toggle_cycling_test_checkbutton(self):
         """用來啟用或禁用 Cycling Test 的輸入框"""
@@ -2142,7 +1206,6 @@ class ParameterApp(tk.Tk):
             self.repeat_entry.delete(0, tk.END)   # 清空當前的內容
             self.repeat_entry.insert(0, "1")   # 插入數字 1
     
-    
     def toggle_connect_thermostat_checkbutton(self):
         """用來啟用或禁用 tsp 選項以及 temperature"""
         if self.connect_thermostat_var.get():  # 如果 "Connect to Thermostat" Checkbutton 被選中
@@ -2161,7 +1224,6 @@ class ParameterApp(tk.Tk):
             self.tmax_entry.config(state="disabled")  # 禁用 tmax 輸入框
             self.tstep_entry.delete(0, tk.END)  # 清空 tstep 輸入框的內容
             self.tstep_entry.config(state="disabled")  # 禁用 tstep 輸入框
-
 
     # 創建填寫 Thermostat 設定值的彈出視窗
     def open_connect_thermostat_set_up_window(self):
@@ -2225,8 +1287,8 @@ class ParameterApp(tk.Tk):
             elif value == "MICREDTHT":
                 self.update_baudrate(1200)
 
+    # 更新 Baudrate 的值
     def update_baudrate(self, baudrate):
-        # 更新 Baudrate 的值
         self.save_thermostat_config["Baudrate"] = baudrate
         # 找到 Baudrate 的 Combobox 並更新其值
         for widget in self.connect_thermostat_set_up_window.winfo_children():
@@ -2240,7 +1302,6 @@ class ParameterApp(tk.Tk):
             json.dump(self.save_thermostat_config, f, ensure_ascii=False, indent=4)
         self.connect_thermostat_set_up_window.destroy()
     
-
     def toggle_tsp_checkbutton(self):
         """用來啟用或禁用 TSP calibration 的輸入框"""
         if self.tsp_var.get():  # 如果 tspCheckbutton 被選中
@@ -2254,7 +1315,6 @@ class ParameterApp(tk.Tk):
             self.tmax_entry.config(state="disabled")  # 禁用 tmax 輸入框
             self.tstep_entry.delete(0, tk.END)  # 清空 tstep 輸入框的內容
             self.tstep_entry.config(state="disabled")  # 禁用 tstep 輸入框
-
 
     # 獲取 SI 所需的 CurrentSourceParams 參數值
     def fill_current_source_params(self, config_data):
@@ -2282,6 +1342,54 @@ class ParameterApp(tk.Tk):
             "S8Ch4": "/T3STER/0/MS401/SLOT8/CH3"
         }
 
+        current_source_params = []    
+
+        for sensor in self.sensor_rename.keys():
+            if f"{sensor}_Current_source" in config_data:
+                if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
+                    current_source_params.append({
+                        "Alias": self.sensor_rename[sensor],
+                        "UserAlias": sensor,
+                        "Delay": {
+                            "DelayFallingUs": {
+                                "default": 0,
+                                "locked": False,
+                                "min": -16383,
+                                "max": 5000
+                            },
+                            "DelayRisingUs": {
+                                "default": 0,
+                                "locked": False,
+                                "min": -16383,
+                                "max": 16383
+                            }
+                        },
+                        "OutputMode": {"default": config_data[f"{sensor}_Current_source"]["Output mode"], "locked": False},
+                        "SetCurrent": {"default": float(config_data[f"{sensor}_Current_source"]["Current [A]"]), "locked": False, "min": -1, "max": 1},
+                        "VoltageCorner": {"default": float(config_data[f"{sensor}_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10}
+                    })
+                else:
+                    current_source_params.append({
+                        "Alias": self.sensor_rename[sensor],
+                        "UserAlias": sensor,
+                        "OutputMode": {"default": config_data[f"{sensor}_Current_source"]["Output mode"], "locked": False},
+                        "SetCurrent": {"default": float(config_data[f"{sensor}_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                        "VoltageCorner": {"default": float(config_data[f"{sensor}_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40},
+                    })
+            if f"{sensor}_Both" in config_data:
+                current_source_params.append({
+                    "Alias": self.sensor_rename[sensor],
+                    "UserAlias": sensor,
+                    "OutputMode": {"default": config_data[f"{sensor}_Both"]["Output mode"], "locked": False},
+                    "SetCurrent": {"default": float(config_data[f"{sensor}_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
+                    "VoltageCorner": {"default": float(config_data[f"{sensor}_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40},
+                })
+
+        return current_source_params
+
+    # 獲取 SI 所需的 MeasCardChParams 參數值
+    def fill_measurement_params(self, config_data):
+
         self.range_rename = {
             "Fall scale: 20 V, V(in): -10 V ~ 10 V": 9,
             "Fall scale: 10 V, V(in): -10 V ~ 10 V": 10,
@@ -2298,395 +1406,6 @@ class ParameterApp(tk.Tk):
             "Fall scale: 16 V, V(in): -80 V ~ 80 V": 1,
             "Fall scale: 8 V, V(in): -80 V ~ 80 V": 2
         }
-
-       
-        current_source_params = []    
-
-        if "S1Ch1_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S1Ch1"],
-                "UserAlias": "S1Ch1",
-                "Delay": {
-                    "DelayFallingUs": {
-                        "default": 0,
-                        "locked": False,
-                        "min": -16383,
-                        "max": 5000
-                    },
-                    "DelayRisingUs": {
-                        "default": 0,
-                        "locked": False,
-                        "min": -16383,
-                        "max": 16383
-                    }
-                },
-                "OutputMode": {"default": config_data["S1Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S1Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -1, "max": 1},
-                "VoltageCorner": {"default": float(config_data["S1Ch1_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10}
-            })
-        
-        if "S1Ch2_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S1Ch2"],
-                "UserAlias": "S1Ch2",
-                "Delay": {
-                    "DelayFallingUs": {
-                        "default": 0,
-                        "locked": False,
-                        "min": -16383,
-                        "max": 5000
-                    },
-                    "DelayRisingUs": {
-                        "default": 0,
-                        "locked": False,
-                        "min": -16383,
-                        "max": 16383
-                    }
-                },
-                "OutputMode": {"default": config_data["S1Ch2_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S1Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -2, "max": 2},
-                "VoltageCorner": {"default": float(config_data["S1Ch2_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10}
-            })
-        
-        if "S3Ch1_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S3Ch1"],
-                "UserAlias": "S3Ch1",
-                "Delay": {
-                    "DelayFallingUs": {
-                        "default": 0,
-                        "locked": False,
-                        "min": -16383,
-                        "max": 5000
-                    },
-                    "DelayRisingUs": {
-                        "default": 0,
-                        "locked": False,
-                        "min": -16383,
-                        "max": 16383
-                    }
-                },
-                "OutputMode": {"default": config_data["S3Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S3Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -2, "max": 2},
-                "VoltageCorner": {"default": float(config_data["S3Ch1_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10}
-            })
-        
-        if "S3Ch2_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S3Ch2"],
-                "UserAlias": "S3Ch2",
-                "Delay": {
-                    "DelayFallingUs": {
-                        "default": 0,
-                        "locked": False,
-                        "min": -16383,
-                        "max": 5000
-                    },
-                    "DelayRisingUs": {
-                        "default": 0,
-                        "locked": False,
-                        "min": -16383,
-                        "max": 16383
-                    }
-                },
-                "OutputMode": {"default": config_data["S3Ch2_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S3Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -2, "max": 2},
-                "VoltageCorner": {"default": float(config_data["S3Ch2_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10}
-            })
-
-        if "S5Ch1_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S5Ch1"],
-                "UserAlias": "S5Ch1",
-                "OutputMode": {"default": config_data["S5Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S5Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S5Ch1_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40},
-            })
-
-        if "S5Ch2_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S5Ch2"],
-                "UserAlias": "S5Ch2",
-                "OutputMode": {"default": config_data["S5Ch2_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S5Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S5Ch2_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S5Ch3_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S5Ch3"],
-                "UserAlias": "S5Ch3",
-                "OutputMode": {"default": config_data["S5Ch3_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S5Ch3_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S5Ch3_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S5Ch4_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S5Ch4"],
-                "UserAlias": "S5Ch4",
-                "OutputMode": {"default": config_data["S5Ch4_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S5Ch4_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S5Ch4_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S6Ch1_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S6Ch1"],
-                "UserAlias": "S6Ch1",
-                "OutputMode": {"default": config_data["S6Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S6Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S6Ch1_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S6Ch2_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S6Ch2"],
-                "UserAlias": "S6Ch2",
-                "OutputMode": {"default": config_data["S6Ch2_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S6Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S6Ch2_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S6Ch3_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S6Ch3"],
-                "UserAlias": "S6Ch3",
-                "OutputMode": {"default": config_data["S6Ch3_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S6Ch3_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S6Ch3_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S6Ch4_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S6Ch4"],
-                "UserAlias": "S6Ch4",
-                "OutputMode": {"default": config_data["S6Ch4_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S6Ch4_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S6Ch4_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S7Ch1_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S7Ch1"],
-                "UserAlias": "S7Ch1",
-                "OutputMode": {"default": config_data["S7Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S7Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S7Ch1_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S7Ch2_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S7Ch2"],
-                "UserAlias": "S7Ch2",
-                "OutputMode": {"default": config_data["S7Ch2_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S7Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S7Ch2_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S7Ch3_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S7Ch3"],
-                "UserAlias": "S7Ch3",
-                "OutputMode": {"default": config_data["S7Ch3_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S7Ch3_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S7Ch3_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S7Ch4_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S7Ch4"],
-                "UserAlias": "S7Ch4",
-                "OutputMode": {"default": config_data["S7Ch4_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S7Ch4_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S7Ch4_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S8Ch1_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S8Ch1"],
-                "UserAlias": "S8Ch1",
-                "OutputMode": {"default": config_data["S8Ch1_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S8Ch1_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S8Ch1_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S8Ch2_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S8Ch2"],
-                "UserAlias": "S8Ch2",
-                "OutputMode": {"default": config_data["S8Ch2_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S8Ch2_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S8Ch2_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S8Ch3_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S8Ch3"],
-                "UserAlias": "S8Ch3",
-                "OutputMode": {"default": config_data["S8Ch3_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S8Ch3_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S8Ch3_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S8Ch4_Current_source" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S8Ch4"],
-                "UserAlias": "S8Ch4",
-                "OutputMode": {"default": config_data["S8Ch4_Current_source"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S8Ch4_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S8Ch4_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S5Ch1_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S5Ch1"],
-                "UserAlias": "S5Ch1",
-                "OutputMode": {"default": config_data["S5Ch1_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S5Ch1_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S5Ch1_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S5Ch2_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S5Ch2"],
-                "UserAlias": "S5Ch2",
-                "OutputMode": {"default": config_data["S5Ch2_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S5Ch2_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S5Ch2_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S5Ch3_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S5Ch3"],
-                "UserAlias": "S5Ch3",
-                "OutputMode": {"default": config_data["S5Ch3_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S5Ch3_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S5Ch3_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S5Ch4_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S5Ch4"],
-                "UserAlias": "S5Ch4",
-                "OutputMode": {"default": config_data["S5Ch4_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S5Ch4_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S5Ch4_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S6Ch1_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S6Ch1"],
-                "UserAlias": "S6Ch1",
-                "OutputMode": {"default": config_data["S6Ch1_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S6Ch1_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S6Ch1_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S6Ch2_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S6Ch2"],
-                "UserAlias": "S6Ch2",
-                "OutputMode": {"default": config_data["S6Ch2_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S6Ch2_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S6Ch2_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S6Ch3_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S6Ch3"],
-                "UserAlias": "S6Ch3",
-                "OutputMode": {"default": config_data["S6Ch3_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S6Ch3_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S6Ch3_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S6Ch4_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S6Ch4"],
-                "UserAlias": "S6Ch4",
-                "OutputMode": {"default": config_data["S6Ch4_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S6Ch4_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S6Ch4_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S7Ch1_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S7Ch1"],
-                "UserAlias": "S7Ch1",
-                "OutputMode": {"default": config_data["S7Ch1_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S7Ch1_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S7Ch1_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S7Ch2_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S7Ch2"],
-                "UserAlias": "S7Ch2",
-                "OutputMode": {"default": config_data["S7Ch2_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S7Ch2_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S7Ch2_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S7Ch3_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S7Ch3"],
-                "UserAlias": "S7Ch3",
-                "OutputMode": {"default": config_data["S7Ch3_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S7Ch3_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S7Ch3_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S7Ch4_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S7Ch4"],
-                "UserAlias": "S7Ch4",
-                "OutputMode": {"default": config_data["S7Ch4_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S7Ch4_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S7Ch4_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S8Ch1_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S8Ch1"],
-                "UserAlias": "S8Ch1",
-                "OutputMode": {"default": config_data["S8Ch1_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S8Ch1_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S8Ch1_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S8Ch2_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S8Ch2"],
-                "UserAlias": "S8Ch2",
-                "OutputMode": {"default": config_data["S8Ch2_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S8Ch2_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S8Ch2_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S8Ch3_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S8Ch3"],
-                "UserAlias": "S8Ch3",
-                "OutputMode": {"default": config_data["S8Ch3_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S8Ch3_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S8Ch3_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        if "S8Ch4_Both" in config_data:
-            current_source_params.append({
-                "Alias": self.sensor_rename["S8Ch4"],
-                "UserAlias": "S8Ch4",
-                "OutputMode": {"default": config_data["S8Ch4_Both"]["Output mode"], "locked": False},
-                "SetCurrent": {"default": float(config_data["S8Ch4_Both"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                "VoltageCorner": {"default": float(config_data["S8Ch4_Both"]["Current_source_Range"]), "locked": False, "min": -40, "max": 40}
-            })
-
-        return current_source_params
-
-
-    # 獲取 SI 所需的 MeasCardChParams 參數值
-    def fill_measurement_params(self, config_data):
 
         measurement_params = [] 
         measurement_channels = config_data["Measurement_channel"]
@@ -2722,7 +1441,7 @@ class ParameterApp(tk.Tk):
             if f"{ms_401_value}_Both" in config_data:
                     
                 range_value = config_data[f"{ms_401_value}_Both"].get("Measurement_channel_Range", "")
-                range_idx = self.range_rename.get(range_value, None)  # 从 range_rename 获取对应的索引
+                range_idx = self.range_rename.get(range_value, None)  # 從 range_rename 獲取對應的索引
                     
                 measurement_params.append({
                     "Alias": self.sensor_rename.get(ms_401_value, ""),
@@ -2738,7 +1457,7 @@ class ParameterApp(tk.Tk):
 
         return measurement_params
 
-
+    # 第二頁按下 Next 按鈕會將所有參數匯出至 saved_parameters.json 並開始運行機台
     def page2_export_to_json(self):
         # 定義 JSON 檔案路徑
         file_path = "saved_parameters.json"
@@ -2747,7 +1466,7 @@ class ParameterApp(tk.Tk):
         self.page2_parameters["Config_Name"] = self.config_entry.get()
         self.page2_parameters["storage_path"] = self.path_display.cget("text")
 
-        # 判斷是否有輸入參數，若無，則預設為 0
+        # 確保控件的值是最新的 & 判斷是否有輸入參數，若無，則預設為 0
         try:
             self.page2_parameters["Heating_time"] = float(self.heating_entry.get()) if self.heating_entry.get() else 0.0
         except ValueError:
@@ -2824,7 +1543,6 @@ class ParameterApp(tk.Tk):
         except ValueError:
             self.page2_parameters["Tstep"] = 0  # 或其他預設值
 
-
         # 若有其他 LP220 Current 參數
         other_lp220_current_list = []
         
@@ -2835,7 +1553,6 @@ class ParameterApp(tk.Tk):
         
         self.page2_parameters["Other LP220 Current list"] = other_lp220_current_list
 
-        
         # 將每一行的 `ms_401_label`、`combo_s5_s8`、`combo_s1_s3` 的值儲存到列表中
         sensors_data = []
 
@@ -2850,7 +1567,6 @@ class ParameterApp(tk.Tk):
         # 將 Sensors 列表保存到 page2_parameters
         self.page2_parameters["Measurement_channel"] = sensors_data
         
-
         # 檢查檔案是否存在
         if os.path.exists(file_path):
             # 如果存在，打開檔案並讀取現有內容
@@ -2868,7 +1584,6 @@ class ParameterApp(tk.Tk):
         # 將新參數添加進去
         saved_data.update(self.page2_parameters)
 
-        
         # 使用 fill_current_source_params 以及 fill_measurement_params 填充數據
         config_data = saved_data  # 使用已存在的 JSON 檔案數據
         current_source_data = []
@@ -2882,7 +1597,6 @@ class ParameterApp(tk.Tk):
         saved_data["Resources"]["CurrentSourceParams"] = current_source_data
         saved_data["Resources"]["MeasCardChParams"] = measurement_channel_data
         
-    
         # 將更新後的資料寫回到 JSON 文件中
         with open(file_path, "w") as file:
             json.dump(saved_data, file, indent=4)
@@ -3035,7 +1749,6 @@ class ParameterApp(tk.Tk):
 
         print("參數已成功儲存至 saved_parameters.json")
 
-
         # 啟用進度提示框
         self.progress_text.config(state="normal")
         self.progress_text.delete(1.0, tk.END)  # 清空現有內容
@@ -3049,7 +1762,6 @@ class ParameterApp(tk.Tk):
 
         # 通過 after 定期更新進度
         self.update_progress_text()
-
 
     def run_tests_in_thread(self):
         # 從文件讀取配置

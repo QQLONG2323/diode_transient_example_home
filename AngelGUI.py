@@ -19,7 +19,7 @@ class ParameterApp(tk.Tk):
         # 設置 Sensor 字體大小
         ttk.Style().configure("Large_Bold.TCheckbutton", font=("Helvetica", 16, "bold"))
         # 設定 LabelFrame 字體大小與粗體
-        ttk.Style().configure("Large_Bold.TLabelframe.Label", font=("system", 12, "bold"))
+        ttk.Style().configure("Large_Bold.TLabelframe.Label", font=("system", 16, "bold"))
 
         self.params_file = "params.json"
         self.saved_parameters = self.load_params()
@@ -43,7 +43,7 @@ class ParameterApp(tk.Tk):
 
     # 創建 Sensor 框架的 Function
     def create_sensor_frame(self, text, column):
-        frame = ttk.LabelFrame(self, text=text)
+        frame = ttk.LabelFrame(self.sensors_parent_frame, text=text)
         frame.grid(column=column, row=0, padx=10, pady=10, sticky=tk.NSEW)
         self.page1_widgets.append(frame)
         return frame
@@ -138,6 +138,11 @@ class ParameterApp(tk.Tk):
         # 用於儲存第一個頁面上的所有控件
         self.page1_widgets = []
 
+        # 創建一個 Sensor 父框架來容納所有 Sensor 的框架
+        self.sensors_parent_frame = ttk.LabelFrame(self, text="T3STER SI Sensor", style="Large_Bold.TLabelframe")  # Sensor 父框架
+        self.sensors_parent_frame.grid(column=0, row=0, columnspan=8, padx=10, pady=10, sticky=tk.NSEW)
+        self.page1_widgets.append(self.sensors_parent_frame)
+
         # Sensor 框架
         LP220_S1_frame = self.create_sensor_frame("LP220", 0)
         LP220_S3_frame = self.create_sensor_frame("LP220", 1)
@@ -148,10 +153,19 @@ class ParameterApp(tk.Tk):
         TH800_S9_frame = self.create_sensor_frame("TH800", 6)
         TH800_S10_frame = self.create_sensor_frame("TH800", 7)
 
+        # 創建一個 Booster 父框架來容納所有 Booster 的框架
+        self.booster_parent_frame = ttk.LabelFrame(self, text="BOOSTER", style="Large_Bold.TLabelframe")  # Booster 父框架
+        self.booster_parent_frame.grid(column=0, row=1, columnspan=8, padx=10, pady=10, sticky=tk.NSEW)
+        self.page1_widgets.append(self.booster_parent_frame)
+
+        button = ttk.Button(
+            self.booster_parent_frame, text="11111", command=None)
+        button.grid(column=0, row=0, padx=10, pady=10)
+
         # Next 按鈕，按下後隱藏當前頁面並進入下一步的頁面
         next_button = ttk.Button(
             self, text="Next", command=self.go_to_page2)
-        next_button.grid(column=7, row=1, padx=10, pady=10)
+        next_button.grid(column=7, row=2, padx=10, pady=10, sticky="E")
         self.page1_widgets.append(next_button)
 
         # 定義每個感測器的選項

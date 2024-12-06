@@ -16,7 +16,7 @@ def load_saved_parameters_json():
     with open('saved_parameters.json', 'r') as file:
         return json.load(file)
 
-config_data = load_saved_parameters_json()
+
 
 
 def load_thermostat_config_data_json():
@@ -37,7 +37,7 @@ def load_thermostat_config_data_json():
         print("檔案格式錯誤，返回預設值")
         return {}
 
-thermostat_config_data = load_thermostat_config_data_json()
+
 
 
 # 創建新資料夾的函數
@@ -47,51 +47,7 @@ def create_new_folder():
     os.makedirs(folder_name, exist_ok=True)
     return folder_name
 
-# ---- 常用命令
-command_system_ready = {"Command": "QUERY_SYSTEM_INTEGRITY"}
-command_query_api_version = {"Command": "GET_API_VERSION"}
-command_query_alloc_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": "diode_config"}
-command_query_measurement_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": "diode_config_transient"}
-command_get_file_list = {"Command": "QUERY_TASK_RESULT_FILE_LIST", "TaskAlias": "diode_config_transient"}
-command_remove_transient_task = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": "diode_config_transient"}
-command_remove_resource_alloc = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": "diode_config"}
 
-
-command_do_resource_alloc = {
-    "Command": "START_TASK",
-    "TaskMode": "MONITORING_RESOURCE_ALLOCATION",
-    "ConfigName": "diode_config",
-    "TaskAlias": "diode_config",
-    "LoadConfig": True
-}
-
-command_start_transient = {
-    "Command": "START_TASK",
-    "TaskMode": "TRANSIENT",
-    "ConfigName": "diode_config",
-    "TaskAlias": "diode_config_transient",
-    "LoadConfig": True
-}
-
-command_start_tspcalib = {
-    "Command": "START_TASK",
-    "TaskMode": "TSPCALIB",
-    "ConfigName": "diode_config",
-    "TaskAlias": "diode_config_transient",
-    "LoadConfig": True,
-}
-
-# 啟用 thermostat
-command_enable_thermostat = {
-    "Command": "ENABLE_THERMOSTAT",
-    "Alias": "/THERMOSTAT/0"
-}
-
-# 關閉 thermostat
-command_disable_thermostat = {
-    "Command": "DISABLE_THERMOSTAT",
-    "Alias": "/THERMOSTAT/0"
-}
 
 
 # WebSocket 查詢
@@ -164,7 +120,7 @@ def open_folder(folder_path):
         print(f"無法打開資料夾: {folder_path}，發生錯誤: {e}")
 
 # ------ 執行測量 -----
-def execute_measurements(folder_name, command_save_config, command_save_config_b_no_wait, command_save_thermostat_config):
+def execute_measurements(folder_name):
     # 測量次數設定
     # measurement_count = config_data["Pulse Cycling Repeat"]
     cycle_count = config_data["total Measurement Cycling Repeat"]
@@ -512,7 +468,65 @@ def Cycling_Test():
     global thermostat_config_data
     thermostat_config_data = load_thermostat_config_data_json()
 
+    # 常用命令
+    global command_system_ready
+    command_system_ready = {"Command": "QUERY_SYSTEM_INTEGRITY"}
+    global command_query_api_version
+    command_query_api_version = {"Command": "GET_API_VERSION"}
+    global command_query_alloc_task_status
+    command_query_alloc_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": "diode_config"}
+    global command_query_measurement_task_status
+    command_query_measurement_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": "diode_config_transient"}
+    global command_get_file_list
+    command_get_file_list = {"Command": "QUERY_TASK_RESULT_FILE_LIST", "TaskAlias": "diode_config_transient"}
+    global command_remove_transient_task
+    command_remove_transient_task = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": "diode_config_transient"}
+    global command_remove_resource_alloc
+    command_remove_resource_alloc = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": "diode_config"}
+
+    global command_do_resource_alloc
+    command_do_resource_alloc = {
+        "Command": "START_TASK",
+        "TaskMode": "MONITORING_RESOURCE_ALLOCATION",
+        "ConfigName": "diode_config",
+        "TaskAlias": "diode_config",
+        "LoadConfig": True
+    }
+
+    global command_start_transient
+    command_start_transient = {
+        "Command": "START_TASK",
+        "TaskMode": "TRANSIENT",
+        "ConfigName": "diode_config",
+        "TaskAlias": "diode_config_transient",
+        "LoadConfig": True
+    }
+
+    global command_start_tspcalib
+    command_start_tspcalib = {
+        "Command": "START_TASK",
+        "TaskMode": "TSPCALIB",
+        "ConfigName": "diode_config",
+        "TaskAlias": "diode_config_transient",
+        "LoadConfig": True,
+    }
+
+    # 啟用 thermostat
+    global command_enable_thermostat
+    command_enable_thermostat = {
+        "Command": "ENABLE_THERMOSTAT",
+        "Alias": "/THERMOSTAT/0"
+    }
+
+    # 關閉 thermostat
+    global command_disable_thermostat
+    command_disable_thermostat = {
+        "Command": "DISABLE_THERMOSTAT",
+        "Alias": "/THERMOSTAT/0"
+    }
+
     # 配置保存命令（初始配置）
+    global command_save_config
     command_save_config = {
         "Command": "SAVE_CONFIG",
         "Type": "Config",
@@ -556,6 +570,7 @@ def Cycling_Test():
     }
 
     # 修改後的配置（B組）
+    global command_save_config_b_no_wait
     command_save_config_b_no_wait = {
         "Command": "SAVE_CONFIG",
         "Type": "Config",
@@ -599,6 +614,7 @@ def Cycling_Test():
     }
 
     # 保存 thermostat 設定參數
+    global command_save_thermostat_config
     command_save_thermostat_config = {
         "Command": "TRY_INIT_THEMOSTAT_AND_SAVE_CONFIG",
         "Alias": "/THERMOSTAT/0",
@@ -627,7 +643,7 @@ def Cycling_Test():
     print(f"創建新資料夾: {folder_name}")
 
     # 執行測量並獲取下載的文件列表
-    downloaded_files = execute_measurements(folder_name, command_save_config, command_save_config_b_no_wait, command_save_thermostat_config)
+    downloaded_files = execute_measurements(folder_name)
 
     if not downloaded_files:
         print("錯誤：沒有下載到任何文件")

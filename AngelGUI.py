@@ -1229,13 +1229,13 @@ class ParameterApp(tk.Tk):
     def open_connect_thermostat_set_up_window(self):
 
         self.connect_thermostat_set_up_parameters = {
-            "Thermostat type": ["JULABO_HE", "JULABO_F", "JULABO_CF", "MICREDTHT", "ARROYO", "ESPEC", "ESPEC (No Addressing)", "HUBER_PB", "PELNUS (ADR1, BCC)", "LAUDA Variocool", "LAUDA Proline RP"],
+            "Thermostat type": ["請選擇", "JULABO_HE", "JULABO_F", "JULABO_CF", "MICRED", "ARROYO", "ESPEC", "ESPEC (No Addressing)", "HUBER_PB", "PELNUS (ADR1, BCC)", "LAUDA Variocool", "LAUDA Proline RP"],
             "Interface": ["RS232"],
-            "Baudrate": [1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800, 500000, 576000, 921600, 1000000, 1152000, 1500000, 2000000, 2500000, 3000000, 3500000, 4000000],
-            "Data bits": [7, 8],
-            "Parity": ["NONE", "ODD", "EVEN"],
-            "Stop bits": ["SB1", "SB2"],
-            "Handshake": ["NONE", "XON/XOFF", "REQUESTTOSEND", "REQUESTTOSENDXONXOFF"]
+            "Baudrate": ["請選擇", 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800, 500000, 576000, 921600, 1000000, 1152000, 1500000, 2000000, 2500000, 3000000, 3500000, 4000000],
+            "Data bits": ["請選擇", 7, 8],
+            "Parity": ["請選擇", "NONE", "ODD", "EVEN"],
+            "Stop bits": ["請選擇", "SB1", "SB2"],
+            "Handshake": ["請選擇", "NONE", "XON/XOFF", "REQUESTTOSEND", "REQUESTTOSENDXONXOFF"]
         }
 
         # 建立彈出視窗
@@ -1280,23 +1280,41 @@ class ParameterApp(tk.Tk):
             value = int(value)  # 將需要轉換為整數的值進行轉換
         self.save_thermostat_config[key] = value
 
-        # 根據 Thermostat type 更新 Baudrate
+        # 根據 Thermostat type 來預設其他參數
         if key == "Thermostat type":
             if value == "ARROYO":
-                self.update_baudrate(9600)
-            elif value == "MICREDTHT":
-                self.update_baudrate(1200)
+                self.update_default_parameters(9600, 8, "NONE", "SB1", "NONE")
+            elif value == "MICRED":
+                self.update_default_parameters(1200, 8, "NONE", "SB1", "NONE")
+            elif value == "JULABO_HE":
+                self.update_default_parameters(4800, 7, "EVEN", "SB1", "NONE") 
+            elif value == "請選擇":
+                self.update_default_parameters("請選擇", "請選擇", "請選擇", "請選擇", "請選擇") 
 
-    # 更新 Baudrate 的值
-    def update_baudrate(self, baudrate):
+    # 更新預設的值
+    def update_default_parameters(self, baudrate, data_bits, parity, stop_bits, handshake):
         self.save_thermostat_config["Baudrate"] = baudrate
-        # 找到 Baudrate 的 Combobox 並更新其值
+        self.save_thermostat_config["Data bits"] = data_bits
+        self.save_thermostat_config["Parity"] = parity
+        self.save_thermostat_config["Stop bits"] = stop_bits
+        self.save_thermostat_config["Handshake"] = handshake
+        # 遍歷其餘 Combobox 並預設其值
         for widget in self.connect_thermostat_set_up_window.winfo_children():
             if isinstance(widget, ttk.Combobox) and getattr(widget, 'label_text', '') == "Baudrate":
                 widget.set(baudrate)
+            if isinstance(widget, ttk.Combobox) and getattr(widget, 'label_text', '') == "Data bits":
+                widget.set(data_bits)
+            if isinstance(widget, ttk.Combobox) and getattr(widget, 'label_text', '') == "Parity":
+                widget.set(parity)
+            if isinstance(widget, ttk.Combobox) and getattr(widget, 'label_text', '') == "Stop bits":
+                widget.set(stop_bits)
+            if isinstance(widget, ttk.Combobox) and getattr(widget, 'label_text', '') == "Handshake":
+                widget.set(handshake)
 
     # 儲存 Thermostat 設定值到 JSON 檔案
     def save_thermostat_config_to_json(self):
+        if self.save_thermostat_config["Thermostat type"] == "MICRED":
+            self.save_thermostat_config["Thermostat type"] = "MICREDTHT"
         # 將選擇值寫入 JSON 檔案
         with open('thermostat_config_data.json', 'w', encoding='utf-8') as f:
             json.dump(self.save_thermostat_config, f, ensure_ascii=False, indent=4)
@@ -1796,11 +1814,11 @@ class ParameterApp(tk.Tk):
             self.progress_text.see(tk.END)
 
         # 繼續定期調用這個函數
-        if threading.active_count() > 1:  # 检查是否有线程仍在运行
+        if threading.active_count() > 1:  # 檢查是否有線程仍在運行
             self.progress_text.after(100, self.update_progress_text)
         else:
             self.progress_text.config(state="disabled")  # 禁用编辑    
-            self.progress_text.see(tk.END)  # 确保在任务完成时也能滚动到底部
+            self.progress_text.see(tk.END)  # 確保在任務完成時也能滾動到底部
 
 
 if __name__ == "__main__":

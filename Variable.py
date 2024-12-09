@@ -41,20 +41,30 @@ def websocket_test():
 
     thermostat_config_data = load_thermostat_config_data_json()
 
+    # 自定義保存的本地路徑
+    def download_save_directory():
+        save_directory = config_data["storage_path"]  # 可以修改為你希望的路徑
+
+        # 如果目錄不存在，則創建目錄
+        if not os.path.exists(save_directory):
+            os.makedirs(save_directory)
+
+        return save_directory
+
     # 定義命令
     command_system_ready = {"Command": "QUERY_SYSTEM_INTEGRITY"}
     command_query_api_version = {"Command": "GET_API_VERSION"}
-    command_query_alloc_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": "diode_config"}
-    command_query_measurement_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": "diode_config_transient"}
-    command_get_file_list = {"Command": "QUERY_TASK_RESULT_FILE_LIST", "TaskAlias": "diode_config_transient"}
-    command_remove_transient_task = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": "diode_config_transient"}
-    command_remove_resource_alloc = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": "diode_config"}
+    command_query_alloc_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": config_data["Config_Name"]}
+    command_query_measurement_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": f"{config_data['Config_Name']}_transient"}
+    command_get_file_list = {"Command": "QUERY_TASK_RESULT_FILE_LIST", "TaskAlias": f"{config_data['Config_Name']}_transient"}
+    command_remove_transient_task = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": f"{config_data['Config_Name']}_transient"}
+    command_remove_resource_alloc = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": config_data["Config_Name"]}
 
     # 使用從 JSON 文件中導入的數據
     command_save_config = {
         "Command": "SAVE_CONFIG",
         "Type": "TransientModel",
-        "ConfigName": "diode_config",
+        "ConfigName": config_data["Config_Name"],
         "ConfigParams": {
             "Description": "Test"
         },
@@ -139,8 +149,8 @@ def websocket_test():
     command_do_resource_alloc = {
         "Command": "START_TASK",
         "TaskMode": "MONITORING_RESOURCE_ALLOCATION",
-        "ConfigName": "diode_config",
-        "TaskAlias": "diode_config",
+        "ConfigName": config_data["Config_Name"],
+        "TaskAlias": config_data["Config_Name"],
         "LoadConfig": True,
         # It is recommended to maintain websocket connection (and not use this optional parameter)
         "HandleUserDisconnect": False
@@ -149,16 +159,16 @@ def websocket_test():
     command_start_transient = {
         "Command": "START_TASK",
         "TaskMode": "TRANSIENT",
-        "ConfigName": "diode_config",
-        "TaskAlias": "diode_config_transient",
+        "ConfigName": config_data["Config_Name"],
+        "TaskAlias": f"{config_data['Config_Name']}_transient",
         "LoadConfig": True
     }
 
     command_start_tspcalib = {
     "Command": "START_TASK",
     "TaskMode": "TSPCALIB",
-    "ConfigName": "diode_config",
-    "TaskAlias": "diode_config_transient",
+    "ConfigName": config_data["Config_Name"],
+    "TaskAlias": f"{config_data['Config_Name']}_transient",
     "LoadConfig": True,
     }
 
@@ -197,11 +207,7 @@ def websocket_test():
     try:
 
         print("我是VARI")
-        print(config_data["Heating_time"])
-        print(config_data["Cooling_time"])
-        print(config_data["Pulse Cycling Repeat"])
-        print(config_data["total Measurement Cycling Repeat"])
-        print(config_data["Config_Name"])
+        print(f"{config_data['Config_Name']}_transient")
 
         # ---- Initialize and open websocket
         websocket_transport.connect(websocket_url)
@@ -310,7 +316,10 @@ def websocket_test():
         for file in file_list['Result']:
             print("Downloading " + file["Filename"])
             link = "http://" + IP_ADDRESS + ":8085" + file["Filename"]
-            urllib.request.urlretrieve(link, link[(link.rfind("/")+1):])
+            # 從文件名提取最後一部分，並生成完整的保存路徑
+            save_path = os.path.join(download_save_directory(), link[(link.rfind("/")+1):])
+            # 放入下載來源 url(link) 以及 包含儲存路徑的檔名
+            urllib.request.urlretrieve(link, save_path)
 
         # ---- Release resources: thermal transient task and resource allocation
         if not do_web_socket_bool_query(websocket_transport, command_remove_transient_task):

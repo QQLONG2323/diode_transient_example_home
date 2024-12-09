@@ -16,9 +16,6 @@ def load_saved_parameters_json():
     with open('saved_parameters.json', 'r') as file:
         return json.load(file)
 
-
-
-
 def load_thermostat_config_data_json():
     # 檢查檔案是否存在
     if not os.path.exists('thermostat_config_data.json'):
@@ -37,18 +34,12 @@ def load_thermostat_config_data_json():
         print("檔案格式錯誤，返回預設值")
         return {}
 
-
-
-
 # 創建新資料夾的函數
 def create_new_folder():
     current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
     folder_name = f"measurement_data_{current_time}"
     os.makedirs(folder_name, exist_ok=True)
     return folder_name
-
-
-
 
 # WebSocket 查詢
 def do_web_socket_string_query(ws: WebSocket, command: dict) -> dict:

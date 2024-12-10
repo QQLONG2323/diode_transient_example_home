@@ -7,6 +7,9 @@ from websocket import create_connection
 from typing import Dict
 import urllib.request
 import os
+from datetime import datetime
+import platform
+import subprocess
 
 def websocket_test():
     # 配置 IP 地址
@@ -41,15 +44,32 @@ def websocket_test():
 
     thermostat_config_data = load_thermostat_config_data_json()
 
-    # 自定義保存的本地路徑
-    def download_save_directory():
-        save_directory = config_data["storage_path"]  # 可以修改為你希望的路徑
-
-        # 如果目錄不存在，則創建目錄
-        if not os.path.exists(save_directory):
-            os.makedirs(save_directory)
-
-        return save_directory
+    # 創建新資料夾的函數
+    def create_new_folder():
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        folder_name = f"{config_data['storage_path']}/{config_data['Config_Name']}_measurement_data_{current_time}"
+        if not os.path.exists(folder_name):
+            os.makedirs(folder_name)
+        return folder_name
+    
+    # 下載檔案並確保檔名不被覆蓋
+    def download_file(file_url, original_filename, folder_name):
+        full_path = os.path.join(folder_name, original_filename[(original_filename.rfind('/')+1):])
+        urllib.request.urlretrieve(file_url, full_path)
+        print(f"文件下載完成: {full_path}")
+        return full_path
+    
+    def open_folder(folder_path):
+        try:
+            if platform.system() == "Windows":
+                os.startfile(folder_path)
+            elif platform.system() == "Darwin":  # macOS
+                subprocess.Popen(["open", folder_path])
+            else:  # Linux / Unix
+                subprocess.Popen(["xdg-open", folder_path])
+            print(f"已自動打開資料夾: {folder_path}")
+        except Exception as e:
+            print(f"無法打開資料夾: {folder_path}，發生錯誤: {e}")
 
     # 定義命令
     command_system_ready = {"Command": "QUERY_SYSTEM_INTEGRITY"}
@@ -184,7 +204,6 @@ def websocket_test():
         "Alias": "/THERMOSTAT/0"
     }
 
-
     # WebSocket 操作的相關函數和測量流程不變
     def do_web_socket_string_query(ws: WebSocket, command: Dict) -> Dict:
         ws.send(json.dumps(command))
@@ -205,9 +224,10 @@ def websocket_test():
 
 
     try:
-
         print("我是VARI")
         print(f"{config_data['Config_Name']}_transient")
+
+        folder = create_new_folder()
 
         # ---- Initialize and open websocket
         websocket_transport.connect(websocket_url)
@@ -271,10 +291,11 @@ def websocket_test():
 
             # 取得並下載 TSP 檔案
             file_list = do_web_socket_string_query(websocket_transport, command_get_file_list)
-
-            # for file in file_list["Result"]:
-            #     if "Filename" in file:
-            #         tco_file = download_file(f"http://{IP_ADDRESS}:8085{file['Filename']}", file["Filename"], 1, "TSP", folder_name)
+            print(file_list)
+            print("Results:")
+            for file in file_list["Result"]:
+                print("Downloading " + file["Filename"])
+                download_file("http://" + IP_ADDRESS + ":8085" + file["Filename"], file["Filename"], folder)
 
             # 刪除資源和瞬態任務
             do_web_socket_bool_query(websocket_transport, command_remove_transient_task)
@@ -315,11 +336,7 @@ def websocket_test():
         print("Results:")
         for file in file_list['Result']:
             print("Downloading " + file["Filename"])
-            link = "http://" + IP_ADDRESS + ":8085" + file["Filename"]
-            # 從文件名提取最後一部分，並生成完整的保存路徑
-            save_path = os.path.join(download_save_directory(), link[(link.rfind("/")+1):])
-            # 放入下載來源 url(link) 以及 包含儲存路徑的檔名
-            urllib.request.urlretrieve(link, save_path)
+            download_file("http://" + IP_ADDRESS + ":8085" + file["Filename"], file["Filename"], folder)
 
         # ---- Release resources: thermal transient task and resource allocation
         if not do_web_socket_bool_query(websocket_transport, command_remove_transient_task):
@@ -329,7 +346,7 @@ def websocket_test():
             raise Exception("Cannot remove allocation task")
 
         print("Measurement finished")
-
+        
     except Exception as e:
         print("Error: " + str(e))
     finally:
@@ -338,3 +355,6 @@ def websocket_test():
     # Close
     websocket_transport.close()
     print("Exit")
+
+    # 程式執行完畢後，打開存檔資料夾
+    open_folder(folder)

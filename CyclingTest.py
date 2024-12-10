@@ -37,7 +37,7 @@ def load_thermostat_config_data_json():
 # 創建新資料夾的函數
 def create_new_folder():
     current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-    folder_name = f"measurement_data_{current_time}"
+    folder_name = f"{config_data['storage_path']}/{config_data['Config_Name']}_measurement_data_{current_time}"
     os.makedirs(folder_name, exist_ok=True)
     return folder_name
 
@@ -465,22 +465,22 @@ def Cycling_Test():
     global command_query_api_version
     command_query_api_version = {"Command": "GET_API_VERSION"}
     global command_query_alloc_task_status
-    command_query_alloc_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": "diode_config"}
+    command_query_alloc_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": config_data["Config_Name"]}
     global command_query_measurement_task_status
-    command_query_measurement_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": "diode_config_transient"}
+    command_query_measurement_task_status = {"Command": "QUERY_TASK_STATUS", "TaskAlias": f"{config_data['Config_Name']}_transient"}
     global command_get_file_list
-    command_get_file_list = {"Command": "QUERY_TASK_RESULT_FILE_LIST", "TaskAlias": "diode_config_transient"}
+    command_get_file_list = {"Command": "QUERY_TASK_RESULT_FILE_LIST", "TaskAlias": f"{config_data['Config_Name']}_transient"}
     global command_remove_transient_task
-    command_remove_transient_task = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": "diode_config_transient"}
+    command_remove_transient_task = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": f"{config_data['Config_Name']}_transient"}
     global command_remove_resource_alloc
-    command_remove_resource_alloc = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": "diode_config"}
+    command_remove_resource_alloc = {"Command": "STOP_AND_REMOVE_TASK", "TaskAlias": config_data["Config_Name"]}
 
     global command_do_resource_alloc
     command_do_resource_alloc = {
         "Command": "START_TASK",
         "TaskMode": "MONITORING_RESOURCE_ALLOCATION",
-        "ConfigName": "diode_config",
-        "TaskAlias": "diode_config",
+        "ConfigName": config_data["Config_Name"],
+        "TaskAlias": config_data["Config_Name"],
         "LoadConfig": True
     }
 
@@ -488,8 +488,8 @@ def Cycling_Test():
     command_start_transient = {
         "Command": "START_TASK",
         "TaskMode": "TRANSIENT",
-        "ConfigName": "diode_config",
-        "TaskAlias": "diode_config_transient",
+        "ConfigName": config_data["Config_Name"],
+        "TaskAlias": f"{config_data['Config_Name']}_transient",
         "LoadConfig": True
     }
 
@@ -497,8 +497,8 @@ def Cycling_Test():
     command_start_tspcalib = {
         "Command": "START_TASK",
         "TaskMode": "TSPCALIB",
-        "ConfigName": "diode_config",
-        "TaskAlias": "diode_config_transient",
+        "ConfigName": config_data["Config_Name"],
+        "TaskAlias": f"{config_data['Config_Name']}_transient",
         "LoadConfig": True,
     }
 
@@ -521,7 +521,7 @@ def Cycling_Test():
     command_save_config = {
         "Command": "SAVE_CONFIG",
         "Type": "Config",
-        "ConfigName": "diode_config",
+        "ConfigName": config_data["Config_Name"],
         "ConfigParams": {"Description": "Test"},
         "Resources": {
             "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],
@@ -565,7 +565,7 @@ def Cycling_Test():
     command_save_config_b_no_wait = {
         "Command": "SAVE_CONFIG",
         "Type": "Config",
-        "ConfigName": "diode_config",
+        "ConfigName": config_data["Config_Name"],
         "ConfigParams": {"Description": "Test"},
         "Resources": {
             "CurrentSourceParams": config_data["Resources"]["CurrentSourceParams"],

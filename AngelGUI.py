@@ -850,8 +850,19 @@ class ParameterApp(tk.Tk):
         next_button.grid(row=10, column=0, padx=10, pady=10, sticky="E")
      
         # 添加進度提示框，默認禁用
-        self.progress_text = tk.Text(scrollable_frame, height=10, state="disabled")
-        self.progress_text.grid(row=11, column=0, padx=10, pady=10, sticky=tk.NSEW)
+        self.progress_text_frame = tk.Frame(scrollable_frame)  # 使用額外的 Frame 來放置 Text 和 Scrollbar
+        self.progress_text_frame.grid(row=11, column=0, padx=10, pady=10, sticky=tk.NSEW)
+
+        # 創建滾動條
+        self.progress_text_scrollbar = tk.Scrollbar(self.progress_text_frame)
+        self.progress_text_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)  # 滾動條在右側填充垂直方向
+
+        # 創建 Text 並綁定滾動條
+        self.progress_text = tk.Text(self.progress_text_frame, height=10, state="disabled", yscrollcommand=self.progress_text_scrollbar.set)
+        self.progress_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)  # 文本框填滿剩下的空間
+
+        # 配置滾動條控制文本框
+        self.progress_text_scrollbar.config(command=self.progress_text.yview)
         
         # Config Name 輸入框和標籤
         config_label = ttk.Label(config_details_frame, text="Config Name:")

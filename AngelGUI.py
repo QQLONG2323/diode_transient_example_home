@@ -777,6 +777,27 @@ class ParameterApp(tk.Tk):
 
         # 將該框架放置在Canvas中
         canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        
+        # 為 scrollable_frame 中的所有子小部件綁定鼠標滾輪事件
+        def bind_mouse_wheel_to_children(widget):
+            """遞歸為所有子小部件綁定鼠標滾輪事件"""
+            for child in widget.winfo_children():
+                child.bind("<Enter>", lambda e: canvas.bind_all("<MouseWheel>", lambda event: canvas.yview_scroll(int(-1*(event.delta/120)), "units")))
+                bind_mouse_wheel_to_children(child)
+
+        # 初始綁定滾輪事件
+        bind_mouse_wheel_to_children(scrollable_frame)
+
+        # 根據當前窗口小部件滾動
+        def on_mouse_wheel(event):
+            widget = event.widget
+            if isinstance(widget, tk.Text):
+                widget.yview_scroll(int(-1 * (event.delta / 120)), "units")
+            elif isinstance(widget, tk.Canvas):
+                widget.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+        # 全局綁定滑鼠滾輪事件
+        canvas.bind_all("<MouseWheel>", on_mouse_wheel)
 
         # 使得滾動輪也能工作
         canvas.bind_all("<MouseWheel>", lambda event: canvas.yview_scroll(int(-1*(event.delta/120)), "units"))

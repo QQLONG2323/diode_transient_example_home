@@ -768,6 +768,7 @@ class ParameterApp(tk.Tk):
 
         # 創建一個框架，放置於Canvas內部
         scrollable_frame = ttk.Frame(canvas)
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")   # 將該框架放置在Canvas中
 
         # 設置框架為Canvas的滾動區域
         scrollable_frame.bind(
@@ -775,9 +776,6 @@ class ParameterApp(tk.Tk):
             lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
         )
 
-        # 將該框架放置在Canvas中
-        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-        
         # 使得滾動輪也能工作
         canvas.bind_all("<MouseWheel>", lambda event: canvas.yview_scroll(int(-1*(event.delta/120)), "units"))
 
@@ -863,7 +861,7 @@ class ParameterApp(tk.Tk):
 
         # 配置滾動條控制文本框
         self.progress_text_scrollbar.config(command=self.progress_text.yview)
-        
+
         # Config Name 輸入框和標籤
         config_label = ttk.Label(config_details_frame, text="Config Name:")
         config_label.grid(column=0, row=0, padx=10, pady=10)

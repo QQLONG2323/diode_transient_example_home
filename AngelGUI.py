@@ -158,10 +158,6 @@ class ParameterApp(tk.Tk):
         self.booster_parent_frame.grid(column=0, row=1, columnspan=8, padx=10, pady=10, sticky=tk.NSEW)
         self.page1_widgets.append(self.booster_parent_frame)
 
-        button = ttk.Button(
-            self.booster_parent_frame, text="11111", command=None)
-        button.grid(column=0, row=0, padx=10, pady=10)
-
         # Next 按鈕，按下後隱藏當前頁面並進入下一步的頁面
         next_button = ttk.Button(
             self, text="Next", command=self.go_to_page2)
@@ -222,6 +218,11 @@ class ParameterApp(tk.Tk):
         self.create_sensor_checkbuttons(MS401_S8_frame, 16, 20)
         self.create_sensor_checkbuttons(TH800_S9_frame, 20, 28)
         self.create_sensor_checkbuttons(TH800_S10_frame, 28, 36)
+
+        checkbutton = ttk.Checkbutton(self.booster_parent_frame, text="Heating Source", variable=None, command=None)
+        checkbutton.grid(column=8, row=0, sticky=tk.W, padx=10, pady=5)
+        # 設置 Checkbutton 的字體
+        checkbutton.configure(style="Large_Bold.TCheckbutton")
 
     # 創建 Sensor 的 Checkbutton
     def create_sensor_checkbuttons(self, frame, start, end):

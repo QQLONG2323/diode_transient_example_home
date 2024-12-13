@@ -848,7 +848,7 @@ class ParameterApp(tk.Tk):
         next_button = ttk.Button(scrollable_frame, text="Next", command=self.page2_export_to_json)
         next_button.grid(row=10, column=0, padx=10, pady=10, sticky="E")
      
-        # 添加進度提示框，默認禁用
+        # 添加進度提示框架
         self.progress_text_frame = tk.Frame(scrollable_frame)  # 使用額外的 Frame 來放置 Text 和 Scrollbar
         self.progress_text_frame.grid(row=11, column=0, padx=10, pady=10, sticky=tk.NSEW)
 
@@ -856,12 +856,27 @@ class ParameterApp(tk.Tk):
         self.progress_text_scrollbar = tk.Scrollbar(self.progress_text_frame)
         self.progress_text_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)  # 滾動條在右側填充垂直方向
 
-        # 創建 Text 並綁定滾動條
-        self.progress_text = tk.Text(self.progress_text_frame, height=10, state="disabled", yscrollcommand=self.progress_text_scrollbar.set)
+        # 創建 Text 並綁定滾動條，默認禁用
+        self.progress_text = tk.Text(self.progress_text_frame, height=10,  yscrollcommand=self.progress_text_scrollbar.set)
         self.progress_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)  # 文本框填滿剩下的空間
 
         # 配置滾動條控制文本框
         self.progress_text_scrollbar.config(command=self.progress_text.yview)
+
+        # 單獨綁定滾輪事件到 progress_text
+        self.progress_text.bind("<Enter>", lambda e: enable_progress_text_scroll())   # 鼠標進入 progress_text
+        self.progress_text.bind("<Leave>", lambda e: disable_progress_text_scroll())   # 鼠標離開 progress_text
+
+        def enable_progress_text_scroll():
+            self.progress_text.bind("<MouseWheel>", on_progress_text_scroll)
+
+        def disable_progress_text_scroll():
+            self.progress_text.unbind("<MouseWheel>")
+
+        def on_progress_text_scroll(event):
+            # 滾動 progress_text 控件
+            self.progress_text.yview_scroll(int(-1*(event.delta/120)), "units")
+            return "break"  # 阻止事件冒泡
 
         # Config Name 輸入框和標籤
         config_label = ttk.Label(config_details_frame, text="Config Name:")

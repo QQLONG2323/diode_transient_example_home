@@ -152,6 +152,7 @@ class ParameterApp(tk.Tk):
         MS401_S8_frame = self.create_sensor_frame("MS401", 5)
         TH800_S9_frame = self.create_sensor_frame("TH800", 6)
         TH800_S10_frame = self.create_sensor_frame("TH800", 7)
+        TRIGGER_frame = self.create_sensor_frame("TRIGGER", 8)
 
         # 創建一個 Booster 父框架來容納所有 Booster 的框架
         self.booster_parent_frame = ttk.LabelFrame(self, text="BOOSTER", style="Large_Bold.TLabelframe")  # Booster 父框架

@@ -1,0 +1,79 @@
+{
+    "ConfigName": "jeff66666",
+    "Resources": {
+        "CurrentSourceParams": [
+            {
+                "Alias": "/PWB240/PWB10018/CH0/DriveSour/0",
+                "OutputMode": "PC",
+                "SetCurrent": 0.1,
+                "TriggerSource": "",
+                "UserAlias": "PWB10018 - S1Ch1 - Drive",
+                "VoltageCorner": 10.0
+            },
+            {
+                "Alias": "/PWB240/PWB10018/CH0/SensSour/0",
+                "OutputMode": "ON",
+                "SetCurrent": 0.001,
+                "TriggerSource": "",
+                "UserAlias": "PWB10018 - S1Ch1 - Sense",
+                "VoltageCorner": 11.0
+            }
+        ],
+        "MeasCardChParams": [
+            {
+                "Alias": "/T3STER/0/MS401/SLOT5/CH0",
+                "AutoRange": false,
+                "DividerAlias": "",
+                "PowerStep": "@POWERSTEP_DIODE;/PWB240/PWB10018/CH0/SensSour/0;/PWB240/PWB10018/CH0/DriveSour/0",
+                "RangeIdx": 9,
+                "Sensitivity": [
+                    0.002
+                ],
+                "Uref": 0.0,
+                "UrefHeating": 0.0,
+                "UrefSwitching": false,
+                "UserAlias": "S5Ch1"
+            }
+        ],
+        "ThermostatParams": [
+            {
+                "Alias": "/THERMOSTAT/0",
+                "SetTemperature": 25.0,
+                "StabilityCriteria": {
+                    "DtMinMax": 0.1,
+                    "DtTarget": 0.25,
+                    "TimeWindow": 60.0,
+                    "Timeout": 1800.0
+                },
+                "UserAlias": "Th0",
+                "WaitForStabilityBeforeMeas": false
+            }
+        ],
+        "TriggerOutputParams": [
+            {
+                "Alias": "/T3STER/0/EL100/SLOT11/TRIGGER2",
+                "Delay": {
+                    "DelayFallingUs": 0,
+                    "DelayRisingUs": 0
+                },
+                "TriggerOutputMode": "Switched",
+                "UserAlias": "S11Ch3"
+            }
+        ]
+    },
+    "SourceTimingControl": {
+        "Enabled": false,
+        "ReversePowerOff": true,
+        "WaitForInstrumentDelay": true,
+        "locked": false
+    },
+    "TimingParams": {
+        "CoolingTime": 5.0,
+        "DelayTime": 0.0,
+        "HeatingTime": 5.0,
+        "Repeat": 1,
+        "SamplePerOctave": 1000,
+        "TransientMode": "REPEATED_COOLING"
+    },
+    "Type": "TransientModel"
+}

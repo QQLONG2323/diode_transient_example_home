@@ -202,7 +202,15 @@ class ParameterApp(tk.Tk):
             "S10Ch5": self.create_th800_sensor_option_parameters(),
             "S10Ch6": self.create_th800_sensor_option_parameters(),
             "S10Ch7": self.create_th800_sensor_option_parameters(),
-            "S10Ch8": self.create_th800_sensor_option_parameters()
+            "S10Ch8": self.create_th800_sensor_option_parameters(),
+            "S11Ch1": "Trigger",
+            "S11Ch2": "Trigger",
+            "S11Ch3": "Trigger",
+            "S11Ch4": "Trigger",
+            "S11Ch5": "Trigger",
+            "S11Ch6": "Trigger",
+            "S11Ch7": "Trigger",
+            "S11Ch8": "Trigger"
         }
 
         # 初始化用於保存 Sensor 、 Option 、 Parameters 和表單控件的字典
@@ -219,6 +227,7 @@ class ParameterApp(tk.Tk):
         self.create_sensor_checkbuttons(MS401_S8_frame, 16, 20)
         self.create_sensor_checkbuttons(TH800_S9_frame, 20, 28)
         self.create_sensor_checkbuttons(TH800_S10_frame, 28, 36)
+        self.create_trigger_checkbuttons(TRIGGER_frame, 36, 44)
 
         checkbutton = ttk.Checkbutton(self.booster_parent_frame, text="Heating Source", variable=None, command=None)
         checkbutton.grid(column=8, row=0, sticky=tk.W, padx=10, pady=5)
@@ -254,6 +263,41 @@ class ParameterApp(tk.Tk):
                 self.option[sensor].set("")
             if sensor in self.form_widgets:
                 self.update_form(sensor)
+
+    def create_trigger_checkbuttons(self, frame, start, end):
+        for i, sensor in enumerate(itertools.islice(self.sensor_option_parameters.keys(), start, end)):
+            self.sensor[sensor] = tk.BooleanVar()
+            # 檢查是否有保存的 trigger 值，並設置勾選狀態
+            if any(saved_sensor == sensor for saved_sensor, _ in self.saved_parameters.keys()):
+                self.sensor[sensor].set(True)
+            checkbutton = ttk.Checkbutton(
+                frame, text=sensor, variable=self.sensor[sensor], command=lambda t=sensor: self.toggle_trigger(t))
+            checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
+
+            # 設置 Checkbutton 的字體
+            checkbutton.configure(style="Large_Bold.TCheckbutton")
+
+    def toggle_trigger(self, sensor):
+        if self.sensor[sensor].get():
+            # 如果被勾選，保存到 saved_parameters
+            self.saved_parameters[(sensor, "Trigger")] = {"status": "enabled"}
+        else:
+            # 如果取消勾選，從 saved_parameters 刪除
+            if (sensor, "Trigger") in self.saved_parameters:
+                del self.saved_parameters[(sensor, "Trigger")]
+        # 更新保存到 JSON 文件
+        self.save_params()
+
+        
+
+
+
+
+
+
+
+
+
 
     # 創建 Parameters 框架的 Function
     def create_parameters_frame(self, parameter_window, text, row):
@@ -679,8 +723,8 @@ class ParameterApp(tk.Tk):
 
             print(self.saved_parameters.items())
 
-            # Create the "sensor_option" key to structure the output
-            sensor_option = f"{sensor}_{option}"
+            # Create the "sensor-option" key to structure the output
+            sensor_option = f"{sensor}-{option}"
 
             modified_params = {}
             for key, value in params.items():

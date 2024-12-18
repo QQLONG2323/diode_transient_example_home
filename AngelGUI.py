@@ -214,8 +214,10 @@ class ParameterApp(tk.Tk):
         }
 
         # 初始化用於保存 Sensor 、 Option 、 Parameters 和表單控件的字典
-        self.sensor = {}   # 儲存 Sensor
-        self.option = {}  # 儲存 Option
+        self.sensor = {}   # 儲存 Sensor 的選項
+        self.option = {}   # 儲存 Option 的選項
+        self.sensor_widget = {}   # 儲存 Sensor 的控件 
+        self.option_widget = {}   # 儲存 Option 的控件
         self.form_widgets = {}   # 儲存所有動態生成的表單控件
 
         # 創建 & 排版 Sensor
@@ -244,7 +246,7 @@ class ParameterApp(tk.Tk):
             checkbutton = ttk.Checkbutton(
                 frame, text=sensor, variable=self.sensor[sensor], command=lambda t=sensor: self.toggle_sensor(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
+            self.sensor_widget[sensor] = checkbutton
             # 設置 Checkbutton 的字體
             checkbutton.configure(style="Large_Bold.TCheckbutton")
             
@@ -273,7 +275,7 @@ class ParameterApp(tk.Tk):
             checkbutton = ttk.Checkbutton(
                 frame, text=sensor, variable=self.sensor[sensor], command=lambda t=sensor: self.toggle_trigger(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-
+            self.sensor_widget[sensor] = checkbutton
             # 設置 Checkbutton 的字體
             checkbutton.configure(style="Large_Bold.TCheckbutton")
 
@@ -285,13 +287,76 @@ class ParameterApp(tk.Tk):
             # 如果取消勾選，從 saved_parameters 刪除
             if (sensor, "Trigger") in self.saved_parameters:
                 del self.saved_parameters[(sensor, "Trigger")]
+
+        # 判斷是否有任意 Trigger 被勾選
+        any_trigger_selected = any(self.sensor[sensor].get() for sensor, option in self.saved_parameters.keys() if option == "Trigger")
+
+         # 根據 Trigger 的狀態啟用/禁用相關框架和選項
+        self.update_based_on_trigger(any_trigger_selected)
+
         # 更新保存到 JSON 文件
         self.save_params()
 
+    def update_based_on_trigger(self, trigger_selected):
+        """根據是否有 Trigger 被勾選，更新 UI 的狀態。"""
+        # LP220 框架內的 SENSOR
+        lp220_sensors = ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]
+
+        # MS401 框架內需要禁用的 Current source option
+        ms401_sensors = ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4",
+                        "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4",
+                        "S7Ch1", "S7Ch2", "S7Ch3", "S7Ch4",
+                        "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]
+
+        # 根據 Trigger 狀態進行操作
+        if trigger_selected:
+            # 禁用 LP220 框架內的 SENSOR
+            for sensor in lp220_sensors:
+                self.sensor[sensor].set(False)  # 清除選中狀態
+                self.disable_lp220_sensors(sensor)  # 禁用按鈕
+            # 禁用 MS401 Sensor 裡面的 Current source 的選項和表單
+            for sensor in ms401_sensors:
+                self.disable_ms401_option_form(sensor, "Current_source")
+        else:
+        # 啟用 LP220 框架內的 SENSOR
+            for sensor in lp220_sensors:
+                self.enable_lp220_sensors(sensor)
+    
+    def disable_lp220_sensors(self, sensor):
+        """禁用 Checkbutton。"""
+        widget = self.sensor_widget.get(sensor)
+        if widget:
+            widget.configure(state=tk.DISABLED)
+
+    def enable_lp220_sensors(self, sensor):
+        """啟用 Checkbutton。"""
+        widget = self.sensor_widget.get(sensor)
+        if widget:
+            widget.configure(state=tk.NORMAL)
+
+    # def disable_ms401_option_form(self, sensor, option):
+    #     """禁用指定 Sensor 的 Option 跟 表單。"""
+    #     # 禁用與 option 對應的 Radiobutton
+    #     if option in self.option_widget:
+    #         print(f"Disabling radiobutton for option: {option}")
+    #         self.option_widget[(sensor, option)].configure(state=tk.DISABLED)
+    #     # 禁用 form_widgets 中對應的表單
+    #     if sensor in self.form_widgets and option in self.form_widgets[sensor]:
+    #         print(f"Disabling form widgets for sensor: {sensor}, option: {option}")
+    #         for widget in self.form_widgets[sensor][option]:
+    #             widget.configure(state=tk.DISABLED)
+
+    def disable_ms401_option_form(self, sensor, option):
+        """禁用指定 Sensor 的 Option 跟 表單。"""
+        # 禁用與 option 對應的 Radiobutton
+        key = (sensor, option)
+        if key not in self.option_widget:
+            print(f"[ERROR] Key not found in option_widget: {key}")
+            print(f"Available keys in option_widget: {list(self.option_widget.keys())}")
+            print(self.sensor_option_parameters[sensor].keys())
+            return
+        self.option_widget[key].configure(state=tk.DISABLED)
         
-
-
-
 
 
 
@@ -341,9 +406,14 @@ class ParameterApp(tk.Tk):
 
         # Option 排版
         for i, option in enumerate(list(self.sensor_option_parameters[sensor].keys())):
-            tk.Radiobutton(option_frame, text=option, variable=self.option[sensor], value=option, font=(
-                "Helvetica", 16, "bold"), command=lambda: self.update_form(sensor)).grid(row=0, column=i+1, padx=20, pady=5)
-        
+            print(f"Adding option: sensor={sensor}, option={option}")
+            print("sensor_option_parameters:", self.sensor_option_parameters)
+            radiobutton = tk.Radiobutton(option_frame, text=option, variable=self.option[sensor], value=option, font=(
+                "Helvetica", 16, "bold"), command=lambda: self.update_form(sensor))
+            radiobutton.grid(row=0, column=i+1, padx=20, pady=5)
+            self.option_widget[(sensor, option)] = radiobutton
+            print(f"Current option_widget: {self.option_widget}")
+            
         # 建立每個 Sensor 中的參數表單
         self.form_widgets[sensor] = {}
 
@@ -707,6 +777,11 @@ class ParameterApp(tk.Tk):
 
         # Save parameters to JSON file
         self.save_params()
+
+        print(list(self.sensor_widget))
+        print(list(self.option_widget))
+       
+        
 
         # Close the window
         window.destroy()

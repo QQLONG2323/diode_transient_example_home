@@ -317,6 +317,7 @@ class ParameterApp(tk.Tk):
             # 禁用 MS401 Sensor 裡面的 Current source 的選項和表單
             for sensor in ms401_sensors:
                 self.disable_ms401_option_form(sensor, "Current_source")
+                self.disable_ms401_option_form(sensor, "Both")
         else:
         # 啟用 LP220 框架內的 SENSOR
             for sensor in lp220_sensors:
@@ -349,13 +350,7 @@ class ParameterApp(tk.Tk):
     def disable_ms401_option_form(self, sensor, option):
         """禁用指定 Sensor 的 Option 跟 表單。"""
         # 禁用與 option 對應的 Radiobutton
-        key = (sensor, option)
-        if key not in self.option_widget:
-            print(f"[ERROR] Key not found in option_widget: {key}")
-            print(f"Available keys in option_widget: {list(self.option_widget.keys())}")
-            print(self.sensor_option_parameters[sensor].keys())
-            return
-        self.option_widget[key].configure(state=tk.DISABLED)
+        self.option_widget[option].configure(state=tk.DISABLED)
         
 
 
@@ -406,13 +401,10 @@ class ParameterApp(tk.Tk):
 
         # Option 排版
         for i, option in enumerate(list(self.sensor_option_parameters[sensor].keys())):
-            print(f"Adding option: sensor={sensor}, option={option}")
-            print("sensor_option_parameters:", self.sensor_option_parameters)
             radiobutton = tk.Radiobutton(option_frame, text=option, variable=self.option[sensor], value=option, font=(
                 "Helvetica", 16, "bold"), command=lambda: self.update_form(sensor))
             radiobutton.grid(row=0, column=i+1, padx=20, pady=5)
-            self.option_widget[(sensor, option)] = radiobutton
-            print(f"Current option_widget: {self.option_widget}")
+            self.option_widget[option] = radiobutton
             
         # 建立每個 Sensor 中的參數表單
         self.form_widgets[sensor] = {}

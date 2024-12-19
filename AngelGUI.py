@@ -246,9 +246,9 @@ class ParameterApp(tk.Tk):
             checkbutton = ttk.Checkbutton(
                 frame, text=sensor, variable=self.sensor[sensor], command=lambda t=sensor: self.toggle_sensor(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-            self.sensor_widget[sensor] = checkbutton
             # 設置 Checkbutton 的字體
             checkbutton.configure(style="Large_Bold.TCheckbutton")
+            self.sensor_widget[sensor] = checkbutton   # 儲存控件
             
     # 只有在 Sensor 被勾選時才彈出視窗
     def toggle_sensor(self, sensor):
@@ -275,9 +275,9 @@ class ParameterApp(tk.Tk):
             checkbutton = ttk.Checkbutton(
                 frame, text=sensor, variable=self.sensor[sensor], command=lambda t=sensor: self.toggle_trigger(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
-            self.sensor_widget[sensor] = checkbutton
             # 設置 Checkbutton 的字體
             checkbutton.configure(style="Large_Bold.TCheckbutton")
+            self.sensor_widget[sensor] = checkbutton   # 儲存控件
 
     def toggle_trigger(self, sensor):
         if self.sensor[sensor].get():
@@ -335,17 +335,7 @@ class ParameterApp(tk.Tk):
         if widget:
             widget.configure(state=tk.NORMAL)
 
-    # def disable_ms401_option_form(self, sensor, option):
-    #     """禁用指定 Sensor 的 Option 跟 表單。"""
-    #     # 禁用與 option 對應的 Radiobutton
-    #     if option in self.option_widget:
-    #         print(f"Disabling radiobutton for option: {option}")
-    #         self.option_widget[(sensor, option)].configure(state=tk.DISABLED)
-    #     # 禁用 form_widgets 中對應的表單
-    #     if sensor in self.form_widgets and option in self.form_widgets[sensor]:
-    #         print(f"Disabling form widgets for sensor: {sensor}, option: {option}")
-    #         for widget in self.form_widgets[sensor][option]:
-    #             widget.configure(state=tk.DISABLED)
+
 
     def disable_ms401_option_form(self, sensor, option):
         """禁用指定 Sensor 的 Option 跟 表單。"""
@@ -404,7 +394,7 @@ class ParameterApp(tk.Tk):
             radiobutton = tk.Radiobutton(option_frame, text=option, variable=self.option[sensor], value=option, font=(
                 "Helvetica", 16, "bold"), command=lambda: self.update_form(sensor))
             radiobutton.grid(row=0, column=i+1, padx=20, pady=5)
-            self.option_widget[option] = radiobutton
+            self.option_widget[option] = radiobutton   # 儲存控件
             
         # 建立每個 Sensor 中的參數表單
         self.form_widgets[sensor] = {}

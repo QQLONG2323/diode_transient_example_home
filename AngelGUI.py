@@ -203,14 +203,14 @@ class ParameterApp(tk.Tk):
             "S10Ch6": self.create_th800_sensor_option_parameters(),
             "S10Ch7": self.create_th800_sensor_option_parameters(),
             "S10Ch8": self.create_th800_sensor_option_parameters(),
-            "S11Ch1": ["High", "Low", "Switched", "Switched Inverted", "Disabled"],
-            "S11Ch2": ["High", "Low", "Switched", "Switched Inverted", "Disabled"],
-            "S11Ch3": ["High", "Low", "Switched", "Switched Inverted", "Disabled"],
-            "S11Ch4": ["High", "Low", "Switched", "Switched Inverted", "Disabled"],
-            "S11Ch5": ["High", "Low", "Switched", "Switched Inverted", "Disabled"],
-            "S11Ch6": ["High", "Low", "Switched", "Switched Inverted", "Disabled"],
-            "S11Ch7": ["High", "Low", "Switched", "Switched Inverted", "Disabled"],
-            "S11Ch8": ["High", "Low", "Switched", "Switched Inverted", "Disabled"]
+            "S11Ch1": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
+            "S11Ch2": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
+            "S11Ch3": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
+            "S11Ch4": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
+            "S11Ch5": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
+            "S11Ch6": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
+            "S11Ch7": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
+            "S11Ch8": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}}
         }
 
         # 初始化用於保存 Sensor 、 Option 、 Parameters 和表單控件的字典
@@ -236,6 +236,10 @@ class ParameterApp(tk.Tk):
         checkbutton.grid(column=8, row=0, sticky=tk.W, padx=10, pady=5)
         # 設置 Checkbutton 的字體
         checkbutton.configure(style="Large_Bold.TCheckbutton")
+
+        for widget in self.page1_widgets:
+            if widget is self.booster_parent_frame:
+                widget.grid_forget()
 
     # 創建 Sensor 的 Checkbutton
     def create_sensor_checkbuttons(self, frame, start, end):
@@ -284,47 +288,46 @@ class ParameterApp(tk.Tk):
     # Trigger 被勾選時的反應
     def toggle_trigger(self, sensor):
         if self.sensor[sensor].get():
-            # 如果被勾選，保存到 saved_parameters
-            self.saved_parameters[(sensor, "Trigger")] = {"status": "enabled"}
-            self.open_trigger_parameter_window(sensor)
+            self.open_parameter_window(sensor) 
         else:
-            # 如果取消勾選，從 saved_parameters 刪除
-            if (sensor, "Trigger") in self.saved_parameters:
-                del self.saved_parameters[(sensor, "Trigger")]
+            # 刪除 params.json 中對應的 option 以及各個控件的參數
+            keys_to_delete = [key for key in self.saved_parameters if key[0] == sensor]
+            for key in keys_to_delete:
+                del self.saved_parameters[key]
+            self.save_params()
+            
+        # 檢查 Trigger 是否有被選中
+        self.any_trigger_selected = any(self.sensor[sensor].get() for sensor in ["S11Ch1", "S11Ch2", "S11Ch3", "S11Ch4", "S11Ch5", "S11Ch6", "S11Ch7", "S11Ch8"])
 
-        # 判斷是否有任意 Trigger 被勾選
-        self.any_trigger_selected = any(self.sensor[sensor].get() for (sensor, option) in self.saved_parameters.keys() if option == "Trigger")
-
-        # 根據 Trigger 的狀態啟用/禁用相關框架和選項
-        self.update_based_on_trigger(self.any_trigger_selected)
-
+        if self.any_trigger_selected:
+            # 禁用 LP220 框架內的 SENSOR
+            for lp220 in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
+                self.sensor[lp220].set(False)   # 清除選中狀態
+                self.disable_lp220_sensors(lp220)   # 禁用 LP220 框架內的 SENSOR 
+            # 顯示 Booster 框架   
+            self.booster_parent_frame.grid(column=0, row=1, columnspan=8, padx=10, pady=10, sticky=tk.NSEW) 
+        else:
+            # 啟用 LP220 框架內的 SENSOR
+            for lp220 in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
+                self.enable_lp220_sensors(lp220)
+            # 隱藏 Booster 框架
+            for widget in self.page1_widgets:
+                if widget is self.booster_parent_frame:
+                    widget.grid_forget()
+            
         # 更新保存到 JSON 文件
         self.save_params()
 
-    def update_based_on_trigger(self, trigger_selected):
-        """根據是否有 Trigger 被勾選，更新 UI 的狀態。"""
-        # LP220 框架內的 SENSOR
-        lp220_sensors = ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]
-
-        # 根據 Trigger 狀態進行操作
-        if trigger_selected:
-            # 禁用 LP220 框架內的 SENSOR
-            for sensor in lp220_sensors:
-                self.sensor[sensor].set(False)  # 清除選中狀態
-                self.disable_lp220_sensors(sensor)  # 禁用按鈕
-        else:
-        # 啟用 LP220 框架內的 SENSOR
-            for sensor in lp220_sensors:
-                self.enable_lp220_sensors(sensor)
-    
+    # 配合 Trigger 被勾選時的反應的 Function
     def disable_lp220_sensors(self, sensor):
-        """禁用 Checkbutton。"""
+        """禁用 LP220 的 Sensor"""
         widget = self.sensor_widget.get(sensor)
         if widget:
             widget.configure(state=tk.DISABLED)
 
+    # 配合 Trigger 被取消勾選時的反應的 Function
     def enable_lp220_sensors(self, sensor):
-        """啟用 Checkbutton。"""
+        """啟用 LP220 的 Sensor"""
         widget = self.sensor_widget.get(sensor)
         if widget:
             widget.configure(state=tk.NORMAL)
@@ -367,12 +370,13 @@ class ParameterApp(tk.Tk):
         option_frame = ttk.Frame(parameter_window)
         option_frame.grid(row=0, column=0, padx=20, pady=10, sticky="ew")
 
-        # 建立 LP220 、 MS401 、 TH800 裡面的參數表單框架
+        # 建立 LP220、MS401、TH800、TRIGGER 裡面的參數表單框架
         S1_S3_Current_source_frame = self.create_parameters_frame(parameter_window, "Current source", 1)
         S1_S3_Voltage_source_frame = self.create_parameters_frame(parameter_window, "Voltage source", 2)
         S5_S8_Current_source_frame = self.create_parameters_frame(parameter_window, "Current source", 1)
         S5_S8_Measurement_channel_frame = self.create_parameters_frame(parameter_window, "Measurement channel", 2)
         S9_S10_Thermometer_frame = self.create_parameters_frame(parameter_window, "Thermometer", 1)
+        S11_Trigger_frame = self.create_parameters_frame(parameter_window, "Trigger", 1)
 
         # 建立儲存、取消按鈕框架
         button_frame = ttk.Frame(parameter_window)
@@ -392,6 +396,8 @@ class ParameterApp(tk.Tk):
 
         form_widgets_for_option_Thermometer = []
 
+        form_widgets_for_option_Trigger = []
+
         # 檢查是否有保存的 Parameters 選項
         # LP220
         saved_parameters_for_S1_S3_current_source = list(self.saved_parameters.get(
@@ -410,6 +416,10 @@ class ParameterApp(tk.Tk):
         # TH800
         saved_parameters_for_S9_S10_Thermometer = list(self.saved_parameters.get(
             (sensor, "Thermometer"), {}).values())
+
+        # TRIGGER
+        saved_parameters_for_S11_Trigger = list(self.saved_parameters.get(
+            (sensor, "Trigger"), {}).values())
 
         # 檢查 S1 & S3 如果有 Voltage_source 保存的參數，那麼禁用 Current_source，反之亦然
         if saved_parameters_for_S1_S3_voltage_source:
@@ -437,7 +447,7 @@ class ParameterApp(tk.Tk):
             S5_S8_current_source_state = "normal"
             Measurement_channel_state = "disabled"
 
-        # S9 & S10 只有一個選項，所以不用檢查
+        # S9 & S10 & S11 只有一個選項，所以不用檢查
 
         if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
             # 填充 S1_S3_Current_source 表單
@@ -551,7 +561,7 @@ class ParameterApp(tk.Tk):
             self.form_widgets[sensor]["Both"] = self.form_widgets[sensor]["Current_source"] + \
                 self.form_widgets[sensor]["Measurement_channel"]
 
-        else:
+        elif sensor in ["S9Ch1", "S9Ch2", "S9Ch3", "S9Ch4", "S9Ch5", "S9Ch6", "S9Ch7", "S9Ch8", "S10Ch1", "S10Ch2", "S10Ch3", "S10Ch4", "S10Ch5", "S10Ch6", "S10Ch7", "S10Ch8"]:
             # 填充 S9_S10_Thermometer 表單
             for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Thermometer"].items()):
                 ttk.Label(S9_S10_Thermometer_frame,
@@ -578,6 +588,22 @@ class ParameterApp(tk.Tk):
             # 保存填充的 Thermometer
             self.form_widgets[sensor]["Thermometer"] = form_widgets_for_option_Thermometer
 
+        elif sensor in ["S11Ch1", "S11Ch2", "S11Ch3", "S11Ch4", "S11Ch5", "S11Ch6", "S11Ch7", "S11Ch8"]:
+            # 填充 S11_Trigger 表單
+            for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Trigger"].items()):
+                ttk.Label(S11_Trigger_frame, text=label_text).pack(anchor=tk.W)
+                combobox = ttk.Combobox(S11_Trigger_frame, values=field_type, width=40)
+                combobox.pack(anchor=tk.W, pady=5)
+                # 回填 saved_parameters_for_S11_Trigger 中的值
+                if i < len(saved_parameters_for_S11_Trigger):
+                    combobox.set(saved_parameters_for_S11_Trigger[i])
+                else:
+                    combobox.set(field_type[2])
+                form_widgets_for_option_Trigger.append(combobox)
+
+            # 保存填充的 Trigger
+            self.form_widgets[sensor]["Trigger"] = form_widgets_for_option_Trigger
+
         # 儲存、取消按鈕排版
         ttk.Button(button_frame, text="儲存", command=lambda: self.save_parameters(
             sensor, self.option[sensor].get(), parameter_window)).pack(side=tk.LEFT, padx=5)
@@ -586,8 +612,10 @@ class ParameterApp(tk.Tk):
         
         # 若有勾選 Trigger，則禁用 MS401 的 Current_source Option 和 Both Option
         if self.any_trigger_selected:
-            self.option_widget["Current_source"].configure(state=tk.DISABLED)
-            self.option_widget["Both"].configure(state=tk.DISABLED)
+            if "Current_source" in self.option_widget and self.option_widget["Current_source"].winfo_exists():
+                self.option_widget["Current_source"].configure(state=tk.DISABLED)
+            if "Both" in self.option_widget and self.option_widget["Both"].winfo_exists():
+                self.option_widget["Both"].configure(state=tk.DISABLED)
             self.option[sensor].set("Measurement_channel")
             self.update_form(sensor)
 
@@ -625,46 +653,6 @@ class ParameterApp(tk.Tk):
                             for widget in widgets:
                                 if widget.winfo_exists():  # 檢查控件是否存在
                                     widget.configure(state="normal")
-
-    # 彈出一個填寫參數的表單視窗 (Trigger)
-    def open_trigger_parameter_window(self, sensor):
-        # 建立彈出視窗
-        parameter_window = tk.Toplevel(self)
-        parameter_window.title(f"{sensor}")
-        parameter_window.geometry("")
-
-        # 建立按鈕框架
-        option_frame = ttk.Frame(parameter_window)
-        option_frame.grid(row=0, column=0, padx=20, pady=10, sticky="ew")
-
-        # 建立儲存、取消按鈕框架
-        button_frame = ttk.Frame(parameter_window)
-        button_frame.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
-
-        # 取得對應的 Option 選項以及其參數
-        # 檢查是否有保存的 Option 選項
-        default_option = None
-        for option in list(self.sensor_option_parameters[sensor]):
-            if (sensor, option) in self.saved_parameters:
-                default_option = option
-                break
-
-        # 如果已經有保存的選項，將其作為預設選項，否則使用第一個選項
-        self.option[sensor] = tk.StringVar(
-            value=default_option or list(self.sensor_option_parameters[sensor])[0])  # 保存這個 sensor 的選擇變量
-
-        # Option 排版
-        for i, option in enumerate(list(self.sensor_option_parameters[sensor])):
-            radiobutton = tk.Radiobutton(option_frame, text=option, variable=self.option[sensor], value=option, font=(
-                "Helvetica", 16, "bold"))
-            radiobutton.grid(row=0, column=i+1, padx=20, pady=5)
-            self.option_widget[option] = radiobutton  # 儲存控件
-
-        # 儲存、取消按鈕排版
-        ttk.Button(button_frame, text="儲存", command=lambda: self.save_parameters(
-            sensor, "Trigger", parameter_window)).pack(side=tk.LEFT, padx=5)
-        ttk.Button(button_frame, text="取消", command=parameter_window.destroy).pack(
-            side=tk.LEFT, padx=5)
 
     def save_parameters(self, sensor, option, window):
         """此為保存參數的函式，將參數輸出至 params.json ， 並將參數保存到 saved_parameters 字典中以便按下 Next 之後輸出至 saved_parameters.json"""
@@ -787,13 +775,10 @@ class ParameterApp(tk.Tk):
             for field, value in last_5_items:
                 measurement_channel_params[field] = value
 
+        
+
         # Save parameters to JSON file
         self.save_params()
-
-        print(list(self.sensor_widget))
-        print(list(self.option_widget))
-       
-        
 
         # Close the window
         window.destroy()

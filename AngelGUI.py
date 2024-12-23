@@ -210,7 +210,27 @@ class ParameterApp(tk.Tk):
             "S11Ch5": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
             "S11Ch6": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
             "S11Ch7": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
-            "S11Ch8": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}}
+            "S11Ch8": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
+            "S1Ch1 - Drive": {
+                "Current_source": {
+                    "Output mode": ["Off", "On", "Switching"],
+                    "Current [A]": "entry",
+                    "Voltage limit [V]": "entry"
+                }
+            },
+            "S1Ch1 - Gate": {
+                "Voltage_source": {
+                    "Output mode": ["Off", "On", "Switching", "Rds on"],
+                    "On-state voltage [V]": "entry",
+                }
+            },
+            "S1Ch1 - Sense": {
+                "Current_source": {
+                "Output mode": ["Off", "ON"],
+                "Range [V]": ["11"],
+                "Current [A]": "entry"
+                }
+            }
         }
 
         # 初始化用於保存 Sensor 、 Option 、 Parameters 和表單控件的字典
@@ -232,11 +252,37 @@ class ParameterApp(tk.Tk):
         self.create_sensor_checkbuttons(TH800_S10_frame, 28, 36)
         self.create_trigger_checkbuttons(TRIGGER_frame, 36, 44)
 
-        checkbutton = ttk.Checkbutton(self.booster_parent_frame, text="Heating Source", variable=None, command=None)
-        checkbutton.grid(column=8, row=0, sticky=tk.W, padx=10, pady=5)
-        # 設置 Checkbutton 的字體
+        # 創建 Booster 的 介面
+        # 加載圖片
+        self.booster1_image = tk.PhotoImage(file="booster1.png")
+        self.booster2_image = tk.PhotoImage(file="booster2.png")
+        self.booster3_image = tk.PhotoImage(file="booster3.png")
+        # 創建 booster1 Label 並顯示圖片
+        self.booster1_image_label = ttk.Label(self.booster_parent_frame, image=self.booster1_image)
+        self.booster1_image_label.grid(row=0, column=0, padx=10, pady=10, sticky=tk.W)
+        # 創建 booster2 Label 並顯示圖片
+        self.booster2_image_label = ttk.Label(self.booster_parent_frame, image=self.booster2_image)
+        self.booster2_image_label.grid(row=0, column=1, padx=10, pady=10, sticky=tk.E)
+        # 創建 booster3 Label 並顯示圖片
+        self.booster3_image_label = ttk.Label(self.booster_parent_frame, image=self.booster3_image)
+        self.booster3_image_label.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
+        # 確保 booster_parent_frame 的列配置允許擴展
+        self.booster_parent_frame.columnconfigure(0, weight=1)
+        self.booster_parent_frame.columnconfigure(1, weight=1)
+        
+        
+        
+        # 過濾出 S11Ch1 到 S11Ch8
+        trigger_sensors = [sensor for sensor in self.load_params() if sensor.startswith("S11Ch")]
+
+        # 創建 Checkbutton 並顯示
+        checkbutton = ttk.Combobox(self.booster_parent_frame, values=trigger_sensors)
+        checkbutton.grid(column=0, row=1, sticky=tk.W, padx=90, pady=5)
         checkbutton.configure(style="Large_Bold.TCheckbutton")
 
+
+        
+        # 隱藏 Booster 框架
         for widget in self.page1_widgets:
             if widget is self.booster_parent_frame:
                 widget.grid_forget()
@@ -612,11 +658,12 @@ class ParameterApp(tk.Tk):
         
         # 若有勾選 Trigger，則禁用 MS401 的 Current_source Option 和 Both Option
         if self.any_trigger_selected:
-            if "Current_source" in self.option_widget and self.option_widget["Current_source"].winfo_exists():
-                self.option_widget["Current_source"].configure(state=tk.DISABLED)
-            if "Both" in self.option_widget and self.option_widget["Both"].winfo_exists():
-                self.option_widget["Both"].configure(state=tk.DISABLED)
-            self.option[sensor].set("Measurement_channel")
+            if sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:
+                if "Current_source" in self.option_widget and self.option_widget["Current_source"].winfo_exists():
+                    self.option_widget["Current_source"].configure(state=tk.DISABLED)
+                if "Both" in self.option_widget and self.option_widget["Both"].winfo_exists():
+                    self.option_widget["Both"].configure(state=tk.DISABLED)
+                self.option[sensor].set("Measurement_channel")
             self.update_form(sensor)
 
     # 根據選擇的 Option 來開啟或禁用表單

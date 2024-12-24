@@ -7,6 +7,7 @@ import itertools
 from io import StringIO
 import sys
 import threading
+from PIL import Image, ImageTk 
 
 
 class ParameterApp(tk.Tk):
@@ -15,7 +16,7 @@ class ParameterApp(tk.Tk):
 
         self.title("T3STER SI")
         self.geometry("1280x960")
-
+        
         # 設置 Sensor 字體大小
         ttk.Style().configure("Large_Bold.TCheckbutton", font=("Helvetica", 16, "bold"))
         # 設定 LabelFrame 字體大小與粗體
@@ -45,7 +46,6 @@ class ParameterApp(tk.Tk):
     def create_sensor_frame(self, text, column):
         frame = ttk.LabelFrame(self.sensors_parent_frame, text=text)
         frame.grid(column=column, row=0, padx=10, pady=10, sticky=tk.NSEW)
-        self.page1_widgets.append(frame)
         return frame
 
     # 創建 LP220 的 Sensor 、 Option 、 Parameters 的 Function
@@ -140,7 +140,7 @@ class ParameterApp(tk.Tk):
 
         # 創建一個 Sensor 父框架來容納所有 Sensor 的框架
         self.sensors_parent_frame = ttk.LabelFrame(self, text="T3STER SI Sensor", style="Large_Bold.TLabelframe")  # Sensor 父框架
-        self.sensors_parent_frame.grid(column=0, row=0, columnspan=8, padx=10, pady=10, sticky=tk.NSEW)
+        self.sensors_parent_frame.grid(column=0, row=0, padx=10, pady=10, sticky=tk.NSEW)
         self.page1_widgets.append(self.sensors_parent_frame)
 
         # Sensor 框架
@@ -156,13 +156,13 @@ class ParameterApp(tk.Tk):
 
         # 創建一個 Booster 父框架來容納所有 Booster 的框架
         self.booster_parent_frame = ttk.LabelFrame(self, text="BOOSTER", style="Large_Bold.TLabelframe")  # Booster 父框架
-        self.booster_parent_frame.grid(column=0, row=1, columnspan=8, padx=10, pady=10, sticky=tk.NSEW)
+        self.booster_parent_frame.grid(column=0, row=1, padx=10, pady=10, sticky=tk.NSEW)
         self.page1_widgets.append(self.booster_parent_frame)
 
         # Next 按鈕，按下後隱藏當前頁面並進入下一步的頁面
         next_button = ttk.Button(
             self, text="Next", command=self.go_to_page2)
-        next_button.grid(column=7, row=2, padx=10, pady=10, sticky="E")
+        next_button.grid(column=0, row=2, padx=10, pady=10, sticky="E")
         self.page1_widgets.append(next_button)
 
         # 定義每個感測器的選項
@@ -254,34 +254,54 @@ class ParameterApp(tk.Tk):
 
         # 創建 Booster 的 介面
         # 加載圖片
-        self.booster1_image = tk.PhotoImage(file="booster1.png")
-        self.booster2_image = tk.PhotoImage(file="booster2.png")
-        self.booster3_image = tk.PhotoImage(file="booster3.png")
+        self.booster1_image = Image.open("booster1.png")
+        self.booster1_photo = ImageTk.PhotoImage(self.booster1_image)
+
+        self.booster2_image = Image.open("booster2.png")
+        self.booster2_photo = ImageTk.PhotoImage(self.booster2_image)
+
+        self.s1ch1_drive_image = Image.open("S1Ch1_Drive.png")
+        self.s1ch1_drive_photo = ImageTk.PhotoImage(self.s1ch1_drive_image)
+
+        # # 確保 booster_parent_frame 的列配置允許擴展
+        # self.booster_parent_frame.columnconfigure(0, weight=1)
+        # self.booster_parent_frame.columnconfigure(1, weight=1)
+
         # 創建 booster1 Label 並顯示圖片
-        self.booster1_image_label = ttk.Label(self.booster_parent_frame, image=self.booster1_image)
-        self.booster1_image_label.grid(row=0, column=0, padx=10, pady=10, sticky=tk.W)
+        self.booster1_photo_label = ttk.Label(self.booster_parent_frame, image=self.booster1_photo)
+        self.booster1_photo_label.grid(row=0, column=0, padx=10, pady=10, sticky=tk.W)
         # 創建 booster2 Label 並顯示圖片
-        self.booster2_image_label = ttk.Label(self.booster_parent_frame, image=self.booster2_image)
-        self.booster2_image_label.grid(row=0, column=1, padx=10, pady=10, sticky=tk.E)
-        # 創建 booster3 Label 並顯示圖片
-        self.booster3_image_label = ttk.Label(self.booster_parent_frame, image=self.booster3_image)
-        self.booster3_image_label.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
-        # 確保 booster_parent_frame 的列配置允許擴展
-        self.booster_parent_frame.columnconfigure(0, weight=1)
-        self.booster_parent_frame.columnconfigure(1, weight=1)
-        
-        
-        
-        # 過濾出 S11Ch1 到 S11Ch8
-        trigger_sensors = [sensor for sensor in self.load_params() if sensor.startswith("S11Ch")]
+        self.booster2_photo_label = ttk.Label(self.booster_parent_frame, image=self.booster2_photo)
+        self.booster2_photo_label.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
+        # 創建 S1Ch1 Drive Checkbutton 並顯示圖片
+        self.sensor["S1Ch1 - Drive"] = tk.BooleanVar()
+        self.s1ch1_drive_checkbutton = ttk.Checkbutton(self.booster_parent_frame, image=self.s1ch1_drive_photo, variable=self.sensor["S1Ch1 - Drive"], command=lambda t="S1Ch1 - Drive": self.toggle_sensor(t))
+        self.s1ch1_drive_checkbutton.grid(row=0, column=4, padx=10, pady=10, sticky=tk.E)
 
-        # 創建 Checkbutton 並顯示
-        checkbutton = ttk.Combobox(self.booster_parent_frame, values=trigger_sensors)
-        checkbutton.grid(column=0, row=1, sticky=tk.W, padx=90, pady=5)
-        checkbutton.configure(style="Large_Bold.TCheckbutton")
+        # R-DRIVER 來源做在 toggle_trigger 裡面的 self.trigger_combobox
 
+        # 創建 S1Ch1 Sense Checkbutton
+        self.sensor["S1Ch1 - Sense"] = tk.BooleanVar()
+        self.s1ch1_sense_checkbutton = ttk.Checkbutton(self.booster_parent_frame, text="S1Ch1 - Sense", variable=self.sensor["S1Ch1 - Sense"], command=lambda t="S1Ch1 - Sense": self.toggle_sensor(t))
+        self.s1ch1_sense_checkbutton.grid(row=2, column=0, padx=0, pady=10, sticky=tk.E)
+        self.s1ch1_sense_checkbutton.configure(style="Large_Bold.TCheckbutton")
 
-        
+        # 創建 S1Ch1 Gate Checkbutton
+        # 創建四個 Checkbutton 並共用同一個 BooleanVar 變量
+        self.sensor["S1Ch1 - Gate"] = tk.BooleanVar()
+        self.s1ch1_gate_pos1_checkbutton = ttk.Checkbutton(self.booster_parent_frame, text="Pos 1", variable=self.sensor["S1Ch1 - Gate"], command=lambda t="S1Ch1 - Gate": self.toggle_sensor(t))
+        self.s1ch1_gate_pos1_checkbutton.grid(row=2, column=1, padx=(30,0), pady=5, sticky=tk.W)
+        self.s1ch1_gate_pos1_checkbutton.configure(style="Large_Bold.TCheckbutton")
+        self.s1ch1_gate_pos2_checkbutton = ttk.Checkbutton(self.booster_parent_frame, text="Pos 2", variable=self.sensor["S1Ch1 - Gate"], command=lambda t="S1Ch1 - Gate": self.toggle_sensor(t))
+        self.s1ch1_gate_pos2_checkbutton.grid(row=2, column=2, padx=0, pady=5, sticky=tk.W)
+        self.s1ch1_gate_pos2_checkbutton.configure(style="Large_Bold.TCheckbutton")
+        self.s1ch1_gate_pos3_checkbutton = ttk.Checkbutton(self.booster_parent_frame, text="Pos 3", variable=self.sensor["S1Ch1 - Gate"], command=lambda t="S1Ch1 - Gate": self.toggle_sensor(t))
+        self.s1ch1_gate_pos3_checkbutton.grid(row=2, column=3, padx=0, pady=5, sticky=tk.W)
+        self.s1ch1_gate_pos3_checkbutton.configure(style="Large_Bold.TCheckbutton")
+        self.s1ch1_gate_pos4_checkbutton = ttk.Checkbutton(self.booster_parent_frame, text="Pos 4", variable=self.sensor["S1Ch1 - Gate"], command=lambda t="S1Ch1 - Gate": self.toggle_sensor(t))
+        self.s1ch1_gate_pos4_checkbutton.grid(row=2, column=4, padx=(0,390), pady=5, sticky=tk.W)
+        self.s1ch1_gate_pos4_checkbutton.configure(style="Large_Bold.TCheckbutton")
+
         # 隱藏 Booster 框架
         for widget in self.page1_widgets:
             if widget is self.booster_parent_frame:
@@ -364,6 +384,13 @@ class ParameterApp(tk.Tk):
         # 更新保存到 JSON 文件
         self.save_params()
 
+        # 過濾出 S11Ch1 到 S11Ch8
+        trigger_sensors = [sensor for sensor in self.sensor if sensor.startswith("S11Ch") and self.sensor[sensor].get()]
+        # 創建 Checkbutton 並顯示
+        self.trigger_combobox = ttk.Combobox(self.booster_parent_frame, values=trigger_sensors)
+        self.trigger_combobox.grid(column=0, row=1, sticky=tk.W, padx=(90,200), pady=5)
+        self.trigger_combobox.set("選擇 Trigger 來源")
+  
     # 配合 Trigger 被勾選時的反應的 Function
     def disable_lp220_sensors(self, sensor):
         """禁用 LP220 的 Sensor"""
@@ -377,7 +404,7 @@ class ParameterApp(tk.Tk):
         widget = self.sensor_widget.get(sensor)
         if widget:
             widget.configure(state=tk.NORMAL)
-        
+
     # 創建 Parameters 框架的 Function
     def create_parameters_frame(self, parameter_window, text, row):
         frame = ttk.LabelFrame(parameter_window, text=text, style="Large_Bold.TLabelframe")
@@ -417,12 +444,12 @@ class ParameterApp(tk.Tk):
         option_frame.grid(row=0, column=0, padx=20, pady=10, sticky="ew")
 
         # 建立 LP220、MS401、TH800、TRIGGER 裡面的參數表單框架
-        S1_S3_Current_source_frame = self.create_parameters_frame(parameter_window, "Current source", 1)
+        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame = self.create_parameters_frame(parameter_window, "Current source", 1)
         S1_S3_Voltage_source_frame = self.create_parameters_frame(parameter_window, "Voltage source", 2)
-        S5_S8_Current_source_frame = self.create_parameters_frame(parameter_window, "Current source", 1)
         S5_S8_Measurement_channel_frame = self.create_parameters_frame(parameter_window, "Measurement channel", 2)
         S9_S10_Thermometer_frame = self.create_parameters_frame(parameter_window, "Thermometer", 1)
         S11_Trigger_frame = self.create_parameters_frame(parameter_window, "Trigger", 1)
+        S1Ch1Gate_Voltage_source_frame = self.create_parameters_frame(parameter_window, "Voltage source", 1)
 
         # 建立儲存、取消按鈕框架
         button_frame = ttk.Frame(parameter_window)
@@ -443,6 +470,12 @@ class ParameterApp(tk.Tk):
         form_widgets_for_option_Thermometer = []
 
         form_widgets_for_option_Trigger = []
+
+        form_widgets_for_option_S1Ch1_Drive_current_source = []
+
+        form_widgets_for_option_S1Ch1_Sense_current_source = []
+
+        form_widgets_for_option_S1Ch1_Gate_Voltage_source = []
 
         # 檢查是否有保存的 Parameters 選項
         # LP220
@@ -466,6 +499,18 @@ class ParameterApp(tk.Tk):
         # TRIGGER
         saved_parameters_for_S11_Trigger = list(self.saved_parameters.get(
             (sensor, "Trigger"), {}).values())
+        
+        # S1Ch1 - Drive
+        saved_parameters_for_S1Ch1_Drive_current_source = list(self.saved_parameters.get(
+            (sensor, "Current_source"), {}).values())
+        
+        # S1Ch1 - Sense
+        saved_parameters_for_S1Ch1_Sense_current_source = list(self.saved_parameters.get(
+            (sensor, "Current_source"), {}).values())
+        
+        # S1Ch1 - Gate
+        saved_parameters_for_S1Ch1_Gate_Voltage_source = list(self.saved_parameters.get(
+            (sensor, "Voltage_source"), {}).values())
 
         # 檢查 S1 & S3 如果有 Voltage_source 保存的參數，那麼禁用 Current_source，反之亦然
         if saved_parameters_for_S1_S3_voltage_source:
@@ -493,16 +538,16 @@ class ParameterApp(tk.Tk):
             S5_S8_current_source_state = "normal"
             Measurement_channel_state = "disabled"
 
-        # S9 & S10 & S11 只有一個選項，所以不用檢查
+        # S9 & S10 & S11 & S1Ch1_Drive & S1Ch1_Sense & S1Ch1_Gate 只有一個選項，所以不用檢查
 
         if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
             # 填充 S1_S3_Current_source 表單
             for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Current_source"].items()):
-                ttk.Label(S1_S3_Current_source_frame,
+                ttk.Label(S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame,
                           text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
                     combobox = ttk.Combobox(
-                        S1_S3_Current_source_frame, values=field_type, state=S1_S3_current_source_state, width=40)  # 根據條件禁用或啟用
+                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, values=field_type, state=S1_S3_current_source_state, width=40)  # 根據條件禁用或啟用
                     combobox.pack(anchor=tk.W, pady=5)
                     # 回填 saved_parameters_for_S1_S3_current_source 中的值
                     if i < len(saved_parameters_for_S1_S3_current_source):
@@ -511,7 +556,7 @@ class ParameterApp(tk.Tk):
                     
                 else:
                     entry = ttk.Entry(
-                        S1_S3_Current_source_frame, state=S1_S3_current_source_state, width=40)  # 根據條件禁用或啟用
+                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, state=S1_S3_current_source_state, width=40)  # 根據條件禁用或啟用
                     entry.pack(anchor=tk.W, pady=5)
                     # 回填 saved_parameters_for_S1_S3_current_source 中的值
                     if i < len(saved_parameters_for_S1_S3_current_source):
@@ -549,11 +594,11 @@ class ParameterApp(tk.Tk):
         elif sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:
             # 填充 S5_S8_Current_source 表單
             for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Current_source"].items()):
-                ttk.Label(S5_S8_Current_source_frame,
+                ttk.Label(S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame,
                           text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
                     combobox = ttk.Combobox(
-                        S5_S8_Current_source_frame, values=field_type, state=S5_S8_current_source_state, width=40)   # 根據條件禁用或啟用
+                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, values=field_type, state=S5_S8_current_source_state, width=40)   # 根據條件禁用或啟用
                     combobox.pack(anchor=tk.W, pady=5)
                     # 回填 saved_parameters_for_S5_S8_current_source 中的值
                     if i < len(saved_parameters_for_S5_S8_current_source):
@@ -564,7 +609,7 @@ class ParameterApp(tk.Tk):
 
                 else:
                     entry = ttk.Entry(
-                        S5_S8_Current_source_frame, state=S5_S8_current_source_state, width=40)   # 根據條件禁用或啟用
+                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, state=S5_S8_current_source_state, width=40)   # 根據條件禁用或啟用
                     entry.pack(anchor=tk.W, pady=5)
                     # 回填 saved_parameters_for_S5_S8_current_source 中的值
                     if i < len(saved_parameters_for_S5_S8_current_source):
@@ -650,6 +695,87 @@ class ParameterApp(tk.Tk):
             # 保存填充的 Trigger
             self.form_widgets[sensor]["Trigger"] = form_widgets_for_option_Trigger
 
+        elif sensor in ["S1Ch1 - Drive"]:
+            # 填充 S1Ch1_Drive_Current_source 表單
+            for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Current_source"].items()):
+                ttk.Label(S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame,
+                          text=label_text).pack(anchor=tk.W)
+                if isinstance(field_type, list):
+                    combobox = ttk.Combobox(
+                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, values=field_type, width=40)
+                    combobox.pack(anchor=tk.W, pady=5)
+                    # 回填 saved_parameters_for_S1Ch1_Drive_current_source 中的值
+                    if i < len(saved_parameters_for_S1Ch1_Drive_current_source):
+                        combobox.set(
+                            saved_parameters_for_S1Ch1_Drive_current_source[i])
+                    form_widgets_for_option_S1Ch1_Drive_current_source.append(combobox)
+
+                else:
+                    entry = ttk.Entry(S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, width=40)
+                    entry.pack(anchor=tk.W, pady=5)
+                    # 回填 saved_parameters_for_S1Ch1_Drive_current_source 中的值
+                    if i < len(saved_parameters_for_S1Ch1_Drive_current_source):
+                        entry.insert(
+                            0, saved_parameters_for_S1Ch1_Drive_current_source[i])
+                    form_widgets_for_option_S1Ch1_Drive_current_source.append(entry)
+
+            # 保存填充的 Current_source
+            self.form_widgets[sensor]["Current_source"] = form_widgets_for_option_S1Ch1_Drive_current_source
+
+        elif sensor in ["S1Ch1 - Sense"]:
+            # 填充 S1Ch1_Sense_Current_source 表單
+            for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Current_source"].items()):
+                ttk.Label(S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame,
+                          text=label_text).pack(anchor=tk.W)
+                if isinstance(field_type, list):
+                    combobox = ttk.Combobox(
+                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, values=field_type, width=40)
+                    combobox.pack(anchor=tk.W, pady=5)
+                    # 回填 saved_parameters_for_S1Ch1_Sense_current_source 中的值
+                    if i < len(saved_parameters_for_S1Ch1_Sense_current_source):
+                        combobox.set(
+                            saved_parameters_for_S1Ch1_Sense_current_source[i])
+                    form_widgets_for_option_S1Ch1_Sense_current_source.append(combobox)
+
+                else:
+                    entry = ttk.Entry(S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, width=40)
+                    entry.pack(anchor=tk.W, pady=5)
+                    # 回填 saved_parameters_for_S1Ch1_Sense_current_source 中的值
+                    if i < len(saved_parameters_for_S1Ch1_Sense_current_source):
+                        entry.insert(
+                            0, saved_parameters_for_S1Ch1_Sense_current_source[i])
+                    form_widgets_for_option_S1Ch1_Sense_current_source.append(entry)
+
+            # 保存填充的 Current_source
+            self.form_widgets[sensor]["Current_source"] = form_widgets_for_option_S1Ch1_Sense_current_source
+
+        elif sensor in ["S1Ch1 - Gate"]:
+            # 填充 S1Ch1_Gate_Voltage_source 表單
+            for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Voltage_source"].items()):
+                ttk.Label(S1Ch1Gate_Voltage_source_frame,
+                          text=label_text).pack(anchor=tk.W)
+                if isinstance(field_type, list):
+                    combobox = ttk.Combobox(
+                        S1Ch1Gate_Voltage_source_frame, values=field_type, width=40)
+                    combobox.pack(anchor=tk.W, pady=5)
+                    # 回填 saved_parameters_for_S1Ch1_Gate_Voltage_source 中的值
+                    if i < len(saved_parameters_for_S1Ch1_Gate_Voltage_source):
+                        combobox.set(
+                            saved_parameters_for_S1Ch1_Gate_Voltage_source[i])
+                    form_widgets_for_option_S1Ch1_Gate_Voltage_source.append(combobox)
+
+                else:
+                    entry = ttk.Entry(S1Ch1Gate_Voltage_source_frame, width=40)
+                    entry.pack(anchor=tk.W, pady=5)
+                    # 回填 saved_parameters_for_S1Ch1_Gate_Voltage_source 中的值
+                    if i < len(saved_parameters_for_S1Ch1_Gate_Voltage_source):
+                        entry.insert(
+                            0, saved_parameters_for_S1Ch1_Gate_Voltage_source[i])
+                    form_widgets_for_option_S1Ch1_Gate_Voltage_source.append(entry)
+
+            # 保存填充的 Voltage_source
+            self.form_widgets[sensor]["Voltage_source"] = form_widgets_for_option_S1Ch1_Gate_Voltage_source
+
         # 儲存、取消按鈕排版
         ttk.Button(button_frame, text="儲存", command=lambda: self.save_parameters(
             sensor, self.option[sensor].get(), parameter_window)).pack(side=tk.LEFT, padx=5)
@@ -700,6 +826,8 @@ class ParameterApp(tk.Tk):
                             for widget in widgets:
                                 if widget.winfo_exists():  # 檢查控件是否存在
                                     widget.configure(state="normal")
+
+            
 
     def save_parameters(self, sensor, option, window):
         """此為保存參數的函式，將參數輸出至 params.json ， 並將參數保存到 saved_parameters 字典中以便按下 Next 之後輸出至 saved_parameters.json"""

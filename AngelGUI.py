@@ -278,7 +278,7 @@ class ParameterApp(tk.Tk):
         self.s1ch1_drive_checkbutton = ttk.Checkbutton(self.booster_parent_frame, image=self.s1ch1_drive_photo, variable=self.sensor["S1Ch1 - Drive"], command=lambda t="S1Ch1 - Drive": self.toggle_sensor(t))
         self.s1ch1_drive_checkbutton.grid(row=0, column=4, padx=10, pady=10, sticky=tk.E)
 
-        # R-DRIVER 來源做在 toggle_trigger 裡面的 self.trigger_combobox
+        # R-DRIVER 來源做在 toggle_trigger 裡面的 self.rdriver_trigger_combobox
 
         # 創建 S1Ch1 Sense Checkbutton
         self.sensor["S1Ch1 - Sense"] = tk.BooleanVar()
@@ -384,13 +384,15 @@ class ParameterApp(tk.Tk):
         # 更新保存到 JSON 文件
         self.save_params()
 
+        # R-DRIVER 來源
         # 過濾出 S11Ch1 到 S11Ch8
-        trigger_sensors = [sensor for sensor in self.sensor if sensor.startswith("S11Ch") and self.sensor[sensor].get()]
+        rdriver_trigger_sensors = [sensor for sensor in self.sensor if sensor.startswith("S11Ch") and self.sensor[sensor].get()]
         # 創建 Checkbutton 並顯示
-        self.trigger_combobox = ttk.Combobox(self.booster_parent_frame, values=trigger_sensors)
-        self.trigger_combobox.grid(column=0, row=1, sticky=tk.W, padx=(90,200), pady=5)
-        self.trigger_combobox.set("選擇 Trigger 來源")
-  
+        self.rdriver_trigger_combobox = ttk.Combobox(self.booster_parent_frame, values=rdriver_trigger_sensors)
+        self.rdriver_trigger_combobox.grid(column=0, row=1, sticky=tk.W, padx=(90,200), pady=5)
+        self.rdriver_trigger_combobox.set("選擇 Trigger 來源")
+        self.rdriver_trigger_combobox.bind("<<ComboboxSelected>>", self.on_rdriver_trigger_combobox_select)
+
     # 配合 Trigger 被勾選時的反應的 Function
     def disable_lp220_sensors(self, sensor):
         """禁用 LP220 的 Sensor"""
@@ -404,6 +406,18 @@ class ParameterApp(tk.Tk):
         widget = self.sensor_widget.get(sensor)
         if widget:
             widget.configure(state=tk.NORMAL)
+
+    # Trigger Combobox 被選中時的反應
+    def on_rdriver_trigger_combobox_select(self, event):
+        selected_value = self.rdriver_trigger_combobox.get()
+        new_value = {"R-DRIVER Trigger": selected_value}
+        # 清除之前保存的值
+        keys_to_delete = [key for key, value in self.saved_parameters.items() if key[0] == "R-DRIVER" and value != new_value]
+        for key in keys_to_delete:
+            del self.saved_parameters[key]
+        # 保存新的值
+        self.saved_parameters[("R-DRIVER", "Trigger")] = new_value
+        self.save_params()
 
     # 創建 Parameters 框架的 Function
     def create_parameters_frame(self, parameter_window, text, row):
@@ -948,9 +962,7 @@ class ParameterApp(tk.Tk):
 
             # 將後5個分配到 measurement_channel_params
             for field, value in last_5_items:
-                measurement_channel_params[field] = value
-
-        
+                measurement_channel_params[field] = value       
 
         # Save parameters to JSON file
         self.save_params()
@@ -1020,18 +1032,6 @@ class ParameterApp(tk.Tk):
 
         # 顯示第一頁面的控件
         self.create_page1()
-
-        for (sensor, option), params in self.saved_parameters.items():
-            if sensor in self.form_widgets and option in self.form_widgets[sensor]:
-                # 填充表單控件
-                for idx, widget in enumerate(self.form_widgets[sensor][option]):
-                    if isinstance(widget, ttk.Combobox):
-                        # 重新設置 Combobox 的選定項目
-                        widget.set(params[idx])
-                    else:
-                        # 重新設置 Entry 的值
-                        widget.delete(0, tk.END)
-                        widget.insert(0, params[idx])
 
     # 創建第二頁
     def create_page2(self):

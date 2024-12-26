@@ -16,7 +16,7 @@ class ParameterApp(tk.Tk):
 
         self.title("T3STER SI")
         self.geometry("1280x960")
-        
+  
         # 設置 Sensor 字體大小
         ttk.Style().configure("Large_Bold.TCheckbutton", font=("Helvetica", 16, "bold"))
         # 設定 LabelFrame 字體大小與粗體
@@ -275,13 +275,26 @@ class ParameterApp(tk.Tk):
         self.booster2_photo_label.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
         # 創建 S1Ch1 Drive Checkbutton 並顯示圖片
         self.sensor["S1Ch1 - Drive"] = tk.BooleanVar()
+        if any(saved_sensor == "S1Ch1 - Drive" for saved_sensor, _ in self.saved_parameters.keys()):
+            self.sensor["S1Ch1 - Drive"].set(True)
         self.s1ch1_drive_checkbutton = ttk.Checkbutton(self.booster_parent_frame, image=self.s1ch1_drive_photo, variable=self.sensor["S1Ch1 - Drive"], command=lambda t="S1Ch1 - Drive": self.toggle_sensor(t))
         self.s1ch1_drive_checkbutton.grid(row=0, column=4, padx=10, pady=10, sticky=tk.E)
 
-        # R-DRIVER 來源做在 toggle_trigger 裡面的 self.rdriver_trigger_combobox
+        # R-DRIVER 來源
+        # 過濾出 S11Ch1 到 S11Ch8
+        rdriver_trigger_sensors = [sensor for sensor in self.sensor if sensor.startswith("S11Ch") and self.sensor[sensor].get()]
+        # 創建 Combobox 並顯示
+        self.rdriver_trigger_combobox = ttk.Combobox(self.booster_parent_frame, values=rdriver_trigger_sensors)
+        self.rdriver_trigger_combobox.grid(column=0, row=1, sticky=tk.W, padx=(90,200), pady=5)
+        self.rdriver_trigger_combobox.set("選擇 Trigger 來源")
+        if any(saved_sensor == "R-DRIVER" for saved_sensor, _ in self.saved_parameters.keys()):
+            self.rdriver_trigger_combobox.set(self.saved_parameters.get(("R-DRIVER", "Trigger"), {}).get("R-DRIVER Trigger"))
+        self.rdriver_trigger_combobox.bind("<<ComboboxSelected>>", self.on_rdriver_trigger_combobox_select)
 
         # 創建 S1Ch1 Sense Checkbutton
         self.sensor["S1Ch1 - Sense"] = tk.BooleanVar()
+        if any(saved_sensor == "S1Ch1 - Sense" for saved_sensor, _ in self.saved_parameters.keys()):
+            self.sensor["S1Ch1 - Sense"].set(True)
         self.s1ch1_sense_checkbutton = ttk.Checkbutton(self.booster_parent_frame, text="S1Ch1 - Sense", variable=self.sensor["S1Ch1 - Sense"], command=lambda t="S1Ch1 - Sense": self.toggle_sensor(t))
         self.s1ch1_sense_checkbutton.grid(row=2, column=0, padx=0, pady=10, sticky=tk.E)
         self.s1ch1_sense_checkbutton.configure(style="Large_Bold.TCheckbutton")
@@ -289,6 +302,8 @@ class ParameterApp(tk.Tk):
         # 創建 S1Ch1 Gate Checkbutton
         # 創建四個 Checkbutton 並共用同一個 BooleanVar 變量
         self.sensor["S1Ch1 - Gate"] = tk.BooleanVar()
+        if any(saved_sensor == "S1Ch1 - Gate" for saved_sensor, _ in self.saved_parameters.keys()):
+            self.sensor["S1Ch1 - Gate"].set(True)
         self.s1ch1_gate_pos1_checkbutton = ttk.Checkbutton(self.booster_parent_frame, text="Pos 1", variable=self.sensor["S1Ch1 - Gate"], command=lambda t="S1Ch1 - Gate": self.toggle_sensor(t))
         self.s1ch1_gate_pos1_checkbutton.grid(row=2, column=1, padx=(30,0), pady=5, sticky=tk.W)
         self.s1ch1_gate_pos1_checkbutton.configure(style="Large_Bold.TCheckbutton")
@@ -360,7 +375,15 @@ class ParameterApp(tk.Tk):
             keys_to_delete = [key for key in self.saved_parameters if key[0] == sensor]
             for key in keys_to_delete:
                 del self.saved_parameters[key]
+
+            # 刪除 self.saved_parameters 中擁有相同 sensor 的 R-DRIVER Trigger 項目
+            rdriver_keys_to_delete = [key for key, value in self.saved_parameters.items() if key == ('R-DRIVER', 'Trigger') and value.get('R-DRIVER Trigger') == sensor]
+            for key in rdriver_keys_to_delete:
+                del self.saved_parameters[key]
+
             self.save_params()
+
+            self.rdriver_trigger_combobox.set("選擇 Trigger 來源")
             
         # 檢查 Trigger 是否有被選中
         self.any_trigger_selected = any(self.sensor[sensor].get() for sensor in ["S11Ch1", "S11Ch2", "S11Ch3", "S11Ch4", "S11Ch5", "S11Ch6", "S11Ch7", "S11Ch8"])
@@ -373,6 +396,9 @@ class ParameterApp(tk.Tk):
             # 顯示 Booster 框架   
             self.booster_parent_frame.grid(column=0, row=1, columnspan=8, padx=10, pady=10, sticky=tk.NSEW) 
         else:
+            keys_to_delete = [key for key, _ in self.saved_parameters.items() if key[0] in ["R-DRIVER", "S1Ch1 - Drive", "S1Ch1 - Sense", "S1Ch1 - Gate"]]
+            for key in keys_to_delete:
+                del self.saved_parameters[key]
             # 啟用 LP220 框架內的 SENSOR
             for lp220 in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
                 self.enable_lp220_sensors(lp220)
@@ -384,14 +410,9 @@ class ParameterApp(tk.Tk):
         # 更新保存到 JSON 文件
         self.save_params()
 
-        # R-DRIVER 來源
-        # 過濾出 S11Ch1 到 S11Ch8
+        # 更新 R-DRIVER 來源的 Combobox 選項
         rdriver_trigger_sensors = [sensor for sensor in self.sensor if sensor.startswith("S11Ch") and self.sensor[sensor].get()]
-        # 創建 Checkbutton 並顯示
-        self.rdriver_trigger_combobox = ttk.Combobox(self.booster_parent_frame, values=rdriver_trigger_sensors)
-        self.rdriver_trigger_combobox.grid(column=0, row=1, sticky=tk.W, padx=(90,200), pady=5)
-        self.rdriver_trigger_combobox.set("選擇 Trigger 來源")
-        self.rdriver_trigger_combobox.bind("<<ComboboxSelected>>", self.on_rdriver_trigger_combobox_select)
+        self.rdriver_trigger_combobox['values'] = rdriver_trigger_sensors
 
     # 配合 Trigger 被勾選時的反應的 Function
     def disable_lp220_sensors(self, sensor):
@@ -1032,6 +1053,12 @@ class ParameterApp(tk.Tk):
 
         # 顯示第一頁面的控件
         self.create_page1()
+
+        # 檢查 self.saved_parameters 是否包含 S11Ch1 到 S11Ch8
+        trigger_sensors = ["S11Ch1", "S11Ch2", "S11Ch3", "S11Ch4", "S11Ch5", "S11Ch6", "S11Ch7", "S11Ch8"]
+        if any(sensor in [key[0] for key in self.saved_parameters.keys()] for sensor in trigger_sensors):
+            # 顯示 Booster 框架
+            self.booster_parent_frame.grid(column=0, row=1, columnspan=8, padx=10, pady=10, sticky=tk.NSEW)
 
     # 創建第二頁
     def create_page2(self):
@@ -2155,8 +2182,7 @@ class ParameterApp(tk.Tk):
 if __name__ == "__main__":
 
     if os.path.exists("params.json"):
-        # 刪除檔案
-        os.remove("params.json")
+        os.remove("params.json")   # 刪除檔案
         print("params.json 已被刪除")
     else:
         print("params.json 不存在")

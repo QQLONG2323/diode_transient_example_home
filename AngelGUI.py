@@ -22,9 +22,12 @@ class ParameterApp(tk.Tk):
         # 設定 LabelFrame 字體大小與粗體
         ttk.Style().configure("Large_Bold.TLabelframe.Label", font=("system", 16, "bold"))
 
-        self.params_file = "params.json"
-        self.saved_parameters = self.load_params()
-
+        # 保存第一頁參數的 JSON 檔(params.json)
+        self.params_file = "params.json"   
+        # 讀取之前保存過的第一頁參數的 params.json 以及第一頁新的參數也是用這個來暫存，並在第一頁按下 Next 後匯出至 saved_parameters.json
+        self.saved_parameters = self.load_params()    
+        
+        # 應用程式開始先顯示第一頁
         self.create_page1()
 
     # "保存"第一頁參數，以便從第二頁返回時回填
@@ -263,18 +266,17 @@ class ParameterApp(tk.Tk):
         self.s1ch1_drive_image = Image.open("S1Ch1_Drive.png")
         self.s1ch1_drive_photo = ImageTk.PhotoImage(self.s1ch1_drive_image)
 
-        # # 確保 booster_parent_frame 的列配置允許擴展
-        # self.booster_parent_frame.columnconfigure(0, weight=1)
-        # self.booster_parent_frame.columnconfigure(1, weight=1)
-
         # 創建 booster1 Label 並顯示圖片
         self.booster1_photo_label = ttk.Label(self.booster_parent_frame, image=self.booster1_photo)
         self.booster1_photo_label.grid(row=0, column=0, padx=10, pady=10, sticky=tk.W)
+
         # 創建 booster2 Label 並顯示圖片
         self.booster2_photo_label = ttk.Label(self.booster_parent_frame, image=self.booster2_photo)
         self.booster2_photo_label.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
+
         # 創建 S1Ch1 Drive Checkbutton 並顯示圖片
         self.sensor["S1Ch1 - Drive"] = tk.BooleanVar()
+        # 檢查是否有保存的 sensor 值，並設置勾選狀態
         if any(saved_sensor == "S1Ch1 - Drive" for saved_sensor, _ in self.saved_parameters.keys()):
             self.sensor["S1Ch1 - Drive"].set(True)
         self.s1ch1_drive_checkbutton = ttk.Checkbutton(self.booster_parent_frame, image=self.s1ch1_drive_photo, variable=self.sensor["S1Ch1 - Drive"], command=lambda t="S1Ch1 - Drive": self.toggle_sensor(t))
@@ -287,12 +289,14 @@ class ParameterApp(tk.Tk):
         self.rdriver_trigger_combobox = ttk.Combobox(self.booster_parent_frame, values=rdriver_trigger_sensors)
         self.rdriver_trigger_combobox.grid(column=0, row=1, sticky=tk.W, padx=(90,200), pady=5)
         self.rdriver_trigger_combobox.set("選擇 Trigger 來源")
+        # 檢查是否有保存的 R-DRIVER Trigger 值，並設置 Combobox 選擇值
         if any(saved_sensor == "R-DRIVER" for saved_sensor, _ in self.saved_parameters.keys()):
             self.rdriver_trigger_combobox.set(self.saved_parameters.get(("R-DRIVER", "Trigger"), {}).get("R-DRIVER Trigger"))
         self.rdriver_trigger_combobox.bind("<<ComboboxSelected>>", self.on_rdriver_trigger_combobox_select)
 
         # 創建 S1Ch1 Sense Checkbutton
         self.sensor["S1Ch1 - Sense"] = tk.BooleanVar()
+        # 檢查是否有保存的 sensor 值，並設置勾選狀態
         if any(saved_sensor == "S1Ch1 - Sense" for saved_sensor, _ in self.saved_parameters.keys()):
             self.sensor["S1Ch1 - Sense"].set(True)
         self.s1ch1_sense_checkbutton = ttk.Checkbutton(self.booster_parent_frame, text="S1Ch1 - Sense", variable=self.sensor["S1Ch1 - Sense"], command=lambda t="S1Ch1 - Sense": self.toggle_sensor(t))
@@ -300,8 +304,9 @@ class ParameterApp(tk.Tk):
         self.s1ch1_sense_checkbutton.configure(style="Large_Bold.TCheckbutton")
 
         # 創建 S1Ch1 Gate Checkbutton
-        # 創建四個 Checkbutton 並共用同一個 BooleanVar 變量
+        # 創建四個 Checkbutton 並共用同一個 BooleanVar 變量 (因為機台設定隨便選一個都會連動另外三個)
         self.sensor["S1Ch1 - Gate"] = tk.BooleanVar()
+        # 檢查是否有保存的 sensor 值，並設置勾選狀態
         if any(saved_sensor == "S1Ch1 - Gate" for saved_sensor, _ in self.saved_parameters.keys()):
             self.sensor["S1Ch1 - Gate"].set(True)
         self.s1ch1_gate_pos1_checkbutton = ttk.Checkbutton(self.booster_parent_frame, text="Pos 1", variable=self.sensor["S1Ch1 - Gate"], command=lambda t="S1Ch1 - Gate": self.toggle_sensor(t))
@@ -317,7 +322,7 @@ class ParameterApp(tk.Tk):
         self.s1ch1_gate_pos4_checkbutton.grid(row=2, column=4, padx=(0,390), pady=5, sticky=tk.W)
         self.s1ch1_gate_pos4_checkbutton.configure(style="Large_Bold.TCheckbutton")
 
-        # 隱藏 Booster 框架
+        # 隱藏 Booster 框架 (待勾選 Trigger 時再顯示)
         for widget in self.page1_widgets:
             if widget is self.booster_parent_frame:
                 widget.grid_forget()
@@ -339,7 +344,7 @@ class ParameterApp(tk.Tk):
     # Sensor 被勾選時的反應
     def toggle_sensor(self, sensor):
         if self.sensor[sensor].get():
-            self.open_parameter_window(sensor)
+            self.open_parameter_window(sensor)   # 彈出填寫參數的表單
         else:
             # 刪除 params.json 中對應的 option 以及各個控件的參數
             keys_to_delete = [key for key in self.saved_parameters if key[0] == sensor]
@@ -369,7 +374,7 @@ class ParameterApp(tk.Tk):
     # Trigger 被勾選時的反應
     def toggle_trigger(self, sensor):
         if self.sensor[sensor].get():
-            self.open_parameter_window(sensor) 
+            self.open_parameter_window(sensor)   # 彈出填寫參數的表單
         else:
             # 刪除 params.json 中對應的 option 以及各個控件的參數
             keys_to_delete = [key for key in self.saved_parameters if key[0] == sensor]
@@ -602,7 +607,7 @@ class ParameterApp(tk.Tk):
             # 保存填充的 Current_source
             self.form_widgets[sensor]["Current_source"] = form_widgets_for_option_S1_S3_current_source
 
-            # 填充 Voltage_source 表單
+            # 填充 S1_S3_Voltage_source 表單
             for i, (label_text, field_type) in enumerate(self.sensor_option_parameters[sensor]["Voltage_source"].items()):
                 ttk.Label(S1_S3_Voltage_source_frame, text=label_text).pack(anchor=tk.W)
                 if isinstance(field_type, list):
@@ -683,7 +688,7 @@ class ParameterApp(tk.Tk):
             # 保存填充的 Measurement_channel
             self.form_widgets[sensor]["Measurement_channel"] = form_widgets_for_option_Measurement_channel
 
-            # 初始化 Both 選項，結合前面兩個選項的所有小部件
+            # 初始化 S5_S8_Both 選項，結合前面 S5_S8_Current_source 、 S5_S8_Measurement_channel兩個選項的所有小部件
             self.form_widgets[sensor]["Both"] = self.form_widgets[sensor]["Current_source"] + \
                 self.form_widgets[sensor]["Measurement_channel"]
 
@@ -1056,9 +1061,13 @@ class ParameterApp(tk.Tk):
 
         # 檢查 self.saved_parameters 是否包含 S11Ch1 到 S11Ch8
         trigger_sensors = ["S11Ch1", "S11Ch2", "S11Ch3", "S11Ch4", "S11Ch5", "S11Ch6", "S11Ch7", "S11Ch8"]
-        if any(sensor in [key[0] for key in self.saved_parameters.keys()] for sensor in trigger_sensors):
+        if any(sensor in [key[0] for key in self.saved_parameters.keys()] for sensor in trigger_sensors):   # 如果 saved_parameters 中包含 S11Ch1 到 S11Ch8
             # 顯示 Booster 框架
             self.booster_parent_frame.grid(column=0, row=1, columnspan=8, padx=10, pady=10, sticky=tk.NSEW)
+            # 禁用 LP220 框架內的 SENSOR
+            for lp220 in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
+                self.disable_lp220_sensors(lp220)   # 禁用 LP220 框架內的 SENSOR 
+
 
     # 創建第二頁
     def create_page2(self):
@@ -1100,64 +1109,70 @@ class ParameterApp(tk.Tk):
         canvas.bind_all("<MouseWheel>", lambda event: canvas.yview_scroll(int(-1*(event.delta/120)), "units"))
 
         # 創建框架
+        # 此框架用來放置檔名以及儲存路徑
         config_details_frame = ttk.LabelFrame(scrollable_frame, text="Config details")
         config_details_frame.grid(
             column=0, row=0, padx=10, pady=10, sticky=tk.NSEW)
         
+        # 此框架用來放置 Power Steps 、 Isense 選擇器 、 Idrive 選擇器
         power_steps_frame = ttk.LabelFrame(scrollable_frame, text="Power Steps")
         power_steps_frame.grid(column=0, row=1, padx=10,
                                pady=10, sticky=tk.NSEW)
        
+        # 此框架用來放置 Measurement settings (加熱幾秒、冷卻幾秒、延遲幾秒、重複幾次)
         measurement_settings_frame = ttk.LabelFrame(
             scrollable_frame, text="Measurement settings")
         measurement_settings_frame.grid(
             column=0, row=2, padx=10, pady=10, sticky=tk.NSEW)
         
-        # 是否使用重複測量功能
-        # 使用 tk.BooleanVar 來控制 Cycling Test 的選中狀態
+        # 創建是否使用重複測量功能按鈕
         self.cycling_test_var = tk.BooleanVar(value=False)  # 默認為未選中
-        
         self.cycling_test_checkbutton = ttk.Checkbutton(
             scrollable_frame, text="Cycling Test", variable=self.cycling_test_var, command=self.toggle_cycling_test_checkbutton)
         self.cycling_test_checkbutton.grid(
             row=3, column=0, padx=10, pady=10)
         self.page2_parameters["Cycling_Test"] = self.cycling_test_var.get()
 
+        # 此框架用來放置重複測量功能的參數 (短時間開啟幾秒、短時間關閉幾秒、短時間開關重複幾次、長時間開啟幾秒、長時間關閉幾秒、整個短+長時間完整過程重複幾次、有無要在測量時自動變更 LP220 Current [A] 的值)
         cycling_test_frame = ttk.LabelFrame(
             scrollable_frame, text="Cycling Test")
         cycling_test_frame.grid(
             column=0, row=4, padx=10, pady=10, sticky=tk.NSEW)
      
-        # connect to THERMOSTAT 、是否使用 TSP
-        # 使用 tk.BooleanVar 來控制 connect to THERMOSTAT 、 是否使用 TSP 的選中狀態
-        self.connect_thermostat_var = tk.BooleanVar(value=False)  # 默認為未選中
-        self.tsp_var = tk.BooleanVar(value=False)  # 默認為未選中
+        # 是否連接 THERMOSTAT 、是否使用 TSP
+        self.connect_thermostat_var = tk.BooleanVar(value=False)  # 連接 THERMOSTAT 默認為未選中
+        self.tsp_var = tk.BooleanVar(value=False)  # 連接 TSP 默認為未選中
 
+        # 創建是否連接 Thermostat 按鈕
         self.connect_thermostat_checkbutton = ttk.Checkbutton(
             scrollable_frame, text="Connect to Thermostat", variable=self.connect_thermostat_var, command=self.toggle_connect_thermostat_checkbutton)
         self.connect_thermostat_checkbutton.grid(
             row=5, column=0, padx=10, pady=10)
         self.page2_parameters["Connect_to_Thermostat"] = self.connect_thermostat_var.get()
 
+        # 創建是否使用 TSP 按鈕
         self.tsp_checkbutton = ttk.Checkbutton(
             scrollable_frame, text="Calibration Set (TSP)", variable=self.tsp_var, command=self.toggle_tsp_checkbutton, state="disabled")
         self.tsp_checkbutton.grid(
             row=7, column=0, padx=10, pady=10)
         self.page2_parameters["TSP"] = self.tsp_var.get()
 
+        # 此框架用來放置 Thermostat 溫度設定
         thermostat_settings_for_measurement_frame = ttk.LabelFrame(
             scrollable_frame, text="Thermostat Settings for Measurement")
         thermostat_settings_for_measurement_frame.grid(
             column=0, row=6, padx=10, pady=10, sticky=tk.NSEW)
 
+        # 此框架用來放置 TSP 量測參數
         tsp_calibration_frame = ttk.LabelFrame(scrollable_frame, text="TSP calibration")
         tsp_calibration_frame.grid(
             column=0, row=8, padx=10, pady=10, sticky=tk.NSEW)
 
-        advanced_thermostat_stability_settings_frame = ttk.LabelFrame(
-            scrollable_frame, text="Advanced thermostat stability settings")
-        advanced_thermostat_stability_settings_frame.grid(
-            column=0, row=9, padx=10, pady=10, sticky=tk.NSEW)
+        # 此框架 Chrome 裡面有，但我相關參數直接於後端程式碼固定好了，所以目前用不到
+        # advanced_thermostat_stability_settings_frame = ttk.LabelFrame(
+        #     scrollable_frame, text="Advanced thermostat stability settings")
+        # advanced_thermostat_stability_settings_frame.grid(
+        #     column=0, row=9, padx=10, pady=10, sticky=tk.NSEW)
 
         # 添加 Previous 和 Next 按鈕
         previous_button = ttk.Button(
@@ -1168,68 +1183,77 @@ class ParameterApp(tk.Tk):
         next_button.grid(row=10, column=0, padx=10, pady=10, sticky="E")
      
         # 添加進度提示框架
-        self.progress_text_frame = tk.Frame(scrollable_frame)  # 使用額外的 Frame 來放置 Text 和 Scrollbar
+        self.progress_text_frame = tk.Frame(scrollable_frame)
         self.progress_text_frame.grid(row=11, column=0, padx=10, pady=10, sticky=tk.NSEW)
 
-        # 創建滾動條
+        # 進度提示框架內創建滾動條
         self.progress_text_scrollbar = tk.Scrollbar(self.progress_text_frame)
         self.progress_text_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)  # 滾動條在右側填充垂直方向
 
-        # 創建 Text 並綁定滾動條，默認禁用
+        # 創建放於進度提示框架內的提示訊息文本並綁定滾動條 (提示訊息文本須綁定滾動條，滾動條也需綁定提示訊息文本) ，默認禁用
         self.progress_text = tk.Text(self.progress_text_frame, height=10,  yscrollcommand=self.progress_text_scrollbar.set)
-        self.progress_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)  # 文本框填滿剩下的空間
+        self.progress_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)  # 提示訊息文本填滿剩下的空間
 
-        # 配置滾動條控制文本框
+        # 配置滾動條控制提示訊息文本 (提示訊息文本須綁定滾動條，滾動條也需綁定提示訊息文本)
         self.progress_text_scrollbar.config(command=self.progress_text.yview)
 
-        # 單獨綁定滾輪事件到 progress_text
-        self.progress_text.bind("<Enter>", lambda e: enable_progress_text_scroll())   # 鼠標進入 progress_text
-        self.progress_text.bind("<Leave>", lambda e: disable_progress_text_scroll())   # 鼠標離開 progress_text
+        # 單獨綁定滾輪事件到提示訊息文本，讓提示訊息文本也能使用滑鼠滾輪滾動
+        self.progress_text.bind("<Enter>", lambda e: enable_progress_text_scroll())   # 鼠標進入提示訊息文本
+        self.progress_text.bind("<Leave>", lambda e: disable_progress_text_scroll())   # 鼠標離開提示訊息文本
 
+        # 啟用提示訊息文本滾動條
         def enable_progress_text_scroll():
             self.progress_text.bind("<MouseWheel>", on_progress_text_scroll)
-
+        
+        # 禁用提示訊息文本滾動條
         def disable_progress_text_scroll():
             self.progress_text.unbind("<MouseWheel>")
 
+        # 於提示訊息文本的滾輪事件處理函數
         def on_progress_text_scroll(event):
             # 滾動 progress_text 控件
             self.progress_text.yview_scroll(int(-1*(event.delta/120)), "units")
-            return "break"  # 阻止事件冒泡
+            return "break"  # 阻止事件冒泡 (不讓滾動傳遞到外層的 Canvas 控件)
 
-        # Config Name 輸入框和標籤
-        config_label = ttk.Label(config_details_frame, text="Config Name:")
+        '''config_details 框架內的內容'''
+        # Config Name 標籤和輸入框
+        config_label = ttk.Label(config_details_frame, text="Config Name:")   # Config Name 標籤
         config_label.grid(column=0, row=0, padx=10, pady=10)
 
-        self.config_entry = ttk.Entry(config_details_frame)
+        self.config_entry = ttk.Entry(config_details_frame)   # Config Name 輸入框
         self.config_entry.grid(column=1, row=0, padx=10, pady=10)
         self.page2_parameters["Config_Name"] = self.config_entry.get()
 
         # 儲存路徑選擇
-        path_label = ttk.Label(config_details_frame, text="儲存路徑:")
+        path_label = ttk.Label(config_details_frame, text="儲存路徑:")   # 儲存路徑標籤
         path_label.grid(column=0, row=1, padx=10, pady=10)
 
-        self.path_display = ttk.Label(config_details_frame, text="未選擇路徑")
+        self.path_display = ttk.Label(config_details_frame, text="未選擇路徑")   # 顯示儲存路徑
         self.path_display.grid(column=1, row=1, padx=10, pady=10)
         self.page2_parameters["storage_path"] = self.path_display.cget("text")
 
         def select_directory():
-            # 打開文件夾選擇對話框
+            # 打開文件夾選擇儲存路徑
             selected_path = filedialog.askdirectory()
-            if selected_path:  # 如果選擇了路徑
-                self.path_display.config(text=selected_path)
+            if selected_path:   # 如果選擇了路徑
+                self.path_display.config(text=selected_path)   # 則將選擇的路徑顯示在 self.path_display
 
+        # 選擇儲存路徑按鈕
         select_path_button = ttk.Button(
             config_details_frame, text="選擇路徑", command=select_directory)
         select_path_button.grid(column=2, row=1, padx=10, pady=10)
 
-        # 根據 saved_parameters 中的數據動態生成表格
-        measurement_channels = [
+        '''Power Steps 框架內的內容'''
+        # 根據 saved_parameters 中的資料動態生成表格: Sensor (MS401 Measurement_channel 的) 、 Isense 選擇器 (MS401 Current_source 的) 、 Idrive 選擇器 (LP220 Current_source 的)
+        # 從 saved_parameters 中抓取 Sensor (MS401 Measurement_channel 的)
+        ms401_measurement_channel = [
             sensor for sensor, option in self.saved_parameters if "Measurement_channel" in option or "Both" in option]
-        current_sources_s5_s8 = [sensor for sensor, option in self.saved_parameters if ("Current_source" in option and sensor.startswith(
-            ("S5", "S6", "S7", "S8"))) or ("Both" in option and sensor.startswith(("S5", "S6", "S7", "S8")))]
-        current_sources_s1_s3 = [
-            sensor for sensor, option in self.saved_parameters if "Current_source" in option and sensor.startswith(("S1", "S3"))]
+        # 從 saved_parameters 中抓取 Isense 選擇器 (MS401 Current_source 的)
+        s5_s8_current_source = [sensor for sensor, option in self.saved_parameters if ("Current_source" in option and sensor.startswith(
+            ("S5", "S6", "S7", "S8", "S1Ch1 - Sense"))) or ("Both" in option and sensor.startswith(("S5", "S6", "S7", "S8")))]
+        # 從 saved_parameters 中抓取 Idrive 選擇器 (LP220 Current_source 的)
+        s1_s3_current_source = [
+            sensor for sensor, option in self.saved_parameters if "Current_source" in option and sensor.startswith(("S1", "S3", "S1Ch1 - Drive")) and sensor != "S1Ch1 - Sense"]
 
         # 顯示 "Calculation Method" 字
         method_label = ttk.Label(power_steps_frame, text="Calculation Method")
@@ -1240,19 +1264,20 @@ class ParameterApp(tk.Tk):
             power_steps_frame, text="Diode — Pstep = ||Vmeas,heat · (Idrive + Isense)| - |Vmeas,cool · Isense||")
         formula_label.grid(row=0, column=1, columnspan=2, padx=10, pady=10)
 
-        row_index = 1  # 用來處理表格的起始行
-
         # 在類的初始化方法中初始化列表
         self.ms_401_labels = []
         self.combo_s5_s8s = []
         self.combo_s1_s3s = []
 
-        for sensor in measurement_channels:
+        row_index = 1  # 用來處理表格的起始行
+
+        # 生成 Diode 、 Sensor (MS401 Measurement_channel 的) 、 Isense 選擇器 (MS401 Current_source 的) 、 Idrive 選擇器 (LP220 Current_source 的)
+        for sensor in ms401_measurement_channel:
             # 第一欄：顯示 "Diode" 的欄位
             diode_label = ttk.Label(power_steps_frame, text="Diode")
             diode_label.grid(row=row_index, column=0, padx=10, pady=10)
 
-            # 第二欄：顯示 Measurement_channel 的感測器
+            # 第二欄：顯示 Measurement_channel 的 Sensor
             self.ms_401_label = ttk.Label(power_steps_frame, text=sensor)
             self.ms_401_label.grid(row=row_index, column=1, padx=10, pady=10, sticky="E")
             # self.page2_parameters 已寫在下面
@@ -1266,7 +1291,7 @@ class ParameterApp(tk.Tk):
                               padx=10, pady=10, sticky="E")
 
             self.combo_s5_s8 = ttk.Combobox(
-                power_steps_frame, values=current_sources_s5_s8)
+                power_steps_frame, values=s5_s8_current_source)
             self.combo_s5_s8.grid(row=row_index, column=3, padx=10, pady=10)
             # self.page2_parameters 已寫在下面
 
@@ -1278,7 +1303,7 @@ class ParameterApp(tk.Tk):
             Idrive_label.grid(row=row_index, column=4, padx=10, pady=10)
 
             self.combo_s1_s3 = ttk.Combobox(
-                power_steps_frame, values=current_sources_s1_s3)
+                power_steps_frame, values=s1_s3_current_source)
             self.combo_s1_s3.grid(row=row_index, column=5, padx=10, pady=10)
             # self.page2_parameters 已寫在下面
 
@@ -1287,6 +1312,7 @@ class ParameterApp(tk.Tk):
 
             row_index += 1
 
+        '''Measurement settings 框架內的內容'''
         # Heating time row
         heating_label = ttk.Label(
             measurement_settings_frame, text="Heating time [s]")
@@ -1338,6 +1364,7 @@ class ParameterApp(tk.Tk):
         self.delay_entry.grid(row=2, column=3, padx=10, pady=10)
         self.page2_parameters["Delay_time"] = self.delay_entry.get()
 
+        # Repeat times row
         repeat_label = ttk.Label(
             measurement_settings_frame, text="Repeat times")
         repeat_label.grid(row=3, column=0, padx=10, pady=10)
@@ -1350,16 +1377,17 @@ class ParameterApp(tk.Tk):
             measurement_settings_frame, text="Setpoint: ")
         repeat_setpoint_label.grid(row=3, column=2, padx=10, pady=10)
 
-        # Repeat 的 Entry
         self.repeat_entry = ttk.Entry(measurement_settings_frame)
         self.repeat_entry.grid(row=3, column=3, padx=10, pady=10)
         self.repeat_entry.insert(0, "1")   # 插入數字 1
         self.page2_parameters["Repeat_times"] = self.repeat_entry.get()
 
-        # Cycling Test
+        '''Cycling Test 框架內的內容'''
+        # Multi Pulse Cycling 字樣
         multi_pulse_cycling_label = ttk.Label(cycling_test_frame, text="Multi Pulse Cycling")
         multi_pulse_cycling_label.grid(row=0, column=0, padx=10, pady=10, columnspan=2)
-
+        
+        # Pulse Cycling On row
         pulse_cycling_on_label = ttk.Label(
             cycling_test_frame, text="Pulse Cycling On [s]: ")
         pulse_cycling_on_label.grid(row=1, column=0, padx=10, pady=10, sticky="W")
@@ -1369,6 +1397,7 @@ class ParameterApp(tk.Tk):
         self.pulse_cycling_on_entry.grid(row=1, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters["Pulse Cycling On [s]"] = self.pulse_cycling_on_entry.get()
 
+        # Pulse Cycling Off row
         pulse_cycling_off_label = ttk.Label(
             cycling_test_frame, text="Pulse Cycling Off [s]: ")
         pulse_cycling_off_label.grid(row=2, column=0, padx=10, pady=10, sticky="W")
@@ -1378,6 +1407,7 @@ class ParameterApp(tk.Tk):
         self.pulse_cycling_off_entry.grid(row=2, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters["Pulse Cycling Off [s]"] = self.pulse_cycling_off_entry.get()
 
+        # Pulse Cycling Repeat row
         pulse_cycling_repeat_label = ttk.Label(
             cycling_test_frame, text="Pulse Cycling Repeat: ")
         pulse_cycling_repeat_label.grid(row=3, column=0, padx=10, pady=10, sticky="W")
@@ -1387,9 +1417,11 @@ class ParameterApp(tk.Tk):
         self.pulse_cycling_repeat_entry.grid(row=3, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters["Pulse Cycling Repeat"] =  self.pulse_cycling_repeat_entry.get()
 
+        # Rth Measurement 字樣
         rth_measurement_label = ttk.Label(cycling_test_frame, text="Rth Measurement")
         rth_measurement_label.grid(row=4, column=0, padx=10, pady=10, columnspan=2)
 
+        # Rth Measurement Heating Times row
         rth_measurement_heating_times_label = ttk.Label(
             cycling_test_frame, text="Rth Measurement Heating Times: ")
         rth_measurement_heating_times_label.grid(row=5, column=0, padx=10, pady=10, sticky="W")
@@ -1399,6 +1431,7 @@ class ParameterApp(tk.Tk):
         self.rth_measurement_heating_times_entry.grid(row=5, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters["Rth Measurement Heating Times"] = self.rth_measurement_heating_times_entry.get()
 
+        # Rth Measurement Cooling Times row
         rth_measurement_cooling_times_label = ttk.Label(
             cycling_test_frame, text="Rth Measurement Cooling Times: ")
         rth_measurement_cooling_times_label.grid(row=6, column=0, padx=10, pady=10, sticky="W")
@@ -1408,9 +1441,11 @@ class ParameterApp(tk.Tk):
         self.rth_measurement_cooling_times_entry.grid(row=6, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters["Rth Measurement Cooling Times"] = self.rth_measurement_cooling_times_entry.get()
 
+        # Total Cycling Test 字樣
         total_cycling_test_label = ttk.Label(cycling_test_frame, text="Total Cycling Test")
         total_cycling_test_label.grid(row=7, column=0, padx=10, pady=10, columnspan=2)
 
+        # Total Measurement Cycling Repeat row
         total_measurement_cycling_repeat_label = ttk.Label(
             cycling_test_frame, text="Total Measurement Cycling Repeat: ")
         total_measurement_cycling_repeat_label.grid(row=8, column=0, padx=10, pady=10, sticky="W")
@@ -1420,10 +1455,12 @@ class ParameterApp(tk.Tk):
         self.total_measurement_cycling_repeat_entry.grid(row=8, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters["total Measurement Cycling Repeat"] =  self.total_measurement_cycling_repeat_entry.get()
 
+        # 若有其他 LP220 Current [A] 請填下面字樣
         other_lp220_current_label = ttk.Label(
             cycling_test_frame, text="若有其他 LP220 Current [A] 請填下面")
         other_lp220_current_label.grid(row=9, column=0, padx=10, pady=10, columnspan=2)
 
+        # Other LP220 Current [A] 01 row
         other_lp220_current_01_label = ttk.Label(
             cycling_test_frame, text="LP220 Current [A] 01: ")
         other_lp220_current_01_label.grid(row=10, column=0, padx=10, pady=10, sticky="W")
@@ -1433,6 +1470,7 @@ class ParameterApp(tk.Tk):
         self.other_lp220_current_01_entry.grid(row=10, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters["Other LP220 Current 01"] =  self.other_lp220_current_01_entry.get()
 
+        # Other LP220 Current [A] 02 row
         other_lp220_current_02_label = ttk.Label(
             cycling_test_frame, text="LP220 Current [A] 02: ")
         other_lp220_current_02_label.grid(row=11, column=0, padx=10, pady=10, sticky="W")
@@ -1442,7 +1480,8 @@ class ParameterApp(tk.Tk):
         self.other_lp220_current_02_entry.grid(row=11, column=1, padx=10, pady=10, sticky="W")
         self.page2_parameters["Other LP220 Current 02"] =  self.other_lp220_current_02_entry.get()
 
-        # Temperature [°C]
+        '''Thermostat Settings for Measurement 框架內的內容'''
+        # Temperature [°C] row
         temperature_label = ttk.Label(
             thermostat_settings_for_measurement_frame, text="Temperature [°C]")
         temperature_label.grid(row=0, column=0, padx=10, pady=10)
@@ -1460,8 +1499,8 @@ class ParameterApp(tk.Tk):
         self.temperature_entry.grid(row=0, column=3, padx=10, pady=10)
         self.page2_parameters["Temperature"] = self.temperature_entry.get()
 
-        # TSP calibration
-        # Tmin [°C]
+        '''TSP calibration 框架內的內容'''
+        # Tmin [°C] row
         tmin_label = ttk.Label(tsp_calibration_frame, text="Tmin [°C]")
         tmin_label.grid(row=0, column=0, padx=10, pady=10)
 
@@ -1478,7 +1517,7 @@ class ParameterApp(tk.Tk):
         self.tmin_entry.grid(row=0, column=3, padx=10, pady=10)
         self.page2_parameters["Tmin"] = self.tmin_entry.get()
 
-        # Tmax [°C]
+        # Tmax [°C] row
         tmax_label = ttk.Label(tsp_calibration_frame, text="Tmax [°C]")
         tmax_label.grid(row=1, column=0, padx=10, pady=10)
 
@@ -1495,7 +1534,7 @@ class ParameterApp(tk.Tk):
         self.tmax_entry.grid(row=1, column=3, padx=10, pady=10)
         self.page2_parameters["Tmax"] = self.tmax_entry.get()
 
-        # Tstep [°C]
+        # Tstep [°C] row
         tstep_label = ttk.Label(tsp_calibration_frame, text="Tstep [°C]")
         tstep_label.grid(row=2, column=0, padx=10, pady=10)
 
@@ -1512,12 +1551,11 @@ class ParameterApp(tk.Tk):
         self.tstep_entry.grid(row=2, column=3, padx=10, pady=10)
         self.page2_parameters["Tstep"] = self.tstep_entry.get()
 
-
+        # 於 advanced_thermostat_stability_settings_frame 框架內的參數， Chrome 裡面有，但我相關參數直接於後端程式碼固定好了，所以目前用不到
         # Time window [s]
         # Max. allowed temp. change [°C]
         # ΔT from target [°C]
         # Timeout [s]
-
 
         self.update()  # 強制刷新頁面
 
@@ -1557,12 +1595,12 @@ class ParameterApp(tk.Tk):
             self.other_lp220_current_01_entry.config(state="disabled")  # 禁用 other_lp220_current_01_entry 輸入框
             self.other_lp220_current_02_entry.delete(0, tk.END)  # 清空 other_lp220_current_02_entry 輸入框的內容
             self.other_lp220_current_02_entry.config(state="disabled")  # 禁用 other_lp220_current_02_entry 輸入框
-            self.heating_entry.config(state="normal")
-            self.cooling_entry.config(state="normal")
-            self.delay_entry.config(state="normal")
-            self.repeat_entry.config(state="normal")
-            self.repeat_entry.delete(0, tk.END)   # 清空當前的內容
-            self.repeat_entry.insert(0, "1")   # 插入數字 1
+            self.heating_entry.config(state="normal")  # 啟用 heating 輸入框
+            self.cooling_entry.config(state="normal")  # 啟用 cooling 輸入框
+            self.delay_entry.config(state="normal")  # 啟用 delay 輸入框
+            self.repeat_entry.config(state="normal")  # 啟用 repeat 輸入框
+            self.repeat_entry.delete(0, tk.END)   # 清空 repeat 輸入框的內容
+            self.repeat_entry.insert(0, "1")   # 在 repeat 輸入框填入數字 1
     
     def toggle_connect_thermostat_checkbutton(self):
         """用來啟用或禁用 tsp 選項以及 temperature"""
@@ -1934,9 +1972,9 @@ class ParameterApp(tk.Tk):
 
         for i in range(len(self.ms_401_labels)):
             sensor_info = {
-                "MS_401": self.ms_401_labels[i].cget("text"),  # 传感器标签
-                "Isense": self.combo_s5_s8s[i].get(),  # 用户选择的 Isense 值
-                "Idrive": self.combo_s1_s3s[i].get()   # 用户选择的 Idrive 值
+                "MS_401": self.ms_401_labels[i].cget("text"),  # Sensor 名稱
+                "Isense": self.combo_s5_s8s[i].get(),  # 用戶選擇的 Isense 值
+                "Idrive": self.combo_s1_s3s[i].get()   # 用戶選擇的 Idrive 值
             }
             sensors_data.append(sensor_info)
 

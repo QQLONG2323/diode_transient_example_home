@@ -25,7 +25,15 @@ class ParameterApp(tk.Tk):
         # 保存第一頁參數的 JSON 檔(params.json)
         self.params_file = "params.json"   
         # 讀取之前保存過的第一頁參數的 params.json 以及第一頁新的參數也是用這個來暫存，並在第一頁按下 Next 後匯出至 saved_parameters.json
-        self.saved_parameters = self.load_params()    
+        self.saved_parameters = self.load_params()
+
+        # 初始化用於保存 Sensor 、 Option 、 Parameters 和表單控件的字典
+        self.sensor = {}   # 儲存 Sensor 的選項
+        self.option = {}   # 儲存 Option 的選項
+        self.sensor_widget = {}   # 儲存 Sensor 的控件 
+        self.option_widget = {}   # 儲存 Option 的控件
+        self.form_widgets = {}   # 儲存所有動態生成的表單控件
+        self.any_trigger_selected = False   # 檢查是否有任意 Trigger 被選中    
         
         # 應用程式開始先顯示第一頁
         self.create_page1()
@@ -135,6 +143,39 @@ class ParameterApp(tk.Tk):
             }
         }
 
+    def create_trigger_sensor_option_parameters(self):
+        return {
+            "Trigger": {
+                "Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]
+            }
+        }
+
+    def create_booster_S1Ch1Drive_option_parameters(self):
+        return {
+            "Current_source": {
+                "Output mode": ["Off", "On", "Switching"],
+                "Current [A]": "entry",
+                "Voltage limit [V]": "entry"
+            }
+        }
+
+    def create_booster_S1Ch1Gate_option_parameters(self):
+        return {
+            "Voltage_source": {
+                "Output mode": ["Off", "On", "Switching", "Rds on"],
+                "On-state voltage [V]": "entry",
+            }
+        }
+
+    def create_booster_S1Ch1Sense_option_parameters(self):
+        return {
+            "Current_source": {
+                "Output mode": ["Off", "ON"],
+                "Range [V]": ["11"],
+                "Current [A]": "entry"
+            }
+        }
+
     # 創建第一頁
     def create_page1(self):
 
@@ -206,43 +247,18 @@ class ParameterApp(tk.Tk):
             "S10Ch6": self.create_th800_sensor_option_parameters(),
             "S10Ch7": self.create_th800_sensor_option_parameters(),
             "S10Ch8": self.create_th800_sensor_option_parameters(),
-            "S11Ch1": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
-            "S11Ch2": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
-            "S11Ch3": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
-            "S11Ch4": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
-            "S11Ch5": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
-            "S11Ch6": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
-            "S11Ch7": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
-            "S11Ch8": {"Trigger": {"Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]}},
-            "S1Ch1 - Drive": {
-                "Current_source": {
-                    "Output mode": ["Off", "On", "Switching"],
-                    "Current [A]": "entry",
-                    "Voltage limit [V]": "entry"
-                }
-            },
-            "S1Ch1 - Gate": {
-                "Voltage_source": {
-                    "Output mode": ["Off", "On", "Switching", "Rds on"],
-                    "On-state voltage [V]": "entry",
-                }
-            },
-            "S1Ch1 - Sense": {
-                "Current_source": {
-                "Output mode": ["Off", "ON"],
-                "Range [V]": ["11"],
-                "Current [A]": "entry"
-                }
-            }
+            "S11Ch1": self.create_trigger_sensor_option_parameters(),
+            "S11Ch2": self.create_trigger_sensor_option_parameters(),
+            "S11Ch3": self.create_trigger_sensor_option_parameters(),
+            "S11Ch4": self.create_trigger_sensor_option_parameters(),
+            "S11Ch5": self.create_trigger_sensor_option_parameters(),
+            "S11Ch6": self.create_trigger_sensor_option_parameters(),
+            "S11Ch7": self.create_trigger_sensor_option_parameters(),
+            "S11Ch8": self.create_trigger_sensor_option_parameters(),
+            "S1Ch1 - Drive": self.create_booster_S1Ch1Drive_option_parameters(),
+            "S1Ch1 - Gate": self.create_booster_S1Ch1Gate_option_parameters(),
+            "S1Ch1 - Sense": self.create_booster_S1Ch1Sense_option_parameters()
         }
-
-        # 初始化用於保存 Sensor 、 Option 、 Parameters 和表單控件的字典
-        self.sensor = {}   # 儲存 Sensor 的選項
-        self.option = {}   # 儲存 Option 的選項
-        self.sensor_widget = {}   # 儲存 Sensor 的控件 
-        self.option_widget = {}   # 儲存 Option 的控件
-        self.form_widgets = {}   # 儲存所有動態生成的表單控件
-        self.any_trigger_selected = False   # 檢查是否有任意 Trigger 被選中
 
         # 創建 & 排版 Sensor
         self.create_sensor_checkbuttons(LP220_S1_frame, 0, 2)
@@ -323,9 +339,10 @@ class ParameterApp(tk.Tk):
         self.s1ch1_gate_pos4_checkbutton.configure(style="Large_Bold.TCheckbutton")
 
         # 隱藏 Booster 框架 (待勾選 Trigger 時再顯示)
-        for widget in self.page1_widgets:
-            if widget is self.booster_parent_frame:
-                widget.grid_forget()
+        if not self.any_trigger_selected:
+            for widget in self.page1_widgets:
+                if widget is self.booster_parent_frame:
+                    widget.grid_forget()
 
     # 創建 Sensor 的 Checkbutton
     def create_sensor_checkbuttons(self, frame, start, end):
@@ -340,6 +357,11 @@ class ParameterApp(tk.Tk):
             # 設置 Checkbutton 的字體
             checkbutton.configure(style="Large_Bold.TCheckbutton")
             self.sensor_widget[sensor] = checkbutton   # 儲存控件
+
+            # 如果有 Trigger 被選中，則禁用 LP220 框架內的 SENSOR
+            if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
+                if self.any_trigger_selected:
+                    checkbutton.configure(state=tk.DISABLED)
             
     # Sensor 被勾選時的反應
     def toggle_sensor(self, sensor):
@@ -903,92 +925,101 @@ class ParameterApp(tk.Tk):
         print(self.saved_parameters)
 
         # 針對 S1_S3 清除另一個選項的內容
-        if option == "Current_source":
-            # 清除 Voltage_source 的內容
-            if (sensor, "Voltage_source") in self.saved_parameters:
-                del self.saved_parameters[(sensor, "Voltage_source")]
-                # 清空界面上的 Voltage_source 表單內容
-                for widget in self.form_widgets[sensor]["Voltage_source"]:
-                    if isinstance(widget, ttk.Combobox):
-                        widget.set("")  # 清空 combobox
-                    else:
-                        widget.delete(0, tk.END)  # 清空 entry
-        elif option == "Voltage_source":
-            # 清除 Current_source 的內容
-            if (sensor, "Current_source") in self.saved_parameters:
-                del self.saved_parameters[(sensor, "Current_source")]
-                # 清空界面上的 Current_source 表單內容
-                for widget in self.form_widgets[sensor]["Current_source"]:
-                    if isinstance(widget, ttk.Combobox):
-                        widget.set("")  # 清空 combobox
-                    else:
-                        widget.delete(0, tk.END)  # 清空 entry
+        if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
+            if option == "Current_source":
+                # 清除 Voltage_source 的內容
+                if (sensor, "Voltage_source") in self.saved_parameters:
+                    del self.saved_parameters[(sensor, "Voltage_source")]
+                    # 清空界面上的 Voltage_source 表單內容
+                    for widget in self.form_widgets[sensor]["Voltage_source"]:
+                        if isinstance(widget, ttk.Combobox):
+                            widget.set("")  # 清空 combobox
+                        else:
+                            widget.delete(0, tk.END)  # 清空 entry
+            elif option == "Voltage_source":
+                # 清除 Current_source 的內容
+                if (sensor, "Current_source") in self.saved_parameters:
+                    del self.saved_parameters[(sensor, "Current_source")]
+                    # 清空界面上的 Current_source 表單內容
+                    for widget in self.form_widgets[sensor]["Current_source"]:
+                        if isinstance(widget, ttk.Combobox):
+                            widget.set("")  # 清空 combobox
+                        else:
+                            widget.delete(0, tk.END)  # 清空 entry
 
         # 針對 S5_S8 清除另一個選項的內容或是選擇 Both 的話兩個選項參數都保留
-        if option == "Current_source":
-            # 清除 Measurement_channel 的內容
-            if (sensor, "Measurement_channel") in self.saved_parameters:
-                print(sensor, option)
-                del self.saved_parameters[(sensor, "Measurement_channel")]
-                for widget in self.form_widgets[sensor]["Measurement_channel"]:
-                    if isinstance(widget, ttk.Combobox):
-                        widget.set("")  # 清空 combobox
-                    else:
-                        widget.delete(0, tk.END)  # 清空 entry
-            if (sensor, "Both") in self.saved_parameters:
-                print(sensor, option)
-                del self.saved_parameters[(sensor, "Both")]
-                for widget in self.form_widgets[sensor]["Both"]:
-                    if isinstance(widget, ttk.Combobox):
-                        widget.set("")  # 清空 combobox
-                    else:
-                        widget.delete(0, tk.END)  # 清空 entry
+        if sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:
+            if option == "Current_source":
+                # 清除 Measurement_channel 的內容
+                if (sensor, "Measurement_channel") in self.saved_parameters:
+                    print(sensor, option)
+                    del self.saved_parameters[(sensor, "Measurement_channel")]
+                    for widget in self.form_widgets[sensor]["Measurement_channel"]:
+                        if isinstance(widget, ttk.Combobox):
+                            widget.set("")  # 清空 combobox
+                        else:
+                            widget.delete(0, tk.END)  # 清空 entry
+                if (sensor, "Both") in self.saved_parameters:
+                    print(sensor, option)
+                    del self.saved_parameters[(sensor, "Both")]
+                    for widget in self.form_widgets[sensor]["Both"]:
+                        if isinstance(widget, ttk.Combobox):
+                            widget.set("")  # 清空 combobox
+                        else:
+                            widget.delete(0, tk.END)  # 清空 entry
 
-        elif option == "Measurement_channel":
-            # 清除 Current_source 的內容
-            if (sensor, "Current_source") in self.saved_parameters:
-                print(sensor, option)
-                del self.saved_parameters[(sensor, "Current_source")]
-                for widget in self.form_widgets[sensor]["Current_source"]:
-                    if isinstance(widget, ttk.Combobox):
-                        widget.set("")  # 清空 combobox
-                    else:
-                        widget.delete(0, tk.END)  # 清空 entry
-            if (sensor, "Both") in self.saved_parameters:
-                print(sensor, option)
-                del self.saved_parameters[(sensor, "Both")]
-                for widget in self.form_widgets[sensor]["Both"]:
-                    if isinstance(widget, ttk.Combobox):
-                        widget.set("")  # 清空 combobox
-                    else:
-                        widget.delete(0, tk.END)  # 清空 entry
+            elif option == "Measurement_channel":
+                # 清除 Current_source 的內容
+                if (sensor, "Current_source") in self.saved_parameters:
+                    print(sensor, option)
+                    del self.saved_parameters[(sensor, "Current_source")]
+                    for widget in self.form_widgets[sensor]["Current_source"]:
+                        if isinstance(widget, ttk.Combobox):
+                            widget.set("")  # 清空 combobox
+                        else:
+                            widget.delete(0, tk.END)  # 清空 entry
+                if (sensor, "Both") in self.saved_parameters:
+                    print(sensor, option)
+                    del self.saved_parameters[(sensor, "Both")]
+                    for widget in self.form_widgets[sensor]["Both"]:
+                        if isinstance(widget, ttk.Combobox):
+                            widget.set("")  # 清空 combobox
+                        else:
+                            widget.delete(0, tk.END)  # 清空 entry
 
-        elif option == "Both":
-            # 刪除 Current_source 和 Measurement_channel 的 key (不清空表單)
-            if (sensor, "Current_source") in self.saved_parameters:
-                del self.saved_parameters[(sensor, "Current_source")]
+            elif option == "Both":
+                # 刪除 Current_source 和 Measurement_channel 的 key (不清空表單)
+                if (sensor, "Current_source") in self.saved_parameters:
+                    del self.saved_parameters[(sensor, "Current_source")]
 
-            if (sensor, "Measurement_channel") in self.saved_parameters:
-                del self.saved_parameters[(sensor, "Measurement_channel")]
+                if (sensor, "Measurement_channel") in self.saved_parameters:
+                    del self.saved_parameters[(sensor, "Measurement_channel")]
 
-            both_params = self.saved_parameters[(sensor, option)]
-            current_source_params = {}
-            measurement_channel_params = {}
+                both_params = self.saved_parameters[(sensor, option)]
+                current_source_params = {}
+                measurement_channel_params = {}
 
-            # 將 both_params 轉換為一個 list，這樣可以按索引操作
-            both_items = list(both_params.items())
+                # 將 both_params 轉換為一個 list，這樣可以按索引操作
+                both_items = list(both_params.items())
 
-            # 使用 itertools.islice 對前3個和後5個分別切片
-            first_3_items = itertools.islice(both_items, 3)  # 前3個
-            last_5_items = itertools.islice(both_items, 3, 8)  # 第4到第8個
+                # 使用 itertools.islice 對前3個和後5個分別切片
+                first_3_items = itertools.islice(both_items, 3)  # 前3個
+                last_5_items = itertools.islice(both_items, 3, 8)  # 第4到第8個
 
-            # 將前3個分配到 current_source_params
-            for field, value in first_3_items:
-                current_source_params[field] = value
+                # 將前3個分配到 current_source_params
+                for field, value in first_3_items:
+                    current_source_params[field] = value
 
-            # 將後5個分配到 measurement_channel_params
-            for field, value in last_5_items:
-                measurement_channel_params[field] = value       
+                # 將後5個分配到 measurement_channel_params
+                for field, value in last_5_items:
+                    measurement_channel_params[field] = value  
+
+        # 如果有勾選 Trigger，則將 S1 ~ S3 的所有參數清空以及 S5 ~ S8 的 Current_source 和 Both 的參數清空
+        if sensor in ["S11Ch1", "S11Ch2", "S11Ch3", "S11Ch4", "S11Ch5", "S11Ch6", "S11Ch7", "S11Ch8"]:
+            sensor_to_delete = [key for key, _ in self.saved_parameters.items() if (key[0] in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]) 
+                                or (key[0] in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"] and key[1] in ["Current_source", "Both"])]
+            for sensor in sensor_to_delete:
+                del self.saved_parameters[sensor]
 
         # Save parameters to JSON file
         self.save_params()
@@ -1009,7 +1040,7 @@ class ParameterApp(tk.Tk):
             print(self.saved_parameters.items())
 
             # Create the "sensor-option" key to structure the output
-            sensor_option = f"{sensor}-{option}"
+            sensor_option = f"{sensor}_{option}"
 
             modified_params = {}
             for key, value in params.items():
@@ -1058,16 +1089,6 @@ class ParameterApp(tk.Tk):
 
         # 顯示第一頁面的控件
         self.create_page1()
-
-        # 檢查 self.saved_parameters 是否包含 S11Ch1 到 S11Ch8
-        trigger_sensors = ["S11Ch1", "S11Ch2", "S11Ch3", "S11Ch4", "S11Ch5", "S11Ch6", "S11Ch7", "S11Ch8"]
-        if any(sensor in [key[0] for key in self.saved_parameters.keys()] for sensor in trigger_sensors):   # 如果 saved_parameters 中包含 S11Ch1 到 S11Ch8
-            # 顯示 Booster 框架
-            self.booster_parent_frame.grid(column=0, row=1, columnspan=8, padx=10, pady=10, sticky=tk.NSEW)
-            # 禁用 LP220 框架內的 SENSOR
-            for lp220 in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
-                self.disable_lp220_sensors(lp220)   # 禁用 LP220 框架內的 SENSOR 
-
 
     # 創建第二頁
     def create_page2(self):
@@ -1753,7 +1774,17 @@ class ParameterApp(tk.Tk):
             "S8Ch1": "/T3STER/0/MS401/SLOT8/CH0",
             "S8Ch2": "/T3STER/0/MS401/SLOT8/CH1",
             "S8Ch3": "/T3STER/0/MS401/SLOT8/CH2",
-            "S8Ch4": "/T3STER/0/MS401/SLOT8/CH3"
+            "S8Ch4": "/T3STER/0/MS401/SLOT8/CH3",
+            "S11Ch1": "/T3STER/0/EL100/SLOT11/TRIGGER0",
+            "S11Ch2": "/T3STER/0/EL100/SLOT11/TRIGGER1",
+            "S11Ch3": "/T3STER/0/EL100/SLOT11/TRIGGER2",
+            "S11Ch4": "/T3STER/0/EL100/SLOT11/TRIGGER3",
+            "S11Ch5": "/T3STER/0/EL100/SLOT11/TRIGGER4",
+            "S11Ch6": "/T3STER/0/EL100/SLOT11/TRIGGER5",
+            "S11Ch7": "/T3STER/0/EL100/SLOT11/TRIGGER6",
+            "S11Ch8": "/T3STER/0/EL100/SLOT11/TRIGGER7",
+            "S1Ch1 - Drive": "/PWB240/PWB10018/CH0/DriveSour/0",
+            "S1Ch1 - Sense": "/PWB240/PWB10018/CH0/SensSour/0"
         }
 
         current_source_params = []    
@@ -1782,13 +1813,22 @@ class ParameterApp(tk.Tk):
                         "SetCurrent": {"default": float(config_data[f"{sensor}_Current_source"]["Current [A]"]), "locked": False, "min": -1, "max": 1},
                         "VoltageCorner": {"default": float(config_data[f"{sensor}_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10}
                     })
-                else:
+                elif sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2", "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:
                     current_source_params.append({
                         "Alias": self.sensor_rename[sensor],
                         "UserAlias": sensor,
                         "OutputMode": {"default": config_data[f"{sensor}_Current_source"]["Output mode"], "locked": False},
                         "SetCurrent": {"default": float(config_data[f"{sensor}_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                        "VoltageCorner": {"default": float(config_data[f"{sensor}_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40},
+                        "VoltageCorner": {"default": float(config_data[f"{sensor}_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
+                    })
+                elif sensor in "S1Ch1 - Drive":
+                    current_source_params.append({
+                        "Alias": self.sensor_rename[sensor],
+                        "UserAlias": f"PWB10018 - {sensor}",
+                        "OutputMode": {"default": config_data[f"{sensor}_Current_source"]["Output mode"], "locked": False},
+                        "SetCurrent": {"default": float(config_data[f"{sensor}_Current_source"]["Current [A]"]), "locked": False, "min": 0, "max": 240},
+                        "VoltageCorner": {"default": float(config_data[f"{sensor}_Current_source"]["Voltage limit [V]"]), "locked": False, "min": 0, "max": 11},
+                        "TriggerSource": ""
                     })
             if f"{sensor}_Both" in config_data:
                 current_source_params.append({
@@ -1893,8 +1933,6 @@ class ParameterApp(tk.Tk):
             self.page2_parameters["Delay_time"] = float(self.delay_entry.get()) if self.delay_entry.get() else 0.0
         except ValueError:
             self.page2_parameters["Delay_time"] = 0.0  # 或其他預設值
-
-        # self.page2_parameters["Repeat"] = self.repeat_var.get()
         try:
             self.page2_parameters["Repeat_times"] = int(self.repeat_entry.get()) if self.repeat_entry.get() else 0
         except ValueError:

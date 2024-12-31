@@ -1,7 +1,6 @@
 import json
 import tkinter as tk
-from tkinter import ttk
-from tkinter import filedialog
+from tkinter import ttk, Frame, filedialog, messagebox, TclError
 import os
 import itertools
 from io import StringIO
@@ -488,6 +487,94 @@ class ParameterApp(tk.Tk):
         self.saved_parameters[("R-DRIVER", "Trigger")] = new_value
         self.save_params()
 
+    def on_input_change(self, frame, entry_widget, min_value, max_value):
+        """檢查輸入值是否在範圍內，並變更外部框架的背景顏色"""
+        content = entry_widget.get().strip()  # 移除前後空白
+        
+        # 如果是空值，保持白色背景
+        if content == "":
+            frame.config(background="white")
+            return
+        try:
+            value = float(content)
+            if min_value <= value <= max_value:
+                frame.config(background="white")
+            else:
+                frame.config(background="red")
+        except ValueError:
+            frame.config(background="red")
+
+    def create_ttk_entry_with_validation(self, parent, min_value, max_value, entry_state,entry_width=40):
+        """建立帶有範圍檢查的輸入框，模擬背景變色"""
+        frame = Frame(parent, background="white")
+        frame.pack(anchor=tk.W, pady=5)
+    
+        entry = ttk.Entry(frame, state=entry_state, width=entry_width)
+        entry.pack(padx=1, pady=1)  # 用於增加邊框的效果
+        entry.bind("<KeyRelease>", lambda event: self.on_input_change(frame, entry, min_value, max_value))
+
+        # 將 frame 和 entry 成對追蹤
+        if not hasattr(self, 'validation_pairs'):
+            self.validation_pairs = []
+        self.validation_pairs.append((frame, entry))
+
+        return entry
+    
+    def create_ttk_entry_with_validation_grid(self, parent,entry_state, min_value, max_value, row=0, column=3, padx=10, pady=10):
+        """建立帶有範圍檢查的輸入框，模擬背景變色"""
+        frame = Frame(parent, background="white")
+        frame.grid(row=row, column=column, padx=padx, pady=pady)  # 改用 grid
+        
+        entry = ttk.Entry(frame, state=entry_state)
+        entry.grid(padx=1, pady=1)  # 改用 grid
+        entry.bind("<KeyRelease>", lambda event: self.on_input_change(frame, entry, min_value, max_value))
+
+        # 將 frame 和 entry 成對追蹤
+        if not hasattr(self, 'validation_pairs'):
+            self.validation_pairs = []
+        self.validation_pairs.append((frame, entry))
+    
+        return entry
+
+    def check_input_validation(self):
+        """檢查所有輸入框是否有錯誤（紅色背景）和空白"""
+        valid_pairs = []
+        
+        for frame, entry in self.validation_pairs:
+            try:
+                # 檢查 widget 是否仍然存在
+                entry.winfo_exists()
+                frame.winfo_exists()
+                
+                # 檢查 entry 是否啟用
+                if str(entry.cget("state")) == "normal":
+                    # 檢查是否為空白
+                    content = entry.get()
+                    if not content.strip():
+                        messagebox.showwarning(
+                            "數據錯誤",
+                            "請填寫所有啟用的輸入欄位！"
+                        )
+                        return False
+                        
+                    # 檢查是否有紅框（驗證錯誤）
+                    if frame.cget("background") == "red":
+                        messagebox.showwarning(
+                            "數據錯誤",
+                            "請修正紅框內的輸入值！"
+                        )
+                        return False
+                        
+                valid_pairs.append((frame, entry))
+                
+            except (TclError, tk.TclError):
+                # Widget 已被銷毀，跳過
+                continue
+                
+        # 更新有效的 validation_pairs
+        self.validation_pairs = valid_pairs
+        return True
+
     # 創建 Parameters 框架的 Function
     def create_parameters_frame(self, parameter_window, text, row):
         frame = ttk.LabelFrame(parameter_window, text=text, style="Large_Bold.TLabelframe")
@@ -636,17 +723,34 @@ class ParameterApp(tk.Tk):
                     if i < len(saved_parameters_for_S1_S3_current_source):
                         combobox.set(saved_parameters_for_S1_S3_current_source[i])
                     form_widgets_for_option_S1_S3_current_source.append(combobox)
-                    
-                else:
-                    entry = ttk.Entry(
-                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, state=S1_S3_current_source_state, width=40)  # 根據條件禁用或啟用
-                    entry.pack(anchor=tk.W, pady=5)
+                elif i == 1 :    
+                    entry = self.create_ttk_entry_with_validation(
+                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame,   # parent
+                        -2,                                                       # min_value
+                        2,                                                        # max_value
+                        S1_S3_current_source_state,                               # entry_state
+                        40                                                        # entry_width
+                    )
+                # else:
+                #     entry = ttk.Entry(
+                #         S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, state=S1_S3_current_source_state, width=40)  # 根據條件禁用或啟用
+                #     entry.pack(anchor=tk.W, pady=5)
                     # 回填 saved_parameters_for_S1_S3_current_source 中的值
                     if i < len(saved_parameters_for_S1_S3_current_source):
                         entry.insert(0, saved_parameters_for_S1_S3_current_source[i])
                     form_widgets_for_option_S1_S3_current_source.append(entry)
+                elif i == 2 :    
+                    entry = self.create_ttk_entry_with_validation(
+                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame,   # parent
+                        -10,                                                       # min_value
+                        10,                                                        # max_value
+                        S1_S3_current_source_state,                               # entry_state
+                        40                                                        # entry_width
+                    )
+                    if i < len(saved_parameters_for_S1_S3_current_source):
+                        entry.insert(0, saved_parameters_for_S1_S3_current_source[i])
+                    form_widgets_for_option_S1_S3_current_source.append(entry)
             
-
             # 保存填充的 Current_source
             self.form_widgets[sensor]["Current_source"] = form_widgets_for_option_S1_S3_current_source
 
@@ -689,11 +793,17 @@ class ParameterApp(tk.Tk):
                             saved_parameters_for_S5_S8_current_source[i])
                     form_widgets_for_option_S5_S8_current_source.append(
                         combobox)
-
                 else:
-                    entry = ttk.Entry(
-                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, state=S5_S8_current_source_state, width=40)   # 根據條件禁用或啟用
-                    entry.pack(anchor=tk.W, pady=5)
+                    # entry = ttk.Entry(
+                    #     S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, state=S5_S8_current_source_state, width=40)   # 根據條件禁用或啟用
+                    # entry.pack(anchor=tk.W, pady=5)
+                    entry = self.create_ttk_entry_with_validation(
+                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame,   # parent
+                        -0.2,                                                     # min_value
+                        0.2,                                                      # max_value
+                        S5_S8_current_source_state,                               # entry_state
+                        40                                                        # entry_width
+                    )
                     # 回填 saved_parameters_for_S5_S8_current_source 中的值
                     if i < len(saved_parameters_for_S5_S8_current_source):
                         entry.insert(
@@ -792,11 +902,30 @@ class ParameterApp(tk.Tk):
                         combobox.set(
                             saved_parameters_for_S1Ch1_Drive_current_source[i])
                     form_widgets_for_option_S1Ch1_Drive_current_source.append(combobox)
-
-                else:
-                    entry = ttk.Entry(S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, width=40)
-                    entry.pack(anchor=tk.W, pady=5)
+                elif i == 1 :
+                    entry = self.create_ttk_entry_with_validation(
+                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame,   # parent
+                        0,                                                       # min_value
+                        240,                                                        # max_value
+                        "normal",                                                 # entry_state
+                        40                                                        # entry_width
+                    )
+                # else:
+                #     entry = ttk.Entry(S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, width=40)
+                #     entry.pack(anchor=tk.W, pady=5)
                     # 回填 saved_parameters_for_S1Ch1_Drive_current_source 中的值
+                    if i < len(saved_parameters_for_S1Ch1_Drive_current_source):
+                        entry.insert(
+                            0, saved_parameters_for_S1Ch1_Drive_current_source[i])
+                    form_widgets_for_option_S1Ch1_Drive_current_source.append(entry)
+                elif i == 2 :
+                    entry = self.create_ttk_entry_with_validation(
+                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame,   # parent
+                        0,                                                       # min_value
+                        11,                                                        # max_value
+                        "normal",                                                 # entry_state
+                        40                                                        # entry_width
+                    )
                     if i < len(saved_parameters_for_S1Ch1_Drive_current_source):
                         entry.insert(
                             0, saved_parameters_for_S1Ch1_Drive_current_source[i])
@@ -821,8 +950,15 @@ class ParameterApp(tk.Tk):
                     form_widgets_for_option_S1Ch1_Sense_current_source.append(combobox)
 
                 else:
-                    entry = ttk.Entry(S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, width=40)
-                    entry.pack(anchor=tk.W, pady=5)
+                    # entry = ttk.Entry(S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame, width=40)
+                    # entry.pack(anchor=tk.W, pady=5)
+                    entry = self.create_ttk_entry_with_validation(
+                        S1_S3_S5_S8_S1Ch1Drive_S1Ch1Sense_Current_source_frame,   # parent
+                        -1,                                                       # min_value
+                        1,                                                        # max_value
+                        "normal",                                                 # entry_state
+                        40                                                        # entry_width
+                    )
                     # 回填 saved_parameters_for_S1Ch1_Sense_current_source 中的值
                     if i < len(saved_parameters_for_S1Ch1_Sense_current_source):
                         entry.insert(
@@ -915,138 +1051,148 @@ class ParameterApp(tk.Tk):
     def save_parameters(self, sensor, option, window):
         """此為保存參數的函式，將參數輸出至 params.json ， 並將參數保存到 saved_parameters 字典中以便按下 Next 之後輸出至 saved_parameters.json"""
 
-        # Collect the parameters from the form (now using a dictionary to store keys and values)
-        params = {}
+        # 檢查輸入值是否有效
+        if self.check_input_validation():
+            # Collect the parameters from the form (now using a dictionary to store keys and values)
+            params = {}
 
-        # option 可以是 "Current_source" 或 "Voltage_source" 或 "Measurement_channel" 或 "Both"
-        # Get the field names
-        form_fields = self.sensor_option_parameters[sensor][option].keys()
+            # option 可以是 "Current_source" 或 "Voltage_source" 或 "Measurement_channel" 或 "Both"
+            # Get the field names
+            form_fields = self.sensor_option_parameters[sensor][option].keys()
 
-        # Iterate over the widgets and save both the field names and their values
-        for field_name, widget in zip(form_fields, self.form_widgets[sensor][option]):
-            if isinstance(widget, ttk.Combobox):
-                # Get the selected value in Combobox
-                params[field_name] = widget.get()
-            else:
-                params[field_name] = float(widget.get())   # Get the value in Entry
+            # Iterate over the widgets and save both the field names and their values
+            for field_name, widget in zip(form_fields, self.form_widgets[sensor][option]):
+                if isinstance(widget, ttk.Combobox):
+                    # Get the selected value in Combobox
+                    params[field_name] = widget.get()
+                else:
+                    params[field_name] = float(widget.get())   # Get the value in Entry
 
-        # Delete previously saved parameters for this sensor-option pair
-        for key in list(self.saved_parameters):
-            if key == (sensor, option):  # 僅刪除與當前 sensor 和 option 配對的參數
-                del self.saved_parameters[key]
+            # Delete previously saved parameters for this sensor-option pair
+            for key in list(self.saved_parameters):
+                if key == (sensor, option):  # 僅刪除與當前 sensor 和 option 配對的參數
+                    del self.saved_parameters[key]
 
-        # Save current parameters
-        self.saved_parameters[(sensor, option)] = params
+            # Save current parameters
+            self.saved_parameters[(sensor, option)] = params
      
-        # Print the saved parameters with keys and values
-        print(f"提交的參數 ({sensor} - {option}): ")
-        for field, value in params.items():
-            print(f"{field}: {value}")
+            # Print the saved parameters with keys and values
+            print(f"提交的參數 ({sensor} - {option}): ")
+            for field, value in params.items():
+                print(f"{field}: {value}")
 
-        print(self.saved_parameters)
+            print(self.saved_parameters)
 
-        # 針對 S1_S3 清除另一個選項的內容
-        if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
-            if option == "Current_source":
-                # 清除 Voltage_source 的內容
-                if (sensor, "Voltage_source") in self.saved_parameters:
-                    del self.saved_parameters[(sensor, "Voltage_source")]
-                    # 清空界面上的 Voltage_source 表單內容
-                    for widget in self.form_widgets[sensor]["Voltage_source"]:
-                        if isinstance(widget, ttk.Combobox):
-                            widget.set("")  # 清空 combobox
-                        else:
-                            widget.delete(0, tk.END)  # 清空 entry
-            elif option == "Voltage_source":
-                # 清除 Current_source 的內容
-                if (sensor, "Current_source") in self.saved_parameters:
-                    del self.saved_parameters[(sensor, "Current_source")]
-                    # 清空界面上的 Current_source 表單內容
-                    for widget in self.form_widgets[sensor]["Current_source"]:
-                        if isinstance(widget, ttk.Combobox):
-                            widget.set("")  # 清空 combobox
-                        else:
-                            widget.delete(0, tk.END)  # 清空 entry
+            # 針對 S1_S3 清除另一個選項的內容
+            if sensor in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]:
+                if option == "Current_source":
+                    # 清除 Voltage_source 的內容
+                    if (sensor, "Voltage_source") in self.saved_parameters:
+                        del self.saved_parameters[(sensor, "Voltage_source")]
+                        # 清空界面上的 Voltage_source 表單內容
+                        for widget in self.form_widgets[sensor]["Voltage_source"]:
+                            if isinstance(widget, ttk.Combobox):
+                                widget.set("")  # 清空 combobox
+                            else:
+                                widget.delete(0, tk.END)  # 清空 entry
+                elif option == "Voltage_source":
+                    # 清除 Current_source 的內容
+                    if (sensor, "Current_source") in self.saved_parameters:
+                        del self.saved_parameters[(sensor, "Current_source")]
+                        # 清空界面上的 Current_source 表單內容
+                        for widget in self.form_widgets[sensor]["Current_source"]:
+                            if isinstance(widget, ttk.Combobox):
+                                widget.set("")  # 清空 combobox
+                            else:
+                                widget.delete(0, tk.END)  # 清空 entry
 
-        # 針對 S5_S8 清除另一個選項的內容或是選擇 Both 的話兩個選項參數都保留
-        if sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:
-            if option == "Current_source":
-                # 清除 Measurement_channel 的內容
-                if (sensor, "Measurement_channel") in self.saved_parameters:
-                    print(sensor, option)
-                    del self.saved_parameters[(sensor, "Measurement_channel")]
-                    for widget in self.form_widgets[sensor]["Measurement_channel"]:
-                        if isinstance(widget, ttk.Combobox):
-                            widget.set("")  # 清空 combobox
-                        else:
-                            widget.delete(0, tk.END)  # 清空 entry
-                if (sensor, "Both") in self.saved_parameters:
-                    print(sensor, option)
-                    del self.saved_parameters[(sensor, "Both")]
-                    for widget in self.form_widgets[sensor]["Both"]:
-                        if isinstance(widget, ttk.Combobox):
-                            widget.set("")  # 清空 combobox
-                        else:
-                            widget.delete(0, tk.END)  # 清空 entry
+            # 針對 S5_S8 清除另一個選項的內容或是選擇 Both 的話兩個選項參數都保留
+            if sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:
+                if option == "Current_source":
+                    # 清除 Measurement_channel 的內容
+                    if (sensor, "Measurement_channel") in self.saved_parameters:
+                        print(sensor, option)
+                        del self.saved_parameters[(sensor, "Measurement_channel")]
+                        for widget in self.form_widgets[sensor]["Measurement_channel"]:
+                            if isinstance(widget, ttk.Combobox):
+                                widget.set("")  # 清空 combobox
+                            else:
+                                widget.delete(0, tk.END)  # 清空 entry
+                    if (sensor, "Both") in self.saved_parameters:
+                        print(sensor, option)
+                        del self.saved_parameters[(sensor, "Both")]
+                        for widget in self.form_widgets[sensor]["Both"]:
+                            if isinstance(widget, ttk.Combobox):
+                                widget.set("")  # 清空 combobox
+                            else:
+                                widget.delete(0, tk.END)  # 清空 entry
 
-            elif option == "Measurement_channel":
-                # 清除 Current_source 的內容
-                if (sensor, "Current_source") in self.saved_parameters:
-                    print(sensor, option)
-                    del self.saved_parameters[(sensor, "Current_source")]
-                    for widget in self.form_widgets[sensor]["Current_source"]:
-                        if isinstance(widget, ttk.Combobox):
-                            widget.set("")  # 清空 combobox
-                        else:
-                            widget.delete(0, tk.END)  # 清空 entry
-                if (sensor, "Both") in self.saved_parameters:
-                    print(sensor, option)
-                    del self.saved_parameters[(sensor, "Both")]
-                    for widget in self.form_widgets[sensor]["Both"]:
-                        if isinstance(widget, ttk.Combobox):
-                            widget.set("")  # 清空 combobox
-                        else:
-                            widget.delete(0, tk.END)  # 清空 entry
+                elif option == "Measurement_channel":
+                    # 清除 Current_source 的內容
+                    if (sensor, "Current_source") in self.saved_parameters:
+                        print(sensor, option)
+                        del self.saved_parameters[(sensor, "Current_source")]
+                        for widget in self.form_widgets[sensor]["Current_source"]:
+                            if isinstance(widget, ttk.Combobox):
+                                widget.set("")  # 清空 combobox
+                            else:
+                                widget.delete(0, tk.END)  # 清空 entry
+                    if (sensor, "Both") in self.saved_parameters:
+                        print(sensor, option)
+                        del self.saved_parameters[(sensor, "Both")]
+                        for widget in self.form_widgets[sensor]["Both"]:
+                            if isinstance(widget, ttk.Combobox):
+                                widget.set("")  # 清空 combobox
+                            else:
+                                widget.delete(0, tk.END)  # 清空 entry
 
-            elif option == "Both":
-                # 刪除 Current_source 和 Measurement_channel 的 key (不清空表單)
-                if (sensor, "Current_source") in self.saved_parameters:
-                    del self.saved_parameters[(sensor, "Current_source")]
+                elif option == "Both":
+                    # 刪除 Current_source 和 Measurement_channel 的 key (不清空表單)
+                    if (sensor, "Current_source") in self.saved_parameters:
+                        del self.saved_parameters[(sensor, "Current_source")]
 
-                if (sensor, "Measurement_channel") in self.saved_parameters:
-                    del self.saved_parameters[(sensor, "Measurement_channel")]
+                    if (sensor, "Measurement_channel") in self.saved_parameters:
+                        del self.saved_parameters[(sensor, "Measurement_channel")]
 
-                both_params = self.saved_parameters[(sensor, option)]
-                current_source_params = {}
-                measurement_channel_params = {}
+                    both_params = self.saved_parameters[(sensor, option)]
+                    current_source_params = {}
+                    measurement_channel_params = {}
 
-                # 將 both_params 轉換為一個 list，這樣可以按索引操作
-                both_items = list(both_params.items())
+                    # 將 both_params 轉換為一個 list，這樣可以按索引操作
+                    both_items = list(both_params.items())
 
-                # 使用 itertools.islice 對前3個和後5個分別切片
-                first_3_items = itertools.islice(both_items, 3)  # 前3個
-                last_5_items = itertools.islice(both_items, 3, 8)  # 第4到第8個
+                    # 使用 itertools.islice 對前3個和後5個分別切片
+                    first_3_items = itertools.islice(both_items, 3)  # 前3個
+                    last_5_items = itertools.islice(both_items, 3, 8)  # 第4到第8個
 
-                # 將前3個分配到 current_source_params
-                for field, value in first_3_items:
-                    current_source_params[field] = value
+                    # 將前3個分配到 current_source_params
+                    for field, value in first_3_items:
+                        current_source_params[field] = value
 
-                # 將後5個分配到 measurement_channel_params
-                for field, value in last_5_items:
-                    measurement_channel_params[field] = value  
+                    # 將後5個分配到 measurement_channel_params
+                    for field, value in last_5_items:
+                        measurement_channel_params[field] = value  
 
-        # 如果有勾選 Trigger，則將 S1 ~ S3 的所有參數清空以及 S5 ~ S8 的 Current_source 和 Both 的參數清空
-        if sensor in ["S11Ch1", "S11Ch2", "S11Ch3", "S11Ch4", "S11Ch5", "S11Ch6", "S11Ch7", "S11Ch8"]:
-            sensor_to_delete = [key for key, _ in self.saved_parameters.items() if (key[0] in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]) 
-                                or (key[0] in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"] and key[1] in ["Current_source", "Both"])]
-            for sensor in sensor_to_delete:
-                del self.saved_parameters[sensor]
+            # 如果有勾選 Trigger，則將 S1 ~ S3 的所有參數清空以及 S5 ~ S8 的 Current_source 和 Both 的參數清空
+            if sensor in ["S11Ch1", "S11Ch2", "S11Ch3", "S11Ch4", "S11Ch5", "S11Ch6", "S11Ch7", "S11Ch8"]:
+                sensor_to_delete = [key for key, _ in self.saved_parameters.items() if (key[0] in ["S1Ch1", "S1Ch2", "S3Ch1", "S3Ch2"]) 
+                                    or (key[0] in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2",  "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"] and key[1] in ["Current_source", "Both"])]
+                for sensor in sensor_to_delete:
+                    del self.saved_parameters[sensor]
 
-        # Save parameters to JSON file
-        self.save_params()
+            # Save parameters to JSON file
+            self.save_params()
+            
+            # 成功儲存後顯示訊息
+            messagebox.showinfo("成功", "參數儲存成功！")
 
-        # Close the window
-        window.destroy()
+            # Close the window
+            window.destroy()
+        else:
+            window.lift()
+            window.focus_force()
+            # 什麼都不做，因為 check_input_validation 已經顯示了警告訊息
+            print("資料有誤，不執行儲存")
 
     # 第一頁按下 Next 按鈕後，將參數匯出至 saved_parameters.json
     def export_to_json(self):
@@ -1368,8 +1514,18 @@ class ParameterApp(tk.Tk):
             measurement_settings_frame, text="Setpoint: ")
         heating_setpoint_label.grid(row=0, column=2, padx=10, pady=10)
 
-        self.heating_entry = ttk.Entry(measurement_settings_frame)
-        self.heating_entry.grid(row=0, column=3, padx=10, pady=10)
+        # self.heating_entry = ttk.Entry(measurement_settings_frame)
+        # self.heating_entry.grid(row=0, column=3, padx=10, pady=10)
+        self.heating_entry = self.create_ttk_entry_with_validation_grid(
+                                measurement_settings_frame,   # parent
+                                "normal",                     # state
+                                0,                            # min_value
+                                4000,                         # max_value
+                                row=0,                        # grid row
+                                column=3,                     # grid column
+                                padx=10,                      # grid padx
+                                pady=10                       # grid pady
+                            )
         self.page2_parameters["Heating_time"] = self.heating_entry.get()
 
         # Cooling time row
@@ -1385,8 +1541,18 @@ class ParameterApp(tk.Tk):
             measurement_settings_frame, text="Setpoint: ")
         cooling_setpoint_label.grid(row=1, column=2, padx=10, pady=10)
 
-        self.cooling_entry = ttk.Entry(measurement_settings_frame)
-        self.cooling_entry.grid(row=1, column=3, padx=10, pady=10)
+        # self.cooling_entry = ttk.Entry(measurement_settings_frame)
+        # self.cooling_entry.grid(row=1, column=3, padx=10, pady=10)
+        self.cooling_entry = self.create_ttk_entry_with_validation_grid(
+                                measurement_settings_frame,   # parent
+                                "normal",                     # state
+                                0,                            # min_value
+                                4000,                         # max_value
+                                row=1,                        # grid row
+                                column=3,                     # grid column
+                                padx=10,                      # grid padx
+                                pady=10                       # grid pady
+                            )
         self.page2_parameters["Cooling_time"] = self.cooling_entry.get()
 
         # Delay time row
@@ -1402,8 +1568,18 @@ class ParameterApp(tk.Tk):
             measurement_settings_frame, text="Setpoint: ")
         delay_setpoint_label.grid(row=2, column=2, padx=10, pady=10)
 
-        self.delay_entry = ttk.Entry(measurement_settings_frame)
-        self.delay_entry.grid(row=2, column=3, padx=10, pady=10)
+        # self.delay_entry = ttk.Entry(measurement_settings_frame)
+        # self.delay_entry.grid(row=2, column=3, padx=10, pady=10)
+        self.delay_entry = self.create_ttk_entry_with_validation_grid(
+                                measurement_settings_frame,   # parent
+                                "normal",                     # state
+                                0,                            # min_value
+                                4000,                         # max_value
+                                row=2,                        # grid row
+                                column=3,                     # grid column
+                                padx=10,                      # grid padx
+                                pady=10                       # grid pady
+                            )
         self.page2_parameters["Delay_time"] = self.delay_entry.get()
 
         # Repeat times row
@@ -1419,8 +1595,18 @@ class ParameterApp(tk.Tk):
             measurement_settings_frame, text="Setpoint: ")
         repeat_setpoint_label.grid(row=3, column=2, padx=10, pady=10)
 
-        self.repeat_entry = ttk.Entry(measurement_settings_frame)
-        self.repeat_entry.grid(row=3, column=3, padx=10, pady=10)
+        # self.repeat_entry = ttk.Entry(measurement_settings_frame)
+        # self.repeat_entry.grid(row=3, column=3, padx=10, pady=10)
+        self.repeat_entry = self.create_ttk_entry_with_validation_grid(
+                                measurement_settings_frame,   # parent
+                                "normal",                     # state
+                                1,                            # min_value
+                                100,                          # max_value
+                                row=3,                        # grid row
+                                column=3,                     # grid column
+                                padx=10,                      # grid padx
+                                pady=10                       # grid pady
+                            )
         self.repeat_entry.insert(0, "1")   # 插入數字 1
         self.page2_parameters["Repeat_times"] = self.repeat_entry.get()
 
@@ -1536,9 +1722,19 @@ class ParameterApp(tk.Tk):
             thermostat_settings_for_measurement_frame, text="Setpoint: ")
         temperature_setpoint_label.grid(row=0, column=2, padx=10, pady=10)
 
-        self.temperature_entry = ttk.Entry(
-            thermostat_settings_for_measurement_frame, state="disabled")  # 初始狀態為禁用
-        self.temperature_entry.grid(row=0, column=3, padx=10, pady=10)
+        # self.temperature_entry = ttk.Entry(
+        #     thermostat_settings_for_measurement_frame, state="disabled")  # 初始狀態為禁用
+        # self.temperature_entry.grid(row=0, column=3, padx=10, pady=10)
+        self.temperature_entry = self.create_ttk_entry_with_validation_grid(
+                                    thermostat_settings_for_measurement_frame,   # parent
+                                    "disabled",                                  # state
+                                    -45,                                         # min_value
+                                    160,                                         # max_value
+                                    row=0,                                       # grid row
+                                    column=3,                                    # grid column
+                                    padx=10,                                     # grid padx
+                                    pady=10                                      # grid pady
+                                )
         self.page2_parameters["Temperature"] = self.temperature_entry.get()
 
         '''TSP calibration 框架內的內容'''
@@ -1554,9 +1750,19 @@ class ParameterApp(tk.Tk):
             tsp_calibration_frame, text="Setpoint: ")
         tmin_setpoint_label.grid(row=0, column=2, padx=10, pady=10)
 
-        self.tmin_entry = ttk.Entry(
-            tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
-        self.tmin_entry.grid(row=0, column=3, padx=10, pady=10)
+        # self.tmin_entry = ttk.Entry(
+        #     tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
+        # self.tmin_entry.grid(row=0, column=3, padx=10, pady=10)
+        self.tmin_entry = self.create_ttk_entry_with_validation_grid(
+                            tsp_calibration_frame,   # parent
+                            "disabled",              # state
+                            -45,                     # min_value
+                            160,                     # max_value
+                            row=0,                   # grid row
+                            column=3,                # grid column
+                            padx=10,                 # grid padx
+                            pady=10                  # grid pady
+                        )
         self.page2_parameters["Tmin"] = self.tmin_entry.get()
 
         # Tmax [°C] row
@@ -1571,9 +1777,19 @@ class ParameterApp(tk.Tk):
             tsp_calibration_frame, text="Setpoint: ")
         tmax_setpoint_label.grid(row=1, column=2, padx=10, pady=10)
 
-        self.tmax_entry = ttk.Entry(
-            tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
-        self.tmax_entry.grid(row=1, column=3, padx=10, pady=10)
+        # self.tmax_entry = ttk.Entry(
+        #     tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
+        # self.tmax_entry.grid(row=1, column=3, padx=10, pady=10)
+        self.tmax_entry = self.create_ttk_entry_with_validation_grid(
+                            tsp_calibration_frame,   # parent
+                            "disabled",              # state
+                            -45,                     # min_value
+                            160,                     # max_value
+                            row=1,                   # grid row
+                            column=3,                # grid column
+                            padx=10,                 # grid padx
+                            pady=10                  # grid pady
+                        )
         self.page2_parameters["Tmax"] = self.tmax_entry.get()
 
         # Tstep [°C] row
@@ -1588,9 +1804,19 @@ class ParameterApp(tk.Tk):
             tsp_calibration_frame, text="Setpoint: ")
         tstep_setpoint_label.grid(row=2, column=2, padx=10, pady=10)
 
-        self.tstep_entry = ttk.Entry(
-            tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
-        self.tstep_entry.grid(row=2, column=3, padx=10, pady=10)
+        # self.tstep_entry = ttk.Entry(
+        #     tsp_calibration_frame, state="disabled")  # 初始狀態為禁用
+        # self.tstep_entry.grid(row=2, column=3, padx=10, pady=10)
+        self.tstep_entry = self.create_ttk_entry_with_validation_grid(
+                            tsp_calibration_frame,   # parent
+                            "disabled",              # state
+                            1,                       # min_value
+                            205,                     # max_value
+                            row=2,                   # grid row
+                            column=3,                # grid column
+                            padx=10,                 # grid padx
+                            pady=10                  # grid pady
+                        )
         self.page2_parameters["Tstep"] = self.tstep_entry.get()
 
         # 於 advanced_thermostat_stability_settings_frame 框架內的參數， Chrome 裡面有，但我相關參數直接於後端程式碼固定好了，所以目前用不到
@@ -1947,310 +2173,317 @@ class ParameterApp(tk.Tk):
 
     # 第二頁按下 Next 按鈕會將所有參數匯出至 saved_parameters.json 並開始運行機台
     def page2_export_to_json(self):
-        # 定義 JSON 檔案路徑
-        file_path = "saved_parameters.json"
 
-        # 確保控件的值是最新的
-        self.page2_parameters["Config_Name"] = self.config_entry.get()
-        self.page2_parameters["storage_path"] = self.path_display.cget("text")
+        # 檢查輸入值是否有效
+        if self.check_input_validation():
 
-        # 確保控件的值是最新的 & 判斷是否有輸入參數，若無，則預設為 0
-        try:
-            self.page2_parameters["Heating_time"] = float(self.heating_entry.get()) if self.heating_entry.get() else 0.0
-        except ValueError:
-            self.page2_parameters["Heating_time"] = 0.0  # 或其他預設值
-        try:
-            self.page2_parameters["Cooling_time"] = float(self.cooling_entry.get()) if self.cooling_entry.get() else 0.0
-        except ValueError:
-            self.page2_parameters["Cooling_time"] = 0.0  # 或其他預設值
-        try:
-            self.page2_parameters["Delay_time"] = float(self.delay_entry.get()) if self.delay_entry.get() else 0.0
-        except ValueError:
-            self.page2_parameters["Delay_time"] = 0.0  # 或其他預設值
-        try:
-            self.page2_parameters["Repeat_times"] = int(self.repeat_entry.get()) if self.repeat_entry.get() else 0
-        except ValueError:
-            self.page2_parameters["Repeat_times"] = 0  # 或其他預設值
+            # 定義 JSON 檔案路徑
+            file_path = "saved_parameters.json"
 
-        self.page2_parameters["Cycling_Test"] = self.cycling_test_var.get()
+            # 確保控件的值是最新的
+            self.page2_parameters["Config_Name"] = self.config_entry.get()
+            self.page2_parameters["storage_path"] = self.path_display.cget("text")
 
-        try:
-            self.page2_parameters["Pulse Cycling On [s]"] = float(self.pulse_cycling_on_entry.get()) if self.pulse_cycling_on_entry.get() else 0.0
-        except ValueError:
-            self.page2_parameters["Pulse Cycling On [s]"] = 0.0  # 或其他預設值
-        try:
-            self.page2_parameters["Pulse Cycling Off [s]"] = float(self.pulse_cycling_off_entry.get()) if self.pulse_cycling_off_entry.get() else 0.0
-        except ValueError:
-            self.page2_parameters["Pulse Cycling Off [s]"] = 0.0  # 或其他預設值
-        try:
-            self.page2_parameters["Pulse Cycling Repeat"] = int(self.pulse_cycling_repeat_entry.get()) if self.pulse_cycling_repeat_entry.get() else 0
-        except ValueError:
-            self.page2_parameters["Pulse Cycling Repeat"] = 0  # 或其他預設值
-        try:
-            self.page2_parameters["Rth Measurement Heating Times"] = float(self.rth_measurement_heating_times_entry.get()) if self.rth_measurement_heating_times_entry.get() else 0.0
-        except ValueError:
-            self.page2_parameters["Rth Measurement Heating Times"] = 0.0  # 或其他預設值
-        try:
-            self.page2_parameters["Rth Measurement Cooling Times"] = float(self.rth_measurement_cooling_times_entry.get()) if self.rth_measurement_cooling_times_entry.get() else 0.0
-        except ValueError:
-            self.page2_parameters["Rth Measurement Cooling Times"] = 0.0  # 或其他預設值
-        try:
-            self.page2_parameters["total Measurement Cycling Repeat"] = int(self.total_measurement_cycling_repeat_entry.get()) if self.total_measurement_cycling_repeat_entry.get() else 0
-        except ValueError:
-            self.page2_parameters["total Measurement Cycling Repeat"] = 0  # 或其他預設值
-        try:
-            self.page2_parameters["Other LP220 Current 01"] =  float(self.other_lp220_current_01_entry.get()) if self.other_lp220_current_01_entry.get() else 0.0
-        except ValueError:
-            self.page2_parameters["Other LP220 Current 01"] = 0.0 # 或其他預設值
-        try:
-            self.page2_parameters["Other LP220 Current 02"] =  float(self.other_lp220_current_02_entry.get()) if self.other_lp220_current_02_entry.get() else 0.0
-        except ValueError:
-            self.page2_parameters["Other LP220 Current 02"] = 0.0 # 或其他預設值
+            # 確保控件的值是最新的 & 判斷是否有輸入參數，若無，則預設為 0
+            try:
+                self.page2_parameters["Heating_time"] = float(self.heating_entry.get()) if self.heating_entry.get() else 0.0
+            except ValueError:
+                self.page2_parameters["Heating_time"] = 0.0  # 或其他預設值
+            try:
+                self.page2_parameters["Cooling_time"] = float(self.cooling_entry.get()) if self.cooling_entry.get() else 0.0
+            except ValueError:
+                self.page2_parameters["Cooling_time"] = 0.0  # 或其他預設值
+            try:
+                self.page2_parameters["Delay_time"] = float(self.delay_entry.get()) if self.delay_entry.get() else 0.0
+            except ValueError:
+                self.page2_parameters["Delay_time"] = 0.0  # 或其他預設值
+            try:
+                self.page2_parameters["Repeat_times"] = int(self.repeat_entry.get()) if self.repeat_entry.get() else 0
+            except ValueError:
+                self.page2_parameters["Repeat_times"] = 0  # 或其他預設值
 
-        self.page2_parameters["Connect_to_Thermostat"] = self.connect_thermostat_var.get()
+            self.page2_parameters["Cycling_Test"] = self.cycling_test_var.get()
 
-        try:
-            self.page2_parameters["Temperature"] = int(self.temperature_entry.get()) if self.temperature_entry.get() else 0
-        except ValueError:
-            self.page2_parameters["Temperature"] = 0  # 或其他預設值
+            try:
+                self.page2_parameters["Pulse Cycling On [s]"] = float(self.pulse_cycling_on_entry.get()) if self.pulse_cycling_on_entry.get() else 0.0
+            except ValueError:
+                self.page2_parameters["Pulse Cycling On [s]"] = 0.0  # 或其他預設值
+            try:
+                self.page2_parameters["Pulse Cycling Off [s]"] = float(self.pulse_cycling_off_entry.get()) if self.pulse_cycling_off_entry.get() else 0.0
+            except ValueError:
+                self.page2_parameters["Pulse Cycling Off [s]"] = 0.0  # 或其他預設值
+            try:
+                self.page2_parameters["Pulse Cycling Repeat"] = int(self.pulse_cycling_repeat_entry.get()) if self.pulse_cycling_repeat_entry.get() else 0
+            except ValueError:
+                self.page2_parameters["Pulse Cycling Repeat"] = 0  # 或其他預設值
+            try:
+                self.page2_parameters["Rth Measurement Heating Times"] = float(self.rth_measurement_heating_times_entry.get()) if self.rth_measurement_heating_times_entry.get() else 0.0
+            except ValueError:
+                self.page2_parameters["Rth Measurement Heating Times"] = 0.0  # 或其他預設值
+            try:
+                self.page2_parameters["Rth Measurement Cooling Times"] = float(self.rth_measurement_cooling_times_entry.get()) if self.rth_measurement_cooling_times_entry.get() else 0.0
+            except ValueError:
+                self.page2_parameters["Rth Measurement Cooling Times"] = 0.0  # 或其他預設值
+            try:
+                self.page2_parameters["total Measurement Cycling Repeat"] = int(self.total_measurement_cycling_repeat_entry.get()) if self.total_measurement_cycling_repeat_entry.get() else 0
+            except ValueError:
+                self.page2_parameters["total Measurement Cycling Repeat"] = 0  # 或其他預設值
+            try:
+                self.page2_parameters["Other LP220 Current 01"] =  float(self.other_lp220_current_01_entry.get()) if self.other_lp220_current_01_entry.get() else 0.0
+            except ValueError:
+                self.page2_parameters["Other LP220 Current 01"] = 0.0 # 或其他預設值
+            try:
+                self.page2_parameters["Other LP220 Current 02"] =  float(self.other_lp220_current_02_entry.get()) if self.other_lp220_current_02_entry.get() else 0.0
+            except ValueError:
+                self.page2_parameters["Other LP220 Current 02"] = 0.0 # 或其他預設值
 
-        self.page2_parameters["TSP"] = self.tsp_var.get()
+            self.page2_parameters["Connect_to_Thermostat"] = self.connect_thermostat_var.get()
 
-        try:
-            self.page2_parameters["Tmin"] = int(self.tmin_entry.get()) if self.tmin_entry.get() else 0
-        except ValueError:
-            self.page2_parameters["Tmin"] = 0  # 或其他預設值
-        try:
-            self.page2_parameters["Tmax"] = int(self.tmax_entry.get()) if self.tmax_entry.get() else 0
-        except ValueError:
-            self.page2_parameters["Tmax"] = 0  # 或其他預設值
-        try:
-            self.page2_parameters["Tstep"] = int(self.tstep_entry.get()) if self.tstep_entry.get() else 0
-        except ValueError:
-            self.page2_parameters["Tstep"] = 0  # 或其他預設值
+            try:
+                self.page2_parameters["Temperature"] = int(self.temperature_entry.get()) if self.temperature_entry.get() else 0
+            except ValueError:
+                self.page2_parameters["Temperature"] = 0  # 或其他預設值
 
-        # 若有其他 LP220 Current 參數
-        other_lp220_current_list = []
-        
-        if self.page2_parameters["Other LP220 Current 01"] != 0:
-            other_lp220_current_list.append(self.page2_parameters["Other LP220 Current 01"])
-        if self.page2_parameters["Other LP220 Current 02"] != 0:
-            other_lp220_current_list.append(self.page2_parameters["Other LP220 Current 02"])
-        
-        self.page2_parameters["Other LP220 Current list"] = other_lp220_current_list
+            self.page2_parameters["TSP"] = self.tsp_var.get()
 
-        # 將每一行的 `ms_401_label`、`combo_s5_s8`、`combo_s1_s3` 的值儲存到列表中
-        sensors_data = []
+            try:
+                self.page2_parameters["Tmin"] = int(self.tmin_entry.get()) if self.tmin_entry.get() else 0
+            except ValueError:
+                self.page2_parameters["Tmin"] = 0  # 或其他預設值
+            try:
+                self.page2_parameters["Tmax"] = int(self.tmax_entry.get()) if self.tmax_entry.get() else 0
+            except ValueError:
+                self.page2_parameters["Tmax"] = 0  # 或其他預設值
+            try:
+                self.page2_parameters["Tstep"] = int(self.tstep_entry.get()) if self.tstep_entry.get() else 0
+            except ValueError:
+                self.page2_parameters["Tstep"] = 0  # 或其他預設值
 
-        for i in range(len(self.ms_401_labels)):
-            sensor_info = {
-                "MS_401": self.ms_401_labels[i].cget("text"),  # Sensor 名稱
-                "Isense": self.combo_s5_s8s[i].get(),  # 用戶選擇的 Isense 值
-                "Idrive": self.combo_s1_s3s[i].get()   # 用戶選擇的 Idrive 值
-            }
-            sensors_data.append(sensor_info)
+            # 若有其他 LP220 Current 參數
+            other_lp220_current_list = []
+            
+            if self.page2_parameters["Other LP220 Current 01"] != 0:
+                other_lp220_current_list.append(self.page2_parameters["Other LP220 Current 01"])
+            if self.page2_parameters["Other LP220 Current 02"] != 0:
+                other_lp220_current_list.append(self.page2_parameters["Other LP220 Current 02"])
+            
+            self.page2_parameters["Other LP220 Current list"] = other_lp220_current_list
 
-        # 將 Sensors 列表保存到 page2_parameters
-        self.page2_parameters["Measurement_channel"] = sensors_data
-        
-        # 檢查檔案是否存在
-        if os.path.exists(file_path):
-            # 如果存在，打開檔案並讀取現有內容
+            # 將每一行的 `ms_401_label`、`combo_s5_s8`、`combo_s1_s3` 的值儲存到列表中
+            sensors_data = []
+
+            for i in range(len(self.ms_401_labels)):
+                sensor_info = {
+                    "MS_401": self.ms_401_labels[i].cget("text"),  # Sensor 名稱
+                    "Isense": self.combo_s5_s8s[i].get(),  # 用戶選擇的 Isense 值
+                    "Idrive": self.combo_s1_s3s[i].get()   # 用戶選擇的 Idrive 值
+                }
+                sensors_data.append(sensor_info)
+
+            # 將 Sensors 列表保存到 page2_parameters
+            self.page2_parameters["Measurement_channel"] = sensors_data
+            
+            # 檢查檔案是否存在
+            if os.path.exists(file_path):
+                # 如果存在，打開檔案並讀取現有內容
+                with open(file_path, "r") as file:
+                    try:
+                        # 讀取已存在的資料
+                        saved_data = json.load(file)
+                    except json.JSONDecodeError:
+                        # 如果檔案是空的或格式錯誤，初始化為空字典
+                        saved_data = {}
+            else:
+                # 如果檔案不存在，初始化為空字典
+                saved_data = {}
+
+            # 將新參數添加進去
+            saved_data.update(self.page2_parameters)
+
+            # 使用 fill_current_source_params 以及 fill_measurement_params 填充數據
+            config_data = saved_data  # 使用已存在的 JSON 檔案數據
+            current_source_data = []
+            current_source_data.extend(self.fill_current_source_params(config_data))
+            measurement_channel_data = []
+            measurement_channel_data.extend(self.fill_measurement_params(config_data))
+            
+            # 如果有數據，將其放入 saved_data 中
+            if "Resources" not in saved_data:
+                saved_data["Resources"] = {}
+            saved_data["Resources"]["CurrentSourceParams"] = current_source_data
+            saved_data["Resources"]["MeasCardChParams"] = measurement_channel_data
+            
+            # 將更新後的資料寫回到 JSON 文件中
+            with open(file_path, "w") as file:
+                json.dump(saved_data, file, indent=4)
+
             with open(file_path, "r") as file:
-                try:
-                    # 讀取已存在的資料
-                    saved_data = json.load(file)
-                except json.JSONDecodeError:
-                    # 如果檔案是空的或格式錯誤，初始化為空字典
-                    saved_data = {}
-        else:
-            # 如果檔案不存在，初始化為空字典
-            saved_data = {}
+                config_data = json.load(file)
 
-        # 將新參數添加進去
-        saved_data.update(self.page2_parameters)
+            # 將 Thermostat 參數 (此為等待 Thermostat 平衡好溫度之後再量測的參數表) 填入 config_data 等待寫入 saved_parameters.json
+            thermostatParams_data = [{
+                        "Alias": "/THERMOSTAT/0",
+                        "UserAlias": "Th0",
+                        "SetTemperature": {
+                            "default": config_data["Temperature"],
+                            "locked": False,
+                            "max": 50,
+                            "min": 0
+                        },
+                        "StabilityCriteria": {
+                            "DtMinMax": {
+                                "default": 0.1,
+                                "locked": False,
+                                "max": 5,
+                                "min": 0.0001
+                                },
+                            "DtTarget": {
+                                "default": 0.25,
+                                "locked": False,
+                                "max": 10,
+                                "min": 0.0001
+                                },
+                            "TimeWindow": {
+                                "default": 60,
+                                "locked": False,
+                                "max": 100,
+                                "min": 15
+                                },
+                            "Timeout": {
+                                "default": 1800,
+                                "locked": False,
+                                "max": 4000,
+                                "min": 30
+                                }
+                        },
+                        "WaitForStabilityBeforeMeas": {
+                        "default": True,
+                        "locked": False
+                        }                   
+                    }]
+            
+            if config_data["Temperature"] != 0:
+                config_data["Resources"]["ThermostatParams"] = thermostatParams_data
+            else:
+                config_data["Resources"]["ThermostatParams"] = []
 
-        # 使用 fill_current_source_params 以及 fill_measurement_params 填充數據
-        config_data = saved_data  # 使用已存在的 JSON 檔案數據
-        current_source_data = []
-        current_source_data.extend(self.fill_current_source_params(config_data))
-        measurement_channel_data = []
-        measurement_channel_data.extend(self.fill_measurement_params(config_data))
-        
-        # 如果有數據，將其放入 saved_data 中
-        if "Resources" not in saved_data:
-            saved_data["Resources"] = {}
-        saved_data["Resources"]["CurrentSourceParams"] = current_source_data
-        saved_data["Resources"]["MeasCardChParams"] = measurement_channel_data
-        
-        # 將更新後的資料寫回到 JSON 文件中
-        with open(file_path, "w") as file:
-            json.dump(saved_data, file, indent=4)
+            # 將 Thermostat 參數 (此為不等待 Thermostat 平衡好溫度就直接量測的參數表) 填入 config_data 等待寫入 saved_parameters.json
+            thermostatParams_data_no_wait = [{
+                        "Alias": "/THERMOSTAT/0",
+                        "UserAlias": "Th0",
+                        "SetTemperature": {
+                            "default": config_data["Temperature"],
+                            "locked": False,
+                            "max": 50,
+                            "min": 0
+                        },
+                        "StabilityCriteria": {
+                            "DtMinMax": {
+                                "default": 0.1,
+                                "locked": False,
+                                "max": 5,
+                                "min": 0.0001
+                                },
+                            "DtTarget": {
+                                "default": 0.25,
+                                "locked": False,
+                                "max": 10,
+                                "min": 0.0001
+                                },
+                            "TimeWindow": {
+                                "default": 60,
+                                "locked": False,
+                                "max": 100,
+                                "min": 1
+                                },
+                            "Timeout": {
+                                "default": 1800,
+                                "locked": False,
+                                "max": 4000,
+                                "min": 1
+                                }
+                        },
+                        "WaitForStabilityBeforeMeas": {
+                        "default": False,
+                        "locked": False
+                        }                   
+                    }]
+            
+            if config_data["Temperature"] != 0:
+                config_data["Resources"]["ThermostatParams_no_wait"] = thermostatParams_data_no_wait
+            else:
+                config_data["Resources"]["ThermostatParams_no_wait"] = []
 
-        with open(file_path, "r") as file:
-            config_data = json.load(file)
-
-        # 將 Thermostat 參數 (此為等待 Thermostat 平衡好溫度之後再量測的參數表) 填入 config_data 等待寫入 saved_parameters.json
-        thermostatParams_data = [{
-                    "Alias": "/THERMOSTAT/0",
-                    "UserAlias": "Th0",
-                    "SetTemperature": {
-                        "default": config_data["Temperature"],
-                        "locked": False,
-                        "max": 50,
-                        "min": 0
-                    },
-                    "StabilityCriteria": {
-                        "DtMinMax": {
-                            "default": 0.1,
-                            "locked": False,
-                            "max": 5,
-                            "min": 0.0001
-                            },
-                        "DtTarget": {
-                            "default": 0.25,
-                            "locked": False,
-                            "max": 10,
-                            "min": 0.0001
-                            },
-                        "TimeWindow": {
-                            "default": 60,
-                            "locked": False,
-                            "max": 100,
-                            "min": 15
-                            },
-                        "Timeout": {
-                            "default": 1800,
-                            "locked": False,
-                            "max": 4000,
-                            "min": 30
-                            }
-                    },
-                    "WaitForStabilityBeforeMeas": {
-                    "default": True,
-                    "locked": False
-                    }                   
-                }]
-        
-        if config_data["Temperature"] != 0:
-            config_data["Resources"]["ThermostatParams"] = thermostatParams_data
-        else:
-            config_data["Resources"]["ThermostatParams"] = []
-
-        # 將 Thermostat 參數 (此為不等待 Thermostat 平衡好溫度就直接量測的參數表) 填入 config_data 等待寫入 saved_parameters.json
-        thermostatParams_data_no_wait = [{
-                    "Alias": "/THERMOSTAT/0",
-                    "UserAlias": "Th0",
-                    "SetTemperature": {
-                        "default": config_data["Temperature"],
-                        "locked": False,
-                        "max": 50,
-                        "min": 0
-                    },
-                    "StabilityCriteria": {
-                        "DtMinMax": {
-                            "default": 0.1,
-                            "locked": False,
-                            "max": 5,
-                            "min": 0.0001
-                            },
-                        "DtTarget": {
-                            "default": 0.25,
-                            "locked": False,
-                            "max": 10,
-                            "min": 0.0001
-                            },
-                        "TimeWindow": {
-                            "default": 60,
-                            "locked": False,
-                            "max": 100,
-                            "min": 1
-                            },
-                        "Timeout": {
-                            "default": 1800,
-                            "locked": False,
-                            "max": 4000,
-                            "min": 1
-                            }
-                    },
-                    "WaitForStabilityBeforeMeas": {
+            # 將 TSP 參數填入 config_data 等待寫入 saved_parameters.json
+            tspCalibParams = {
+                "CustomTemperature": {
+                    "default": config_data["Temperature"],
+                    "locked": False,
+                    "max": 50,
+                    "min": 0
+                },
+                "DutStability": {
                     "default": False,
-                    "locked": False
-                    }                   
-                }]
-        
-        if config_data["Temperature"] != 0:
-            config_data["Resources"]["ThermostatParams_no_wait"] = thermostatParams_data_no_wait
-        else:
-            config_data["Resources"]["ThermostatParams_no_wait"] = []
-
-        # 將 TSP 參數填入 config_data 等待寫入 saved_parameters.json
-        tspCalibParams = {
-            "CustomTemperature": {
-                "default": config_data["Temperature"],
-                "locked": False,
-                "max": 50,
-                "min": 0
-            },
-            "DutStability": {
-                "default": False,
-                "locked": False,
-            },
-            "EndAction": {
-                "default": "CustomTemp",
-                "locked": False,
-            },
-            "Mode": {
-                "default": "Downwards",
-                "locked": False,
-            },
-            "ThtIntSensor": {
-                "default": True,
-                "locked": False,
-            },
-            "Tmax": {
-                "default": config_data["Tmax"],
-                "locked": False,
-                "max": 100,
-                "min": 0
-            },
-            "Tmin": {
-                "default": config_data["Tmin"],
-                "locked": False,
-                "max": 100,
-                "min": 0
-            },
-            "Tstep": {
-                "default": config_data["Tstep"],
-                "locked": False,
-                "max": 100, 
-                "min": 1
+                    "locked": False,
+                },
+                "EndAction": {
+                    "default": "CustomTemp",
+                    "locked": False,
+                },
+                "Mode": {
+                    "default": "Downwards",
+                    "locked": False,
+                },
+                "ThtIntSensor": {
+                    "default": True,
+                    "locked": False,
+                },
+                "Tmax": {
+                    "default": config_data["Tmax"],
+                    "locked": False,
+                    "max": 100,
+                    "min": 0
+                },
+                "Tmin": {
+                    "default": config_data["Tmin"],
+                    "locked": False,
+                    "max": 100,
+                    "min": 0
+                },
+                "Tstep": {
+                    "default": config_data["Tstep"],
+                    "locked": False,
+                    "max": 100, 
+                    "min": 1
+                }
             }
-        }
 
-        if config_data["Tmax"] != 0:
-            config_data["TspCalibParams"] = tspCalibParams
+            if config_data["Tmax"] != 0:
+                config_data["TspCalibParams"] = tspCalibParams
+            else:
+                config_data["TspCalibParams"] = []
+
+            with open(file_path, "w") as file:
+                json.dump(config_data, file, indent=4)
+
+            print("參數已成功儲存至 saved_parameters.json")
+
+            # 啟用進度提示框
+            self.progress_text.config(state="normal")
+            self.progress_text.delete(1.0, tk.END)  # 清空現有內容
+
+            # 重定向標準輸出
+            self.progress_output = StringIO()
+            sys.stdout = self.progress_output
+
+            # 啟用一個線程來執行長時間任務
+            threading.Thread(target=self.run_tests_in_thread).start()
+
+            # 通過 after 定期更新進度
+            self.update_progress_text()
         else:
-            config_data["TspCalibParams"] = []
-
-        with open(file_path, "w") as file:
-            json.dump(config_data, file, indent=4)
-
-        print("參數已成功儲存至 saved_parameters.json")
-
-        # 啟用進度提示框
-        self.progress_text.config(state="normal")
-        self.progress_text.delete(1.0, tk.END)  # 清空現有內容
-
-        # 重定向標準輸出
-        self.progress_output = StringIO()
-        sys.stdout = self.progress_output
-
-        # 啟用一個線程來執行長時間任務
-        threading.Thread(target=self.run_tests_in_thread).start()
-
-        # 通過 after 定期更新進度
-        self.update_progress_text()
+            # 什麼都不做，因為 check_input_validation 已經顯示了警告訊息
+            print("資料有誤，不執行儲存")
 
     def run_tests_in_thread(self):
         # 從文件讀取配置

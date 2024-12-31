@@ -1830,6 +1830,15 @@ class ParameterApp(tk.Tk):
                         "VoltageCorner": {"default": float(config_data[f"{sensor}_Current_source"]["Voltage limit [V]"]), "locked": False, "min": 0, "max": 11},
                         "TriggerSource": ""
                     })
+                elif sensor in "S1Ch1 - Sense":
+                    current_source_params.append({
+                        "Alias": self.sensor_rename[sensor],
+                        "UserAlias": f"PWB10018 - {sensor}",
+                        "OutputMode": {"default": config_data[f"{sensor}_Current_source"]["Output mode"], "locked": False},
+                        "SetCurrent": {"default": float(config_data[f"{sensor}_Current_source"]["Current [A]"]), "locked": False, "min": 0, "max": 240},
+                        "VoltageCorner": {"default": float(config_data[f"{sensor}_Current_source"]["Range [V]"]), "locked": False, "min": 0, "max": 11},
+                        "TriggerSource": ""
+                    })
             if f"{sensor}_Both" in config_data:
                 current_source_params.append({
                     "Alias": self.sensor_rename[sensor],

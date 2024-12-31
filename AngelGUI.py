@@ -143,13 +143,15 @@ class ParameterApp(tk.Tk):
             }
         }
 
+    # 創建 Trigger 的 Sensor 、 Option 、 Parameters 的 Function
     def create_trigger_sensor_option_parameters(self):
         return {
             "Trigger": {
                 "Mode" :["High", "Low", "Switched", "Switched Inverted", "Disabled"]
             }
         }
-
+    
+    # 創建 Booster 的 S1Ch1 Drive 的 Sensor 、 Option 、 Parameters 的 Function
     def create_booster_S1Ch1Drive_option_parameters(self):
         return {
             "Current_source": {
@@ -159,6 +161,7 @@ class ParameterApp(tk.Tk):
             }
         }
 
+    # 創建 Booster 的 S1Ch1 Gate 的 Sensor 、 Option 、 Parameters 的 Function
     def create_booster_S1Ch1Gate_option_parameters(self):
         return {
             "Voltage_source": {
@@ -167,6 +170,7 @@ class ParameterApp(tk.Tk):
             }
         }
 
+    # 創建 Booster 的 S1Ch1 Sense 的 Sensor 、 Option 、 Parameters 的 Function
     def create_booster_S1Ch1Sense_option_parameters(self):
         return {
             "Current_source": {
@@ -1708,7 +1712,7 @@ class ParameterApp(tk.Tk):
             elif value == "請選擇":
                 self.update_default_parameters("請選擇", "請選擇", "請選擇", "請選擇", "請選擇") 
 
-    # 更新預設的值
+    # 根據 Thermostat type 來預設其他參數
     def update_default_parameters(self, baudrate, data_bits, parity, stop_bits, handshake):
         self.save_thermostat_config["Baudrate"] = baudrate
         self.save_thermostat_config["Data bits"] = data_bits
@@ -1754,6 +1758,7 @@ class ParameterApp(tk.Tk):
     # 獲取 SI 所需的 CurrentSourceParams 參數值
     def fill_current_source_params(self, config_data):
 
+        # Sensor 的 Alias 對應表
         self.sensor_rename = {
             "S1Ch1": "/T3STER/0/LP220/SLOT1/CH0",
             "S1Ch2": "/T3STER/0/LP220/SLOT1/CH1",
@@ -1787,6 +1792,7 @@ class ParameterApp(tk.Tk):
             "S1Ch1 - Sense": "/PWB240/PWB10018/CH0/SensSour/0"
         }
 
+        # 若有輸入的 Current Source 參數值，則將其填入 current_source_params
         current_source_params = []    
 
         for sensor in self.sensor_rename.keys():
@@ -1853,6 +1859,7 @@ class ParameterApp(tk.Tk):
     # 獲取 SI 所需的 MeasCardChParams 參數值
     def fill_measurement_params(self, config_data):
 
+        # LP401 的 Measurement channel 的 Range 轉成 SI 機台讀得懂的對應表
         self.range_rename = {
             "Fall scale: 20 V, V(in): -10 V ~ 10 V": 9,
             "Fall scale: 10 V, V(in): -10 V ~ 10 V": 10,
@@ -1870,6 +1877,7 @@ class ParameterApp(tk.Tk):
             "Fall scale: 8 V, V(in): -80 V ~ 80 V": 2
         }
 
+        # 若有輸入的 Measurement channel 參數值，則將其填入 measurement_params
         measurement_params = [] 
         measurement_channels = config_data["Measurement_channel"]
 
@@ -2065,6 +2073,7 @@ class ParameterApp(tk.Tk):
         with open(file_path, "r") as file:
             config_data = json.load(file)
 
+        # 將 Thermostat 參數 (此為等待 Thermostat 平衡好溫度之後再量測的參數表) 填入 config_data 等待寫入 saved_parameters.json
         thermostatParams_data = [{
                     "Alias": "/THERMOSTAT/0",
                     "UserAlias": "Th0",
@@ -2111,6 +2120,7 @@ class ParameterApp(tk.Tk):
         else:
             config_data["Resources"]["ThermostatParams"] = []
 
+        # 將 Thermostat 參數 (此為不等待 Thermostat 平衡好溫度就直接量測的參數表) 填入 config_data 等待寫入 saved_parameters.json
         thermostatParams_data_no_wait = [{
                     "Alias": "/THERMOSTAT/0",
                     "UserAlias": "Th0",
@@ -2157,6 +2167,7 @@ class ParameterApp(tk.Tk):
         else:
             config_data["Resources"]["ThermostatParams_no_wait"] = []
 
+        # 將 TSP 參數填入 config_data 等待寫入 saved_parameters.json
         tspCalibParams = {
             "CustomTemperature": {
                 "default": config_data["Temperature"],

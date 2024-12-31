@@ -385,13 +385,30 @@ class ParameterApp(tk.Tk):
 
     # 創建 Trigger 的 Checkbutton
     def create_trigger_checkbuttons(self, frame, start, end):
+        
+        # Trigger 顯示在 GUI 的標籤
+        trigger_labels = {
+            "S11Ch1": "Trigger1",
+            "S11Ch2": "Trigger2",
+            "S11Ch3": "Trigger3",
+            "S11Ch4": "Trigger4",
+            "S11Ch5": "Trigger5",
+            "S11Ch6": "Trigger6",
+            "S11Ch7": "Trigger7",
+            "S11Ch8": "Trigger8"
+        }
+        
         for i, sensor in enumerate(itertools.islice(self.sensor_option_parameters.keys(), start, end)):
             self.sensor[sensor] = tk.BooleanVar()
             # 檢查是否有保存的 trigger 值，並設置勾選狀態
             if any(saved_sensor == sensor for saved_sensor, _ in self.saved_parameters.keys()):
                 self.sensor[sensor].set(True)
+
+            # 設置顯示的文字
+            text = trigger_labels.get(sensor, sensor)
+
             checkbutton = ttk.Checkbutton(
-                frame, text=sensor, variable=self.sensor[sensor], command=lambda t=sensor: self.toggle_trigger(t))
+                frame, text=text, variable=self.sensor[sensor], command=lambda t=sensor: self.toggle_trigger(t))
             checkbutton.grid(column=0, row=i, sticky=tk.W, padx=10, pady=5)
             # 設置 Checkbutton 的字體
             checkbutton.configure(style="Large_Bold.TCheckbutton")
@@ -1816,7 +1833,7 @@ class ParameterApp(tk.Tk):
                             }
                         },
                         "OutputMode": {"default": config_data[f"{sensor}_Current_source"]["Output mode"], "locked": False},
-                        "SetCurrent": {"default": float(config_data[f"{sensor}_Current_source"]["Current [A]"]), "locked": False, "min": -1, "max": 1},
+                        "SetCurrent": {"default": float(config_data[f"{sensor}_Current_source"]["Current [A]"]), "locked": False, "min": -2, "max": 2},
                         "VoltageCorner": {"default": float(config_data[f"{sensor}_Current_source"]["Voltage limit [V]"]), "locked": False, "min": -10, "max": 10}
                     })
                 elif sensor in ["S5Ch1", "S5Ch2", "S5Ch3", "S5Ch4", "S6Ch1", "S6Ch2", "S6Ch3", "S6Ch4", "S7Ch1", "S7Ch2", "S7Ch3", "S7Ch4", "S8Ch1", "S8Ch2", "S8Ch3", "S8Ch4"]:
@@ -1825,7 +1842,7 @@ class ParameterApp(tk.Tk):
                         "UserAlias": sensor,
                         "OutputMode": {"default": config_data[f"{sensor}_Current_source"]["Output mode"], "locked": False},
                         "SetCurrent": {"default": float(config_data[f"{sensor}_Current_source"]["Current [A]"]), "locked": False, "min": -0.2, "max": 0.2},
-                        "VoltageCorner": {"default": float(config_data[f"{sensor}_Current_source"]["Range [V]"]), "locked": False, "min": -40, "max": 40}
+                        "VoltageCorner": {"default": float(config_data[f"{sensor}_Current_source"]["Range [V]"]), "locked": False, "min": -10, "max": 10}
                     })
                 elif sensor in "S1Ch1 - Drive":
                     current_source_params.append({
@@ -1841,7 +1858,7 @@ class ParameterApp(tk.Tk):
                         "Alias": self.sensor_rename[sensor],
                         "UserAlias": f"PWB10018 - {sensor}",
                         "OutputMode": {"default": config_data[f"{sensor}_Current_source"]["Output mode"], "locked": False},
-                        "SetCurrent": {"default": float(config_data[f"{sensor}_Current_source"]["Current [A]"]), "locked": False, "min": 0, "max": 240},
+                        "SetCurrent": {"default": float(config_data[f"{sensor}_Current_source"]["Current [A]"]), "locked": False, "min": -1, "max": 1},
                         "VoltageCorner": {"default": float(config_data[f"{sensor}_Current_source"]["Range [V]"]), "locked": False, "min": 0, "max": 11},
                         "TriggerSource": ""
                     })
